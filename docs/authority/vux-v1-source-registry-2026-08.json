@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "registry_date": "2026-08-09",
+  "status": "LICENCE_PROVENANCE_FREEZE_COMPLETE",
+  "project_license": "GPL-3.0-or-later",
+  "default_policy": "DENY_COPY_OR_MODIFICATION_UNLESS_A_FILE_IS_IN_FILE_REUSE_ALLOWLIST",
+  "pin_policy": {
+    "source_and_reference_pins_are_full_git_shas": true,
+    "branch_tag_or_latest_is_authority": false,
+    "newer_commit_requires_explicit_provenance_refreeze": true,
+    "implementation_dependency_pins_are_selected_later_by_sdd": true
+  },
+  "source_reference_registry": [
+    {
+      "repository": "Heesho/miner-manifold",
+      "url": "https://github.com/Heesho/miner-manifold",
+      "classification": "V1_SOURCE_ANCESTOR",
+      "pin_kind": "SOURCE_PIN",
+      "commit_sha": "bcffbf1eb963810acb14a1fd1c73d03a53a085a8",
+      "commit_date": "2026-01-09T12:06:46-08:00",
+      "files": [
+        "contracts/Rig.sol",
+        "contracts/Unit.sol",
+        "contracts/interfaces/IUnit.sol"
+      ],
+      "license_expression": "MIT at each allowlisted file; GPL-2.0-or-later conservatively applies to the Rig auction-lineage portions through Euler FeeFlow",
+      "provenance": [
+        "The repository has no tracked root LICENSE, LICENCE, COPYING, or NOTICE at the pin.",
+        "README.md says MIT and points to a non-existent LICENSE file.",
+        "Each allowlisted file carries SPDX-License-Identifier: MIT and @author heesho.",
+        "Rig.sol, Unit.sol, and IUnit.sol have one-file histories beginning in the pinned root commit; git blame attributes their lines to Heesho.",
+        "The root commit records Claude Opus 4.5 as a co-author; no separate third-party human contributor is identified for the allowlisted files.",
+        "Rig.sol shares the distinctive FeeFlow-derived auction state-transition skeleton with the repository's Strategy.sol, including the epoch guard, deadline/slippage checks, clamped next-price arithmetic, unchecked epoch increment, timestamp reset, and linear-decay formula.",
+        "The pinned Strategy.sol is byte-identical to liquid-signal-governance/contracts/Strategy.sol and expressly says it is forked and modified from Euler Finance FeeFlow.",
+        "The exact historical Euler revision used by Heesho is not proven; euler-xyz/fee-flow@3bee858a1568d1313f37d615953f83391a897866 is the frozen matching licence/provenance evidence pin.",
+        "Rig.sol imports IUnit.sol and OpenZeppelin IERC20, SafeERC20, Ownable, and ReentrancyGuard. Unit.sol imports OpenZeppelin ERC20, ERC20Permit, and ERC20Votes.",
+        "The upstream yarn.lock resolves OpenZeppelin Contracts 4.9.6; this is ancestor-build evidence, not the VUX implementation dependency selection."
+      ],
+      "permission_status": "CLEARED_FOR_ALLOWLIST_ONLY_UNDER_FILE_MIT_GRANTS_COLLABORATOR_PERMISSION_AND_CONSERVATIVE_GPL_LINEAGE_COMPLIANCE",
+      "required_notices": [
+        "Preserve the upstream MIT licence information and @author heesho attribution.",
+        "Identify repository, full commit SHA, and exact upstream path in the derived file and THIRD_PARTY_NOTICES.md.",
+        "For Rig-derived code, credit Euler Labs and record FeeFlowController.sol at the frozen Euler pin as GPL-2.0-or-later lineage evidence.",
+        "Mark VUX modifications prominently with the relevant modification date.",
+        "Do not invent a copyright holder."
+      ],
+      "loa_copy_allowed": true,
+      "loa_modify_allowed": true,
+      "copy_scope": "FILE_REUSE_ALLOWLIST_ONLY",
+      "newer_commit_requires_refreeze": true
+    },
+    {
+      "repository": "euler-xyz/fee-flow",
+      "url": "https://github.com/euler-xyz/fee-flow",
+      "classification": "V1_SOURCE_ANCESTOR",
+      "pin_kind": "TRANSITIVE_SOURCE_EVIDENCE_PIN",
+      "commit_sha": "3bee858a1568d1313f37d615953f83391a897866",
+      "commit_date": "2025-06-11T13:18:56+02:00",
+      "files": [
+        "src/FeeFlowController.sol",
+        "LICENSE"
+      ],
+      "license_expression": "GPL-2.0-or-later",
+      "provenance": [
+        "FeeFlowController.sol carries SPDX-License-Identifier: GPL-2.0-or-later and @author Euler Labs.",
+        "The root LICENSE contains GNU GPL version 2; the file-level or-later notice supplies the later-version option.",
+        "The pin is the matching transitive source identified in gumball6900 NOTICE and is used conservatively for the auction skeleton visible in Miner Manifold Rig.sol.",
+        "The exact historical Euler revision used by Heesho is not proven.",
+        "FeeFlow has gitlinks for ethereum-vault-connector, forge-std, and solmate, but VUX may not import FeeFlowController.sol directly and the Miner Rig-derived portions do not import those dependencies."
+      ],
+      "permission_status": "TRANSITIVE_LINEAGE_CLEARED_BY_GPL_2_OR_LATER_WITH_GPL_VERSION_3_SELECTED_FOR_VUX",
+      "required_notices": [
+        "Credit Euler Labs and preserve the GPL-2.0-or-later provenance record.",
+        "State that VUX selected GPL version 3 under the upstream or-later option.",
+        "Mark VUX modifications and dates and provide the GPLv3 licence and corresponding source when conveying covered work."
+      ],
+      "loa_copy_allowed": false,
+      "loa_modify_allowed": false,
+      "copy_scope": "TRANSITIVE_PROVENANCE_ONLY_USE_MINER_ALLOWLIST_FOR_IMPLEMENTATION",
+      "newer_commit_requires_refreeze": true
+    },
+    {
+      "repository": "Heesho/liquid-signal-governance",
+      "url": "https://github.com/Heesho/liquid-signal-governance",
+      "classification": "DEFERRED_NOT_V1",
+      "pin_kind": "SOURCE_REFERENCE_PIN",
+      "commit_sha": "14b5fbbbe1945f2e6501f84976e5f12b39fb227a",
+      "commit_date": "2026-02-10T01:12:21-08:00",
+      "files": [
+        "contracts/Strategy.sol",
+        "contracts/RevenueRouter.sol",
+        "contracts/Voter.sol",
+        "contracts/Bribe.sol"
+      ],
+      "license_expression": "MIT file headers, with GPL-2.0-or-later ancestry in Strategy.sol and unresolved Solidly/Synthetix ancestry in Voter.sol and Bribe.sol",
+      "provenance": [
+        "No tracked root LICENSE, LICENCE, COPYING, or NOTICE exists at the pin; README.md points to a non-existent LICENSE file.",
+        "Strategy.sol says it is forked and modified from Euler Finance FeeFlow.",
+        "Voter.sol names Andre Cronje Solidly without an exact repository, commit, or path.",
+        "Bribe.sol names Synthetix StakingRewards without an exact repository, commit, or path.",
+        "There are no git submodules at the pin."
+      ],
+      "permission_status": "DEFERRED_NO_V1_COPY_OR_IMPORT",
+      "required_notices": [],
+      "loa_copy_allowed": false,
+      "loa_modify_allowed": false,
+      "newer_commit_requires_refreeze": true
+    },
+    {
+      "repository": "Heesho/gumball6900",
+      "url": "https://github.com/Heesho/gumball6900",
+      "classification": "REFERENCE_ONLY",
+      "pin_kind": "REFERENCE_PIN",
+      "commit_sha": "4d0883cc2954f773c1e2d84d6e54c3930b09341e",
+      "commit_date": "2026-08-09T00:42:06+02:00",
+      "files": [
+        "NOTICE",
+        "packages/contracts/src/core/Fund.sol",
+        "packages/contracts/src/core/LiquidityPosition.sol",
+        "packages/contracts/src/core/Strategy.sol",
+        "packages/contracts/src/core/ResonanceRouter.sol"
+      ],
+      "license_expression": "AMBIGUOUS_REPOSITORY_STATE: core files say MIT; NOTICE says it grants no repository licence, identifies a release blocker, and also refers to BUSL-1.1 source headers pending counsel",
+      "provenance": [
+        "There is no root LICENSE, LICENCE, or COPYING file at the pin.",
+        "NOTICE pins give.fun, Liquid Signal Governance, and Euler FeeFlow evidence and says the rebuild is not release-authorized.",
+        "Fund.sol has no explicit source-ancestor comment; it implements a broader multi-asset redemption and successor migration surface that VUX rejects.",
+        "The repository has no gitlinks; it vendors forge-std with Apache-2.0 and MIT licence files, but VUX will not copy or import that vendored tree.",
+        "Post-pin commit 395a0dfbf56e3d478233736ef7a110e584a676e7 is known from earlier research but is not authority and is not proposed as a replacement pin."
+      ],
+      "permission_status": "REFERENCE_ONLY_NO_COPY_CLEARANCE",
+      "required_notices": [],
+      "loa_copy_allowed": false,
+      "loa_modify_allowed": false,
+      "newer_commit_requires_refreeze": true
+    },
+    {
+      "repository": "Heesho/givedotfun-monorepo",
+      "url": "https://github.com/Heesho/givedotfun-monorepo",
+      "classification": "REFERENCE_ONLY",
+      "pin_kind": "TRANSITIVE_REFERENCE_PIN",
+      "commit_sha": "ef6ee14a454432210d13e312d0ef825f670bd79d",
+      "commit_date": "2026-03-30T01:11:26-07:00",
+      "files": [
+        "packages/hardhat/contracts/Auction.sol",
+        "packages/hardhat/contracts/Fundraiser.sol",
+        "packages/hardhat/contracts/Coin.sol",
+        "packages/hardhat/contracts/Core.sol"
+      ],
+      "license_expression": "MIT file headers and README statement; Auction.sol expressly carries Euler FeeFlow GPL-2.0-or-later ancestry; no root licence file",
+      "provenance": [
+        "This pin is recorded because gumball6900 NOTICE identifies it as a behavioral source.",
+        "Auction.sol says it is forked and modified from Euler Fee Flow.",
+        "The repository has no tracked root LICENSE, LICENCE, COPYING, or NOTICE at the pin."
+      ],
+      "permission_status": "TRANSITIVE_REFERENCE_ONLY_NO_V1_COPY",
+      "required_notices": [],
+      "loa_copy_allowed": false,
+      "loa_modify_allowed": false,
+      "newer_commit_requires_refreeze": true
+    },
+    {
+      "repository": "OlympusDAO/olympus-v3",
+      "url": "https://github.com/OlympusDAO/olympus-v3",
+      "classification": "REFERENCE_ONLY",
+      "pin_kind": "REFERENCE_PIN",
+      "commit_sha": "a686d715bf572a60156a39f9c9af69d5208ca8be",
+      "commit_date": "2026-07-30T11:08:48+04:00",
+      "files": [
+        "src/policies/EmissionManager.sol",
+        "src/policies/YieldRepurchaseFacility.sol",
+        "src/modules/TRSRY/OlympusTreasury.sol",
+        "src/policies/Heart.sol"
+      ],
+      "license_expression": "Relevant files use AGPL-3.0 legacy SPDX text or AGPL-3.0-only; no root licence file at the pin",
+      "provenance": [
+        "VUX uses only policy shapes described in research.",
+        "No Olympus contract code is required by canonical v1.",
+        "The tracked .gitmodules file is empty and there are no gitlinks at the pin."
+      ],
+      "permission_status": "REFERENCE_ONLY_NO_COPY_OR_IMPORT",
+      "required_notices": [],
+      "loa_copy_allowed": false,
+      "loa_modify_allowed": false,
+      "newer_commit_requires_refreeze": true
+    },
+    {
+      "repository": "OlympusDAO/olympus-docs",
+      "url": "https://github.com/OlympusDAO/olympus-docs",
+      "classification": "REFERENCE_ONLY",
+      "pin_kind": "REFERENCE_PIN",
+      "commit_sha": "4256dd3ffc20747426cbd9e89a1d93849ea968e2",
+      "commit_date": "2026-07-31T10:23:28+04:00",
+      "files": [
+        "LICENSE",
+        "docs/overview/02_treasury.md",
+        "docs/overview/03_pol.md",
+        "docs/overview/05_emissions-manager.md",
+        "docs/overview/06_yield-repurchase-facility.md"
+      ],
+      "license_expression": "MIT",
+      "provenance": [
+        "The root LICENSE is MIT and names Copyright (c) 2022 OlympusDAO.",
+        "The documents informed research language and policy shapes only."
+      ],
+      "permission_status": "REFERENCE_ONLY_NO_TEXT_COPY_PLANNED",
+      "required_notices": [],
+      "loa_copy_allowed": false,
+      "loa_modify_allowed": false,
+      "newer_commit_requires_refreeze": true
+    }
+  ],
+  "file_reuse_allowlist": [
+    {
+      "repository": "Heesho/miner-manifold",
+      "commit_sha": "bcffbf1eb963810acb14a1fd1c73d03a53a085a8",
+      "path": "contracts/Rig.sol",
+      "git_blob_oid": "d362ef354994df29f0859889a7189ec028868e07",
+      "classification": "V1_SOURCE_ANCESTOR",
+      "upstream_spdx": "MIT",
+      "conservative_lineage_license": "GPL-2.0-or-later",
+      "planned_treatment": "FORK_MODIFY_OR_SELECTIVE_PORT",
+      "final_spdx_policy_if_materially_derived": "MIT AND GPL-3.0-or-later",
+      "required_attribution": [
+        "heesho",
+        "Euler Labs for the conservatively attributed FeeFlow auction lineage",
+        "full Miner and Euler repository paths and SHAs",
+        "VUX modification notice and date"
+      ],
+      "loa_copy_allowed": true,
+      "loa_modify_allowed": true
+    },
+    {
+      "repository": "Heesho/miner-manifold",
+      "commit_sha": "bcffbf1eb963810acb14a1fd1c73d03a53a085a8",
+      "path": "contracts/Unit.sol",
+      "git_blob_oid": "26d491eb650d5e0cc1609ee1b9791b9aee510d02",
+      "classification": "V1_SOURCE_ANCESTOR",
+      "upstream_spdx": "MIT",
+      "conservative_lineage_license": null,
+      "planned_treatment": "FORK_MODIFY_OR_SELECTIVE_PORT",
+      "final_spdx_policy_if_materially_derived": "MIT AND GPL-3.0-or-later",
+      "required_attribution": [
+        "heesho",
+        "full Miner repository path and SHA",
+        "VUX modification notice and date"
+      ],
+      "loa_copy_allowed": true,
+      "loa_modify_allowed": true
+    },
+    {
+      "repository": "Heesho/miner-manifold",
+      "commit_sha": "bcffbf1eb963810acb14a1fd1c73d03a53a085a8",
+      "path": "contracts/interfaces/IUnit.sol",
+      "git_blob_oid": "7069422ce70c4d848145f8bfce42300a3f024bb5",
+      "classification": "V1_SOURCE_ANCESTOR",
+      "upstream_spdx": "MIT",
+      "conservative_lineage_license": null,
+      "planned_treatment": "OPTIONAL_DIRECT_IMPORT_COMPANION_OR_INDEPENDENT_IVUX_REPLACEMENT",
+      "final_spdx_policy_if_materially_derived": "MIT AND GPL-3.0-or-later",
+      "required_attribution": [
+        "heesho",
+        "full Miner repository path and SHA",
+        "VUX modification notice and date"
+      ],
+      "loa_copy_allowed": true,
+      "loa_modify_allowed": true
+    }
+  ],
+  "dependency_families": [
+    {
+      "repository": "OpenZeppelin/openzeppelin-contracts",
+      "url": "https://github.com/OpenZeppelin/openzeppelin-contracts",
+      "classification": "V1_DEPENDENCY",
+      "pin_kind": "IMPLEMENTATION_DEPENDENCY_PIN",
+      "commit_sha": null,
+      "pin_status": "SDD_SELECTION_REQUIRED_BEFORE_CODING",
+      "files": [],
+      "license_expression": "MIT",
+      "provenance": [
+        "Miner Manifold imports OpenZeppelin and its yarn.lock resolves 4.9.6; that fact is ancestor-build evidence only.",
+        "Earlier VUX research mentioned 5.6.1 for full-precision arithmetic; that is not a dependency decision.",
+        "The SDD must select an exact compatible release, resolve it to an immutable commit or package integrity digest, and record all imported paths before implementation."
+      ],
+      "permission_status": "LICENSE_FAMILY_CLEARED_EXACT_RELEASE_UNSELECTED",
+      "required_notices": [
+        "Preserve the exact selected release's MIT copyright and permission notice."
+      ],
+      "loa_copy_allowed": false,
+      "loa_modify_allowed": false,
+      "newer_commit_requires_refreeze": true
+    }
+  ],
+  "external_runtime_interfaces": [
+    {
+      "name": "canonical Robinhood Chain WETH",
+      "address": "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73",
+      "source_classification": "NOT_A_VENDORED_OR_LINKED_SOURCE_DEPENDENCY",
+      "rule": "Interact through a cleared interface; do not copy the deployed WETH implementation into VUX."
+    }
+  ],
+  "collaborator_permission": {
+    "type": "COLLABORATOR_PERMISSION",
+    "grantor": "Heesho",
+    "operator_supplied_summary": "go for it!",
+    "scope": "Rights controlled by the grantor for changes/additions to Miner Manifold core only",
+    "does_not_cover": [
+      "Euler contributors' rights",
+      "Solidly or Synthetix contributors' rights",
+      "any other third-party rights",
+      "a relicensing of GPL-licensed upstream material"
+    ],
+    "recordkeeping_action": "Preserve the original message or screenshot in private operational records."
+  }
+}
