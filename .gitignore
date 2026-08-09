@@ -18,3 +18,12 @@ cache/
 out/
 broadcast/
 coverage/
+
+# Loa disabled skills (feature-gated)
+.claude/.skills-disabled/
+
+# Loa framework files are vendored locally, never tracked.
+# Only project-owned customizations are versioned.
+.claude/*
+!.claude/overrides/
+!.claude/settings.json
