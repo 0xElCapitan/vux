@@ -91,8 +91,18 @@ continuous_learning:
 # Invisible Retrospective
 # =============================================================================
 # Automatic learning-signal scan at the END of the skills listed below.
-# Only implementing-tasks, reviewing-code, and auditing-security embed the
-# postlude; the two false entries have no postlude and are inert either way.
+#
+# REALITY CHECK — automatic capture works for implementing-tasks ONLY.
+# reviewing-code and auditing-security embed the postlude but declare
+# `disallowed-tools: [Write, Edit, NotebookEdit]` (capabilities.write_files:
+# false). That is a harness-level barrier instructions cannot override, and the
+# postlude must write three things (trajectory JSONL, skills-pending/SKILL.md,
+# NOTES.md). So it can never complete there — no config value enables it.
+# deploying-infrastructure / designing-architecture embed no postlude at all.
+#
+# The reliable path is manual: /retrospective --scope <skill>, which invokes
+# continuous-learning directly (role: implementation, write_files: true) and is
+# therefore unaffected by the review skills' tool restrictions.
 invisible_retrospective:
   enabled: true
   log_to_trajectory: true
@@ -102,11 +112,11 @@ invisible_retrospective:
   sanitize_descriptions: true   # NEVER disable in production
 
   skills:
-    implementing-tasks: true
-    auditing-security: true
-    reviewing-code: true
-    deploying-infrastructure: false
-    designing-architecture: false
+    implementing-tasks: true    # only path that can actually fire
+    auditing-security: false    # HARNESS-BLOCKED: disallowed-tools strips Write/Edit
+    reviewing-code: false       # HARNESS-BLOCKED: disallowed-tools strips Write/Edit
+    deploying-infrastructure: false   # no postlude embedded
+    designing-architecture: false     # no postlude embedded
 
   quality_gates:
     require_depth: true
