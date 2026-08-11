@@ -1,0 +1,2 @@
+{"timestamp":"2026-08-09T23:17:00Z","decision":"ALLOW","actor":"project-work","zone":"unclassified","path":"C:/Users/0x007/vux/THIRD_PARTY_NOTICES.md","reason":"path not declared in zones.yaml; no opinion"}
+{"timestamp":"2026-08-09T23:17:24Z","decision":"ALLOW","actor":"project-work","zone":"unclassified","path":"C:/Users/0x007/vux/README.md","reason":"path not declared in zones.yaml; no opinion"}
