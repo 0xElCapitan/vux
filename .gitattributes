@@ -1,0 +1,17 @@
+# Byte fidelity for provenance-gated source.
+#
+# The accepted provenance refreeze requires vendored upstream files to land
+# byte-identical to the recorded SHA-256 identities
+# (docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md §3/§4/§7). Git's
+# CRLF translation would silently break those identities — and with them the
+# POOL_INIT_CODE_HASH reproduction — on any clone whose core.autocrlf is not
+# false. `-text` disables all translation regardless of the cloner's config, so
+# byte identity does not depend on developer environment.
+vendor/** -text
+
+# Solidity compiles from bytes; keep every .sol LF-only for deterministic
+# builds in both the =0.8.28 and =0.7.6 compilation units.
+*.sol -text
+
+# Provenance/CI shell must not gain CR bytes on Windows checkouts.
+tools/**/*.sh text eol=lf

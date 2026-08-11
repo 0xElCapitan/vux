@@ -13,11 +13,20 @@ desktop.ini
 .idea/
 *.swp
 
-# Generated build / cache artifacts
+# Generated build / cache artifacts (both compilation units)
 cache/
+cache-v3core/
 out/
-broadcast/
+out-v3core/
 coverage/
+
+# Foundry broadcast artifacts — launch-secret posture (sdd.md:L270).
+# Production broadcast files embed the launch EOA, its nonces, predicted
+# addresses, and genesis calldata; none of that may reach the public repository
+# or public CI logs before the launch block. Enforced by
+# tools/provenance/verify-launch-hygiene.sh.
+broadcast/
+broadcast/**
 
 # Loa disabled skills (feature-gated)
 .claude/.skills-disabled/

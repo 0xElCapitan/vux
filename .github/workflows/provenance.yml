@@ -1,0 +1,94 @@
+name: provenance
+
+# Fail-closed provenance enforcement (PROV-9). Every gate runs on every push and
+# pull request; a violation fails the build rather than warning.
+#
+# No secrets are used or required — the accepted refreeze §"Security
+# Considerations" for Sprint 1 states CI must not require secrets.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: provenance-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Accepted toolchain pin (refreeze §6): foundry v1.0.0 →
+  # 8692e926198056d0228c1e166b1b6c34a5bed66c
+  FOUNDRY_VERSION: v1.0.0
+
+jobs:
+  gates:
+    name: provenance gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      # Byte identity is the whole point; prove the checkout itself did not
+      # translate line endings before any hash is computed.
+      - name: Assert checkout preserved bytes
+        run: git config core.autocrlf false && git diff --exit-code
+
+      - uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      # The pin is only evidence if it is asserted. Installing the pinned release
+      # and printing the version left the pinned-environment claim resting on a
+      # human reading a log; this fails the build when the toolchain diverges.
+      - name: Assert the pinned Foundry toolchain
+        run: |
+          ver="$(forge --version | head -1)"
+          echo "$ver"
+          jq --version
+          case "$ver" in
+            *"${FOUNDRY_VERSION#v}"*) echo "toolchain matches the accepted pin ${FOUNDRY_VERSION} (refreeze §6)" ;;
+            *) echo "::error::expected Foundry ${FOUNDRY_VERSION}, got: $ver"; exit 1 ;;
+          esac
+
+      - name: Run all provenance gates and tests
+        run: bash tools/provenance/run-all.sh
+
+  drift-negative-demonstration:
+    name: drift gate fails closed on a 1-byte mutation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      # Mutates one byte of a vendored file, asserts the drift gate fails,
+      # restores the exact bytes, and asserts the gate is green again.
+      - name: Prove the drift gate closes
+        run: bash tools/provenance/demo-drift-negative.sh
+
+      - name: Assert the working tree was restored exactly
+        run: git diff --exit-code && git status --porcelain --untracked-files=no
+
+  source-boundary-negative-demonstration:
+    name: source boundary fails closed on out-of-root source
+    runs-on: ubuntu-latest
+    # Needs only git + jq: the source-boundary gates never invoke the compiler.
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      # Plants unauthorized source outside the census AND outside the declared
+      # VUX source roots — contracts/ (Hardhat convention) and lib/ (Foundry's
+      # dependency directory) — asserts each gate fails for the boundary reason
+      # rather than by accident, removes every probe, and asserts green again.
+      - name: Prove the source boundary closes
+        run: bash tools/provenance/demo-boundary-negative.sh
+
+      - name: Assert the working tree was restored exactly
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain)" || { git status --porcelain; exit 1; }

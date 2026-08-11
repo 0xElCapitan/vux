@@ -1,0 +1,664 @@
+{
+  "schema_version": 1,
+  "delta_date": "2026-08-10",
+  "status": "PROVENANCE_REFREEZE_CURRENT_ACCEPTED",
+  "activation": "ACTIVE_EXACT_SOURCE_SURFACE_ONLY_NO_WILDCARD_EXPANSION",
+  "operator_acceptance": {
+    "date": "2026-08-10",
+    "status": "OPERATOR_ACCEPTANCE",
+    "scope": "authorizes only the exact §3/§4-enumerated OpenZeppelin v5.2.0 (28 files) and Uniswap v3-core v1.0.0 (32 files) source surface described by this refreeze; does not authorize arbitrary dependency expansion",
+    "nothing_imported_or_installed_by_this_node": true
+  },
+  "companion_markdown": "docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md",
+  "base_markdown": {
+    "path": "docs/authority/vux-v1-licence-provenance-source-pin-freeze-2026-08.md",
+    "sha256": "50c3584a1483b40ffb6391260a2bf42df32220c64724fdcc672ca62c01ace3a2"
+  },
+  "base_registry": {
+    "path": "docs/authority/vux-v1-source-registry-2026-08.json",
+    "sha256": "6fc9fa81d80eda1f1017c6cb79f297b9a608150538e76ad97d8de1c8b5d2fe04"
+  },
+  "prior_delta_markdown": {
+    "path": "docs/authority/vux-v1-strategic-treasury-provenance-boundary-delta-2026-08.md",
+    "sha256": "5e1790276e290a08c58c1fe0accd40fc5d94b5a2ddc94dbb2c91aa90fce12ec3"
+  },
+  "prior_delta_registry": {
+    "path": "docs/authority/vux-v1-source-registry-strategic-treasury-delta-2026-08.json",
+    "sha256": "79e2df97606027e020c2ec3100647dc60f4e7b53fcb3ab1f00128ba91df4b97f"
+  },
+  "accepted_prd": {
+    "path": "grimoires/loa/prd.md",
+    "version": "2.0.0",
+    "sha256": "4e5cacf72d276377cb20897d9e1fe8aea721cc5edb2b0fd55e5cfde79ec89377"
+  },
+  "accepted_sdd": {
+    "path": "grimoires/loa/sdd.md",
+    "version": "1.6.0",
+    "sha256": "19241ed7db8a89b419e746463c6121f5b77c8237d760829e2f2604536c37392a",
+    "role": "selection evidence only — the SDD's selection authorizes nothing; this refreeze independently re-verified every pin, licence, and file identity from primary upstream sources"
+  },
+  "project_license": "GPL-3.0-or-later",
+  "project_license_changed": false,
+  "default_deny_preserved": true,
+  "pin_verification": {
+    "date": "2026-08-10",
+    "method": "git ls-remote refs/tags/<tag> with ^{} peel, plus fresh isolated shallow clone at each tag with git rev-parse HEAD equality check against the expected 40-char commit; package identity cross-checked from the in-repo package.json at the pin; per-file identities from git ls-tree at the pinned checkout",
+    "mutable_refs_are_authority": false
+  },
+  "dependencies_selected": [
+    {
+      "repository": "OpenZeppelin/openzeppelin-contracts",
+      "url": "https://github.com/OpenZeppelin/openzeppelin-contracts",
+      "classification": "V1_DEPENDENCY",
+      "pin_kind": "IMPLEMENTATION_DEPENDENCY_PIN",
+      "release_tag": "v5.2.0",
+      "tag_kind": "lightweight — refs/tags/v5.2.0 resolves directly to the commit",
+      "commit_sha": "acd4ff74de833399287ed6b31b4debf6b2b35527",
+      "commit_date": "2025-01-09T09:04:47-06:00",
+      "package_identity_at_pin": "package.json name 'openzeppelin-solidity' version '5.2.0'",
+      "license_expression": "MIT",
+      "license_evidence": {
+        "path": "LICENSE",
+        "git_blob_oid": "b2fee8f211650092ffdcbd519ef3ffbc1c258b8f",
+        "sha256": "8b3fddff3cff904ab9bd7c48a9288fb08ab4f47b179c07af6df7886b12cb04d6",
+        "copyright_line": "Copyright (c) 2016-2024 Zeppelin Group Ltd",
+        "per_file_spdx": "every authorized file declares SPDX-License-Identifier: MIT (mechanical census at the pin)"
+      },
+      "gpl3_compatibility": "MIT is GPLv3-compatible; MIT terms are preserved and do not disappear when the combined VUX work is conveyed under GPL-3.0-or-later",
+      "authorization_class": "EXACT_FILES_ONLY_NO_WILDCARD",
+      "import_authorized_after_operator_acceptance": true,
+      "authorized_now": true,
+      "permitted_use": "import/compilation within the VUX Solidity =0.8.28 unit for the accepted SDD's contracts; files must land byte-identical to the recorded blob OIDs/sha256 regardless of installation mechanism (git submodule at the pin, vendored copy, or package install) — CI-verified; no modification of upstream files; upstream SPDX headers retained verbatim",
+      "seed_import_surface": [
+        "contracts/token/ERC20/ERC20.sol",
+        "contracts/token/ERC20/extensions/ERC20Permit.sol",
+        "contracts/token/ERC20/IERC20.sol",
+        "contracts/token/ERC20/utils/SafeERC20.sol",
+        "contracts/access/AccessControl.sol",
+        "contracts/utils/ReentrancyGuard.sol",
+        "contracts/utils/math/Math.sol"
+      ],
+      "census_rule": "authorized_files is the mechanically computed transitive import closure of the seed surface at the pin, and it is CLOSED: importing any OpenZeppelin path outside authorized_files requires a new operator-accepted refreeze",
+      "authorized_files": [
+        {
+          "path": "contracts/access/AccessControl.sol",
+          "git_blob_oid": "3e3341e9cfd62e7137f4dd4ea6445b43e4c619c1",
+          "sha256": "1086a1ad3788972b885ff3f209da510615dde6214d46b29e1cd2a4924f66c06d",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/access/IAccessControl.sol",
+          "git_blob_oid": "4c16a6ef75ca7686b374f5a3d13bc94fe0d796f0",
+          "sha256": "c112f5c86fdc4e862f88d4f5694530342320923ebd5b5e7d9d8493550d337c2d",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/interfaces/IERC1363.sol",
+          "git_blob_oid": "02de22859973a398a699ba415a57054c659ec78a",
+          "sha256": "54f427f63724d9760211dfa9e0cc5d79d86c0724becd81f8e638e2e27b0e2669",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/interfaces/IERC165.sol",
+          "git_blob_oid": "944dd0d59127e60f7b55fd8dacde9ea64f43b245",
+          "sha256": "49abfb8fa26e3f1715fe05948a96e3762b805bd4a77d103eb40ba96b1acfa144",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/interfaces/IERC20.sol",
+          "git_blob_oid": "21d5a41327566dac52adc0037d35d9177241eca4",
+          "sha256": "cb42f0b4d269ba8ef2629c176a7f99bf4fb50837c92f45596b54822b26e3df4b",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/interfaces/IERC5267.sol",
+          "git_blob_oid": "47a9fd5885563f1d65a77f0847bdd91bfed9d17a",
+          "sha256": "efd1ebd1e04b6ef9c3b8781a097588f83da954323f438d54a71dc06508e6c7b8",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/interfaces/draft-IERC6093.sol",
+          "git_blob_oid": "3227fd624fca8e3dc2ba54e672c550be7a158e5f",
+          "sha256": "56380323009ef4a119d44550b910fde1bff9cedde8f7f4c690152c7629bc3338",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/token/ERC20/ERC20.sol",
+          "git_blob_oid": "471908d6c1b8f7b108b774528eedafd4132d7794",
+          "sha256": "c322867b0b30f6d5f791e5ab9af5e3f5ff1c8c127906748f6725e592a5f40719",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/token/ERC20/IERC20.sol",
+          "git_blob_oid": "7d1019563f5af1dfe72a771bc4d5fac1ffc8afd9",
+          "sha256": "30edf7394bab78d48b7db3a059248e1ea7c2c77d2ec0e37a13bb91415aafbe5a",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/token/ERC20/extensions/ERC20Permit.sol",
+          "git_blob_oid": "3d36561a85f822a75a250b50daa445e0229da837",
+          "sha256": "75f9f66db047b1413aa45538a53211e7b20479d74c3dd2657335bf4dc50b8811",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/token/ERC20/extensions/IERC20Metadata.sol",
+          "git_blob_oid": "3c067ef401283b6ae369fcc275e4ef6371daa7d3",
+          "sha256": "9e7c70ec72d2f7d592e23ea84f3852b04f91f6f644ce57e0263493046b36afb9",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/token/ERC20/extensions/IERC20Permit.sol",
+          "git_blob_oid": "fc374368fd2bb8de71a7699e499f260ab32d1b8f",
+          "sha256": "026aca1c8ee4574eb9719dca7dfc33e3e57a618715ae702a675e8a8c9ea1e82d",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/token/ERC20/utils/SafeERC20.sol",
+          "git_blob_oid": "edac165bca5734c0c9ec1d7c565f1966934df689",
+          "sha256": "8d3062e8831a07bab894607a7e6990f0b336024079ed5baaaae1f2b103e292ad",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/Context.sol",
+          "git_blob_oid": "4e535fe03c243f864568b8f4430c17c25dbadb47",
+          "sha256": "847fda5460fee70f56f4200f59b82ae622bb03c79c77e67af010e31b7e2cc5b6",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/Nonces.sol",
+          "git_blob_oid": "37451ff93a595bc3626f2d582dc44e3d31cd95ce",
+          "sha256": "9b4cbb85d1f5053c744e83302538eb643a713ffd14bc37665b224f1c66529339",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/Panic.sol",
+          "git_blob_oid": "e168824d34b3f0ba0be33317fb34b9e74fc148b6",
+          "sha256": "270fc8401c1a13fae6a7a4a2dd6e381b95d658896701e51f0d3e2688acab3dec",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/ReentrancyGuard.sol",
+          "git_blob_oid": "a95fb512f31d44755a811ad66f8e2de4b602266e",
+          "sha256": "32fbb1c908ec1b4de85cc1bb10091aebd5816ffe80dfdd5ca5e084fbea67a462",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/ShortStrings.sol",
+          "git_blob_oid": "fb8bde516685af590c53dd1576b4f96a917d54cf",
+          "sha256": "c5970e9c77c9a797941fcb9ab8c9a5d0b1227c610a919ee8a04ba061e6881873",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/StorageSlot.sol",
+          "git_blob_oid": "aebb10524a2c82aa78ceb8394e5f3c1b0e5abeea",
+          "sha256": "75704538dcb223239280c6726d9a31cf769a7816718517c997fc7d63bdb70778",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/Strings.sol",
+          "git_blob_oid": "0360b4cabb3cfd6abd7b97ad08a4fd7fa33d9009",
+          "sha256": "1d47b183ce3217de32c41cf6034281a783f41380ca99d1ca043509018b656165",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/cryptography/ECDSA.sol",
+          "git_blob_oid": "6493f56338ac22d133456cc439fc651b9459e54c",
+          "sha256": "0964ddd02f4a7a8cf9ba130e3aeead588ca3d425d5bc13cc4221358c69108ed0",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/cryptography/EIP712.sol",
+          "git_blob_oid": "f15a67bd9b5a0e8a1e98d463dec80387dfd6349c",
+          "sha256": "e7f41ef62494c6c26ddaaac0f2790fa365b635e7c5aaacbeafba3067574e38d7",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/cryptography/MessageHashUtils.sol",
+          "git_blob_oid": "e1cbccb65ecc7b8870462651e7f0878ee4d1fc5c",
+          "sha256": "93e4c09f9c65d37a14d796601b67a67fc918e16957a6328261f8635e136adf76",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/introspection/ERC165.sol",
+          "git_blob_oid": "9fbce0447e77f71b80bbfe9514178c0ceb1532ce",
+          "sha256": "7fdc4dc9e3872f6a4c1ec9cfa9583a1fc18ccd7a416397a6e698bd5bbf92f32b",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/introspection/IERC165.sol",
+          "git_blob_oid": "719ec358659d3bb92f2c6de3ca77ed7aad249d90",
+          "sha256": "7c5c3f98ab876991e7dd34b84d41137e836306eb9f36f6386a631f5be3f5d6d4",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/math/Math.sol",
+          "git_blob_oid": "85a420b1a7b262af6555743fc0a0b2d485f2bde7",
+          "sha256": "68cf79a637995d5ed243c4a5856b42a5e134ee8786a05034e24d75927fc40ebc",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/math/SafeCast.sol",
+          "git_blob_oid": "b345ede1e6994a12d8ca5ba4b6e87401952cb116",
+          "sha256": "9769274bf53f26a7c7896c526ea1980dc9bea5bf5c2a5fd04870008c4afc1de9",
+          "upstream_spdx": "MIT"
+        },
+        {
+          "path": "contracts/utils/math/SignedMath.sol",
+          "git_blob_oid": "7c97aa4c22da6567126a82c6949ec39e363ea891",
+          "sha256": "1ed50b1056af886752f0fb48a0165d381e69bb4a4b18b893b066dc144a7e08d7",
+          "upstream_spdx": "MIT"
+        }
+      ],
+      "required_notices": [
+        "Preserve the exact v5.2.0 MIT copyright and permission notice (THIRD_PARTY_NOTICES.md §6.1).",
+        "Do not invent copyright holders."
+      ],
+      "newer_commit_requires_refreeze": true
+    },
+    {
+      "repository": "Uniswap/v3-core",
+      "url": "https://github.com/Uniswap/v3-core",
+      "classification": "V1_DEPENDENCY_VENDORED_SOURCE",
+      "pin_kind": "IMPLEMENTATION_DEPENDENCY_PIN",
+      "release_tag": "v1.0.0",
+      "tag_kind": "annotated — tag object ef64f51d0f0dca5346c903484f3e6a771dd69d59 peels to the commit",
+      "commit_sha": "e3589b192d0be27e100cd0daaf6c97204fdb1899",
+      "commit_date": "2021-05-04T11:46:59-05:00",
+      "package_identity_at_pin": "package.json name '@uniswap/v3-core' version '1.0.0' license field 'BUSL-1.1'",
+      "license_expression": "per-file SPDX: BUSL-1.1 (9 files) / GPL-2.0-or-later (22 files) / MIT (1 file); every BUSL-1.1 file is governed by the Change License GPL-2.0-or-later because the Change Date has passed",
+      "license_evidence": {
+        "path": "LICENSE",
+        "git_blob_oid": "075a13ae390e521a9ccee36929e42725ed8ddf57",
+        "sha256": "85c5cbc5be388d8bb38d8618de93c96e247ae5af20eb79dbafc1fb5b13b57b54",
+        "licensor": "Uniswap Labs",
+        "licensed_work": "Uniswap V3 Core — 'The Licensed Work is (c) 2021 Uniswap Labs'",
+        "additional_use_grant": "Any uses listed and defined at v3-core-license-grants.uniswap.eth",
+        "change_date": "The earlier of 2023-04-01 or a date specified at v3-core-license-date.uniswap.eth",
+        "change_license": "GNU General Public License v2.0 or later",
+        "change_date_passed": true,
+        "change_date_reasoning": "the parameter is 'the earlier of' a fixed 2023-04-01 and an ENS-published date, so an ENS record could only accelerate the change, never delay it; 2023-04-01 precedes this node's date 2026-08-10, therefore per the BUSL terms ('Effective on the Change Date … the Licensor hereby grants you rights under the terms of the Change License') every BUSL-1.1 file at this pin is now licensable under GPL-2.0-or-later regardless of ENS state; the Additional Use Grant is not relied on"
+      },
+      "gpl3_compatibility": "GPL-2.0-or-later permits the recipient to take the work under GPLv3; VUX selects GPL version 3 under the or-later option (consistent with the existing Euler FeeFlow precedent in the base freeze); the MIT file is GPLv3-compatible; the combined VUX work remains conveyable under GPL-3.0-or-later — NO change to the VUX project licence posture is required",
+      "authorization_class": "EXACT_FILES_ONLY_NO_WILDCARD_BYTE_IDENTICAL_VENDORING",
+      "import_authorized_after_operator_acceptance": true,
+      "authorized_now": true,
+      "permitted_use": "byte-identical vendoring of exactly the authorized_files into the VUX =0.7.6 compilation unit for the protocol-deployed canonical pool + VuxPoolDeployer (accepted SDD §1.4/§1.6/§2.1), and interface imports by the =0.8.28 unit (interface files carry pragma >=0.5.0); upstream files land byte-identical with upstream SPDX headers retained verbatim; the vendored pool implementation is never edited; all VUX-specific behavior (commitment gate, one-shot, parameter-domain checks, owner()==address(0)) lives only in VUX-owned source",
+      "seed_import_surface": [
+        "contracts/UniswapV3Pool.sol",
+        "contracts/UniswapV3PoolDeployer.sol",
+        "contracts/NoDelegateCall.sol"
+      ],
+      "census_rule": "authorized_files is the mechanically computed transitive import closure of the three implementation seeds at the pin (it contains every library, interface, sub-interface, callback interface, and minimal-ERC20 path the selected implementation and the VUX integration require — including contracts/interfaces/IUniswapV3Factory.sol, which the pinned pool imports for its owner()-gated functions, while the factory IMPLEMENTATION remains excluded); the census is CLOSED: vendoring or importing any other v3-core path requires a new operator-accepted refreeze",
+      "authorized_files": [
+        {
+          "path": "contracts/NoDelegateCall.sol",
+          "git_blob_oid": "5411979dcb6457f59b770d87f4ab7129d4cabd71",
+          "sha256": "c2b03bbf6ae73415e9f60fb2bcdad1ee9dbb3ab1f27f9b12384c44d11a5624e0",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/UniswapV3Pool.sol",
+          "git_blob_oid": "9e0982127248a69e3bf054049c7db966497793f9",
+          "sha256": "d515775b7f3ffe921dd70aca86b8bad16280fa4c122425d82b4dbea4dc564a7a",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/UniswapV3PoolDeployer.sol",
+          "git_blob_oid": "02bfd53547614f59dc50d09ad81003c5b1ecb918",
+          "sha256": "1e27540bc60c4dccff5add8a04da61b7b30ee0c6b1fd25ff6806fec855db6cd1",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/interfaces/IERC20Minimal.sol",
+          "git_blob_oid": "c303265a3b0d5a62d4d8a7adc1715990ad972947",
+          "sha256": "bb0bf574bdfd637eb7d3c0869e8170314d5aac37df8e86cd3ca808f828c7c22a",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/IUniswapV3Factory.sol",
+          "git_blob_oid": "540cfdc68167776e12d54f3a66765656af2bab26",
+          "sha256": "17c72e89a7d0eecca7929ca08d97f46e80930ef7024e4ccbc7b294c588477107",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/IUniswapV3Pool.sol",
+          "git_blob_oid": "56df0500dfb7fbb6df832fe96a9d7e77fb143c7d",
+          "sha256": "b0f97121de74f3c916503f6ec37fa1ba196affd1cc02157e47ab00125dde91fe",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/IUniswapV3PoolDeployer.sol",
+          "git_blob_oid": "72096c1ff597f8541f78763455fb53bcdc77ac4d",
+          "sha256": "48908460f444abc497b261e38a38540effecbf5c99d17e60d849f1d0acfb1fe6",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/callback/IUniswapV3FlashCallback.sol",
+          "git_blob_oid": "18e54c4e12cc471449b6e003bdee85360787ef5a",
+          "sha256": "612135b515e651db56cd80191cd56c0b982eaae954c5b1c4d1dc111f8968d5b8",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/callback/IUniswapV3MintCallback.sol",
+          "git_blob_oid": "85447e84f9b6493eb9699086ed3be2edc52467a0",
+          "sha256": "4dbecbcec83e4f5609d72309f40be3eac554f8517ed46e6345bd35069c9bbc23",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/callback/IUniswapV3SwapCallback.sol",
+          "git_blob_oid": "9f183b22a7016eae4d036db15077bc791cb8fb04",
+          "sha256": "171a9a692e71b6d532df655695b0b672bd8ea5dcca3b3363131700b45b0171c6",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/pool/IUniswapV3PoolActions.sol",
+          "git_blob_oid": "44fb61c24aaf14e4a767ee6eece840e807b3c35b",
+          "sha256": "7fc763acbf5e7044d88cae4a6ed7b1c99b5268d647ae794ba5ee1085060e6a2c",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/pool/IUniswapV3PoolDerivedState.sol",
+          "git_blob_oid": "eda3a0089de2e0ad257d9daebcf65619b63f2b44",
+          "sha256": "9f670bdfed3a283e0557b208a5d4bc561afd2df771d67c4368dddaae2dc1b6e3",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/pool/IUniswapV3PoolEvents.sol",
+          "git_blob_oid": "9d915dde934fc7a0430195f29bb2172c47783a3d",
+          "sha256": "2c2b798ca4288dfdf746bca8516b4e725b79ca6636af3d38a5a64801e50020a7",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/pool/IUniswapV3PoolImmutables.sol",
+          "git_blob_oid": "c9beb151e3309f0d59664c400d3e41275bdf2e48",
+          "sha256": "ac6332f7e174db7fa3852a6c5ae3da3bd013e72c2ff8fa1cf2ec37f6916e2951",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/pool/IUniswapV3PoolOwnerActions.sol",
+          "git_blob_oid": "2395ed321df4092acadd99b67530d7650fb3858c",
+          "sha256": "5f4cd982d6abe55237bc770da3b667f96edf048c230cfe3d7f6309c92cc0e205",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/interfaces/pool/IUniswapV3PoolState.sol",
+          "git_blob_oid": "620256c3118ccd3897f1b2ac82529dc93729a14b",
+          "sha256": "d8d3937703d08d95f7f867a0f49c2aa73c3f3ef5508a54d431e829295f5175ea",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/BitMath.sol",
+          "git_blob_oid": "3a7216c7bd5e9d124957c7f7e487dafff7c8855c",
+          "sha256": "32f71ea9156f55572a72efb0b2a913df88de66ff33d042043fb3e51a6050a557",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/FixedPoint128.sol",
+          "git_blob_oid": "6d6948b106003cf35f8f877b7913cbc933133ed9",
+          "sha256": "cfc3aef8851f183492547dccc168bf72398fba2aad4c4d9d4784f542a8ccda34",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/FixedPoint96.sol",
+          "git_blob_oid": "63b42c294e821eb038793b7f1afb9ae0427f0691",
+          "sha256": "219deb88ffbcdefa482be35051db586378e8523062bee592dd2c5fa7fb47ebd6",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/FullMath.sol",
+          "git_blob_oid": "8688a1773ffbb5ec93d3abbe983f8c16141f9139",
+          "sha256": "54087aee268a6938a85a408d7b14481b5c2c956c21508d5583f1bf48ec6d69ba",
+          "upstream_spdx": "MIT",
+          "current_license_basis": "MIT"
+        },
+        {
+          "path": "contracts/libraries/LiquidityMath.sol",
+          "git_blob_oid": "d5e23032e8b9323de3df2b8d71d9bcc516cc5d6e",
+          "sha256": "84d20a16d5346f6ec4c12dff4df23dda5d46e52d33f18aaaaac2e9e36ce4a072",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/LowGasSafeMath.sol",
+          "git_blob_oid": "dbc817c2ec806775b7c9b213c6db0dffe00ea8cd",
+          "sha256": "394107ff2dbbaded5612452af5e77b4af9d0871b096c1514b0ea659b862fc46f",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/Oracle.sol",
+          "git_blob_oid": "3f6b3f32c99b82960c0fffd82340b845a03b1496",
+          "sha256": "eea86662877614f800344bbe432098f9edf55735f5d1c9474ebd64b55097771b",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/libraries/Position.sol",
+          "git_blob_oid": "1c67c7f279ff9dcf7d6bdaff12a5d3b1b5336a97",
+          "sha256": "a9130c72e3adb7d3fa10ee5050fc9375d6119a8250125fe7daacec94450be21d",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/libraries/SafeCast.sol",
+          "git_blob_oid": "a8ea22987877b615fcf3a557512b240eff1b77c7",
+          "sha256": "9aed494b56d3dd16b7d6535583ded2cdfb03dc80aaa919347b13d35fd597e8bf",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/SqrtPriceMath.sol",
+          "git_blob_oid": "685f485da43402235c3a9ce7fd85a49597b6373a",
+          "sha256": "ddd62e3a94346248677f30f1ab009ef015e71e4b8696dcca890eeabc9dc6c149",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/libraries/SwapMath.sol",
+          "git_blob_oid": "ee176fbee4ae2fb2ba7da4ddd00391fe6b685f39",
+          "sha256": "d6cb9a153be4ea9fb2377ef88641ef7979b5cee6933162f1b732d0289e26e1b6",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/libraries/Tick.sol",
+          "git_blob_oid": "13d34284942923f226ecbe84adc913df17f38523",
+          "sha256": "749121625ab364e653971fae786a9c8e0859c8327e746d9edd999ae9d16f3d71",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/libraries/TickBitmap.sol",
+          "git_blob_oid": "3c43585771d48b7b1868fd1b09212ec115088d1a",
+          "sha256": "bd7a17c5134f0718eb7d856ddfc58d8347d32a8f661bed53aa3ad17c9aea09ba",
+          "upstream_spdx": "BUSL-1.1",
+          "current_license_basis": "GPL-2.0-or-later (BUSL-1.1 Change License; Change Date 2023-04-01 passed)"
+        },
+        {
+          "path": "contracts/libraries/TickMath.sol",
+          "git_blob_oid": "378e44528caeb7fa0ce2f86b8a39f6d0785a0925",
+          "sha256": "83cf64b2ca84001effd16e007b49bac5359143b6c3132bfe42907b2426a0c5f5",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/TransferHelper.sol",
+          "git_blob_oid": "25d6309028b79fcdeddd7435d642b5e11d8fe707",
+          "sha256": "f15b94bc000ee68e434c3ff4c28696c3f5bc23222bd6249744a7228b063e267b",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        },
+        {
+          "path": "contracts/libraries/UnsafeMath.sol",
+          "git_blob_oid": "f62f84676fa39f98b4ae1f7a073fc767ecf78aaa",
+          "sha256": "4d02353eb503e3111e25bd50104ac9b279f99e88d848e455262a3fbeb55c50e7",
+          "upstream_spdx": "GPL-2.0-or-later",
+          "current_license_basis": "GPL-2.0-or-later"
+        }
+      ],
+      "spdx_census_summary": {
+        "BUSL-1.1": 9,
+        "GPL-2.0-or-later": 22,
+        "MIT": 1,
+        "total": 32
+      },
+      "vendored_file_spdx_rule": "unmodified vendored upstream files retain their upstream SPDX headers verbatim — including the BUSL-1.1 headers, which are preserved as historical fact; the Change-Date conversion to GPL-2.0-or-later is recorded here and in THIRD_PARTY_NOTICES.md, never edited into upstream files",
+      "vux_pool_deployer_disposition": {
+        "file": "VuxPoolDeployer.sol (VUX-owned, =0.7.6 unit; not an upstream file)",
+        "relationship": "per accepted SDD §1.4 it DERIVES from the pinned UniswapV3PoolDeployer — subclassing/adopting the upstream deployer pattern with exact upstream deploy semantics (CREATE2, salt keccak256(abi.encode(token0, token1, fee)), parameters() transient-storage pattern); only the commitment gate, one-shot consumption, parameter-domain checks, and permanent owner()==address(0) are VUX-original additions",
+        "classification": "DERIVATIVE_OF_UPSTREAM_DEPLOYER_PATTERN — it must NOT be described as wholly VUX-original",
+        "spdx": "GPL-3.0-or-later (GPLv3 selected under the or-later option of the Change License GPL-2.0-or-later that now governs the BUSL-1.1 upstream UniswapV3PoolDeployer.sol)",
+        "required_header_notices": [
+          "upstream repository URL, path contracts/UniswapV3PoolDeployer.sol, commit e3589b192d0be27e100cd0daaf6c97204fdb1899, git blob 02bfd53547614f59dc50d09ad81003c5b1ecb918",
+          "original licence BUSL-1.1; governed by Change License GPL-2.0-or-later since the 2023-04-01 Change Date; VUX selects GPL version 3 under the or-later option",
+          "Uniswap Labs credit ('The Licensed Work is (c) 2021 Uniswap Labs')",
+          "prominent dated VUX modification notice enumerating the VUX-original additions",
+          "pointer to THIRD_PARTY_NOTICES.md"
+        ],
+        "escalation_rule": "if implementation ends up textually adapting upstream deployer code rather than inheriting it, the same derivative treatment applies a fortiori; a lone GPL-3.0-or-later header with no upstream provenance is prohibited"
+      },
+      "excluded": [
+        "contracts/UniswapV3Factory.sol — factory IMPLEMENTATION (rejected topology); note the interface contracts/interfaces/IUniswapV3Factory.sol IS authorized because the pinned pool mechanically requires it",
+        "all of Uniswap/v3-periphery — evidence pin only (see evidence_pins_added), zero code authorization",
+        "every other Uniswap/v3-core path not listed in authorized_files (tests, audits, echidna specs, build scripts, factory implementation)",
+        "no wildcard authorization; no entire-repository authorization; no mutable-ref authority"
+      ],
+      "required_notices": [
+        "Uniswap Labs attribution with the BUSL-1.1 parameters and Change-Date conversion basis (THIRD_PARTY_NOTICES.md §6.2).",
+        "Do not invent copyright holders."
+      ],
+      "newer_commit_requires_refreeze": true
+    }
+  ],
+  "pool_init_code_hash": {
+    "value": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+    "status": "INDEPENDENTLY_REPRODUCED_AND_CROSS_CONFIRMED",
+    "derivation_rule": "POOL_INIT_CODE_HASH = keccak256(creationCode(UniswapV3Pool)); the pinned pool's init code is argument-free (its constructor reads parameters() from msg.sender, the deployer), so the hash is a pure build constant; canonical pool address = create2(vuxPoolDeployer, keccak256(abi.encode(token0, token1, fee)), POOL_INIT_CODE_HASH)",
+    "reproduction": {
+      "date": "2026-08-10",
+      "workspace": "isolated scratchpad workspace only — nothing was imported into the VUX repository",
+      "compiler": "official solc 0.7.6 build, self-reporting '0.7.6+commit.7338295f.Emscripten.clang' — commit equals the pinned ethereum/solidity v0.7.6 commit 7338295feebfb3f044e265d5cf05ef1841b258b1",
+      "sources": "exactly the 32 authorized_files, bytes taken from the pinned checkout at e3589b192d0be27e100cd0daaf6c97204fdb1899 (autocrlf disabled; working-tree sha256s recorded per file)",
+      "settings": {
+        "optimizer": {
+          "enabled": true,
+          "runs": 800
+        },
+        "metadata": {
+          "bytecodeHash": "none"
+        },
+        "evmVersion": "istanbul (solc 0.7.6 default; upstream hardhat.config.ts sets no override)",
+        "viaIR": "not applicable (does not exist in solc 0.7.6)",
+        "remappings": "none (all v3-core imports are relative)"
+      },
+      "settings_source": "upstream hardhat.config.ts at the pin: solidity 0.7.6, optimizer {enabled: true, runs: 800}, metadata {bytecodeHash: 'none'} with the upstream comment 'we want all generated code to be deterministic'; no per-file overrides",
+      "creation_bytecode_length_bytes": 22728,
+      "creation_bytecode_cbor_tail_hex": "a164736f6c6343000706000a",
+      "cbor_tail_meaning": "CBOR map {solc: 0.7.6} with no metadata hash — mechanical confirmation that bytecodeHash 'none' was in effect"
+    },
+    "cross_check": {
+      "source": "Uniswap/v3-periphery v1.0.0 @ 464a8a49611272f7349c970e0fadb7ec1d3c1086, contracts/libraries/PoolAddress.sol line 6 (git blob 60de3852b1425b21a52e583cc4f87c33859339f2, sha256 484aa68ddecd9ca3bf1a9c872da13b736271c8e1ce1f2ac795b190d26210981b)",
+      "result": "EQUAL — two independent chains (fresh compile from pinned source vs. the canonical upstream-published derivation constant) agree byte-for-byte"
+    },
+    "sprint1_binding_obligations": [
+      "the Foundry profile for the =0.7.6 vendored unit MUST reproduce UniswapV3Pool creation bytecode whose keccak256 equals this value (solc 0.7.6, optimizer enabled, runs 800, evm_version istanbul, bytecode_hash 'none', solc-default CBOR appendage) — CI fails closed on mismatch before any deployment code is accepted",
+      "genesis wiring, the closing self-verification sweep, and the wiring tests use exactly this constant (accepted SDD §1.4)",
+      "any change to compiler version or any bytecode-affecting setting invalidates this hash and requires a new refreeze entry"
+    ]
+  },
+  "toolchain_pins_verified": [
+    {
+      "tool": "solc — VUX-original/Miner-derived unit (exact pragma =0.8.28)",
+      "repository": "ethereum/solidity",
+      "release_tag": "v0.8.28",
+      "commit_sha": "7893614a31fbeacd1966994e310ed4f760772658",
+      "verification": "git ls-remote refs/tags/v0.8.28 on 2026-08-10 resolves directly to this commit (lightweight tag); commit date re-verified from the canonical repository via GitHub API",
+      "commit_date": "2024-10-09T06:01:59Z"
+    },
+    {
+      "tool": "solc — vendored v3-core unit (exact pragma =0.7.6)",
+      "repository": "ethereum/solidity",
+      "release_tag": "v0.7.6",
+      "commit_sha": "7338295feebfb3f044e265d5cf05ef1841b258b1",
+      "verification": "git ls-remote refs/tags/v0.7.6 on 2026-08-10 resolves directly to this commit (lightweight tag); additionally the official solc 0.7.6 compiler build self-reports commit 7338295f; commit date re-verified from the canonical repository via GitHub API",
+      "commit_date": "2020-12-16T14:39:16Z",
+      "binding_rule": "the vendored v3-core compilation unit MUST remain Solidity =0.7.6; upstream 0.7 wrapping arithmetic MUST NOT be ported to 0.8.x"
+    },
+    {
+      "tool": "Foundry (forge/anvil/cast) stable",
+      "repository": "foundry-rs/foundry",
+      "release_tag": "v1.0.0",
+      "commit_sha": "8692e926198056d0228c1e166b1b6c34a5bed66c",
+      "verification": "git ls-remote refs/tags/v1.0.0 on 2026-08-10 resolves directly to this commit (lightweight tag)",
+      "commit_date": "2025-01-31T15:43:48Z (GitHub API, canonical repository)"
+    }
+  ],
+  "evidence_pins_added": [
+    {
+      "repository": "Uniswap/v3-periphery",
+      "url": "https://github.com/Uniswap/v3-periphery",
+      "classification": "EVIDENCE_ONLY_NO_CODE_USE",
+      "pin_kind": "REFERENCE_PIN",
+      "release_tag": "v1.0.0",
+      "tag_kind": "annotated — tag object 268ceeba9686544f90db2593e700c59bf56971f2 peels to the commit",
+      "commit_sha": "464a8a49611272f7349c970e0fadb7ec1d3c1086",
+      "commit_date": "2021-05-04T11:56:18-05:00",
+      "files": [
+        "contracts/libraries/PoolAddress.sol"
+      ],
+      "purpose": "cross-check evidence for the canonical POOL_INIT_CODE_HASH constant ONLY; v3-periphery remains completely unauthorized as implementation source — no copy, port, vendoring, or derivation",
+      "loa_copy_allowed": false,
+      "loa_modify_allowed": false,
+      "newer_commit_requires_refreeze": true
+    }
+  ],
+  "exclusions_reaffirmed": [
+    "Uniswap/v3-core contracts/UniswapV3Factory.sol implementation (interface IUniswapV3Factory.sol authorized; implementation excluded)",
+    "all Uniswap/v3-periphery source (evidence pin above authorizes zero code use)",
+    "Heesho/liquid-signal-governance @ 14b5fbbbe1945f2e6501f84976e5f12b39fb227a — NOT opened, fetched, or consulted during this node; remains DEFERRED_NOT_V1 with Voter.sol/Bribe.sol PROHIBITED_PENDING_CLEARANCE",
+    "Heesho/gumball6900 — remains REFERENCE_ONLY, no copy clearance",
+    "Heesho/givedotfun-monorepo — remains REFERENCE_ONLY (transitive evidence)",
+    "OlympusDAO/olympus-v3 and olympus-docs — remain REFERENCE_ONLY",
+    "no wildcard authorization anywhere in this refreeze; no entire-repository authorization; no mutable reference (branch/tag/HEAD/latest) is authority — the 40-char commits are the pins"
+  ],
+  "miner_allowlist_unchanged": true,
+  "miner_allowlist_note": "the direct file-reuse allowlist remains exactly the three pinned Miner Manifold files (contracts/Rig.sol, contracts/Unit.sol, contracts/interfaces/IUnit.sol at bcffbf1eb963810acb14a1fd1c73d03a53a085a8); this refreeze does not expand it",
+  "file_reuse_allowlist_added": [],
+  "deferred_offchain_provenance_obligation": {
+    "rule": "identical fail-closed provenance rule — exact immutable pins recorded in an operator-accepted refreeze BEFORE first import/use in the applicable later sprint",
+    "deferred_dependencies": [
+      "ponder (SDD 0.8.x family — exact pin at its refreeze)",
+      "Next.js 15.1.4 family + React 19.0.0",
+      "viem 2.21.x / wagmi 2.14.x",
+      "Playwright 1.49.x",
+      "PostgreSQL 16.4 (deployment-time fact under the same recording discipline)",
+      "slither 0.10.x and any additional CI/static-analysis toolchain"
+    ],
+    "recorded_so_it_cannot_be_forgotten": true,
+    "scope_note": "this refreeze is deliberately the smallest authority change unblocking smart-contract sprint planning and Sprint 1; it authorizes no off-chain dependency"
+  },
+  "operator_reserved_values_untouched": "Q-3 Safe signer set/threshold, Q-4 jurisdiction/legal, Q-6 RH native-token/WETH.deposit deployment fact, fee tier, tick spacing, genesis USD conversion, Strategic allocation policy, revenue percentages, signaler percentages, ROOT/GIGA admission, future strategy caps, LSG activation timing, and every R-1…R-14 operator-reserved economic value remain exactly where the accepted SDD leaves them; no deployment-time fact is pulled into source authority",
+  "notices_changed": true,
+  "notices_change_scope": "THIRD_PARTY_NOTICES.md §6 updated from 'none selected' to the accepted-selected state, adding §6.1 (OpenZeppelin v5.2.0 exact-release notice) and §6.2 (Uniswap v3-core BUSL-1.1/Change-Date notice); §§1–5 and §7 preserved verbatim; the notice change is now current as of operator acceptance 2026-08-10",
+  "nothing_imported_or_installed": true,
+  "implementation_note": "no production Solidity was written, no dependency source was vendored/imported/installed into the VUX repository, no Foundry project configuration was modified, and no commit/push/tag was performed by this node"
+}

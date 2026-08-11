@@ -1,8 +1,90 @@
 {
   "version": "1.0.0",
-  "cycles": [],
-  "active_cycle": null,
+  "cycles": [
+    {
+      "id": "cycle-001",
+      "label": "VUX v1",
+      "status": "archived",
+      "created": "2026-08-10T01:56:21Z",
+      "archived": "2026-08-10T06:06:51Z",
+      "archive_path": "C:/Users/0x007/vux/grimoires/loa/archive/2026-08-09-vux-v1-superseded-before-acceptance",
+      "prd": "C:/Users/0x007/vux/grimoires/loa/prd.md",
+      "sdd": null,
+      "sprints": []
+    },
+    {
+      "id": "cycle-002",
+      "label": "VUX v1 Strategic Treasury",
+      "status": "active",
+      "created": "2026-08-10T06:06:54Z",
+      "archived": null,
+      "archive_path": null,
+      "prd": "C:/Users/0x007/vux/grimoires/loa/prd.md",
+      "sdd": "C:/Users/0x007/vux/grimoires/loa/sdd.md",
+      "sprints": [
+        {
+          "global_id": 1,
+          "local_label": "sprint-1",
+          "status": "in_progress",
+          "created": "2026-08-10T20:34:18Z",
+          "completed": null
+        },
+        {
+          "global_id": 2,
+          "local_label": "sprint-2",
+          "status": "planned",
+          "created": "2026-08-10T20:34:23Z",
+          "completed": null
+        },
+        {
+          "global_id": 3,
+          "local_label": "sprint-3",
+          "status": "planned",
+          "created": "2026-08-10T20:34:27Z",
+          "completed": null
+        },
+        {
+          "global_id": 4,
+          "local_label": "sprint-4",
+          "status": "planned",
+          "created": "2026-08-10T20:34:32Z",
+          "completed": null
+        },
+        {
+          "global_id": 5,
+          "local_label": "sprint-5",
+          "status": "planned",
+          "created": "2026-08-10T20:34:36Z",
+          "completed": null
+        },
+        {
+          "global_id": 6,
+          "local_label": "sprint-6",
+          "status": "planned",
+          "created": "2026-08-10T20:34:40Z",
+          "completed": null
+        },
+        {
+          "global_id": 7,
+          "local_label": "sprint-7",
+          "status": "planned",
+          "created": "2026-08-10T20:34:45Z",
+          "completed": null
+        },
+        {
+          "global_id": 8,
+          "local_label": "sprint-8",
+          "status": "planned",
+          "created": "2026-08-10T20:34:50Z",
+          "completed": null
+        }
+      ]
+    }
+  ],
+  "active_cycle": "cycle-002",
   "active_bugfix": null,
-  "global_sprint_counter": 0,
-  "bugfix_cycles": []
+  "global_sprint_counter": 8,
+  "bugfix_cycles": [],
+  "last_updated": "2026-08-11T04:02:03Z",
+  "next_sprint_number": 9
 }

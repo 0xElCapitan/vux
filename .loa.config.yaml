@@ -59,6 +59,62 @@ compaction:
   threshold: 5
 
 # =============================================================================
+# Continuous Learning
+# =============================================================================
+# Skill extraction from debugging discoveries. Manual entry point: /retrospective
+continuous_learning:
+  # Master toggle
+  enabled: true
+
+  # Extraction behavior
+  auto_extract: true          # false = /retrospective only
+  require_approval: true      # false = skip pending, write directly to skills/
+
+  # Paths (relative to project root)
+  skills_dir: grimoires/loa/skills
+  pending_dir: grimoires/loa/skills-pending
+  archive_dir: grimoires/loa/skills-archived
+
+  # Quality gate thresholds
+  min_discovery_depth: 2      # 1=any, 2=moderate, 3=significant
+  require_verification: true
+
+  # Cross-reference behavior
+  check_notes_md: true
+  deduplicate: true
+
+  # Pruning
+  prune_after_days: 90
+  prune_min_matches: 2
+
+# =============================================================================
+# Invisible Retrospective
+# =============================================================================
+# Automatic learning-signal scan at the END of the skills listed below.
+# Only implementing-tasks, reviewing-code, and auditing-security embed the
+# postlude; the two false entries have no postlude and are inert either way.
+invisible_retrospective:
+  enabled: true
+  log_to_trajectory: true
+  surface_threshold: 3
+  max_candidates: 5
+  max_extractions_per_session: 3
+  sanitize_descriptions: true   # NEVER disable in production
+
+  skills:
+    implementing-tasks: true
+    auditing-security: true
+    reviewing-code: true
+    deploying-infrastructure: false
+    designing-architecture: false
+
+  quality_gates:
+    require_depth: true
+    require_reusability: true
+    require_trigger_clarity: true
+    require_verification: true
+
+# =============================================================================
 # Integrations
 # =============================================================================
 integrations:

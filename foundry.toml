@@ -1,0 +1,56 @@
+# VUX v1 — Foundry build configuration
+#
+# Two compilation units, deliberately separated (provenance refreeze §4/§6):
+#
+#   [profile.default]  Solidity =0.8.28 — VUX-original and Miner-derived source
+#                      plus the VUX-original test harness. Consumes vendored
+#                      OpenZeppelin and the (>=0.5.0) v3-core interfaces.
+#
+#   [profile.v3core]   Solidity =0.7.6 — the byte-identical vendored Uniswap
+#                      v3-core tree, built with the exact settings that
+#                      reproduce the accepted POOL_INIT_CODE_HASH. Upstream 0.7
+#                      wrapping arithmetic is never ported to 0.8.x.
+#
+# Toolchain pins (refreeze §6 — 40-character immutable commits; branches, tags,
+# and HEAD are never authority). Enforced by tools/provenance/verify-pins.sh.
+#
+#   solc 0.8.28   ethereum/solidity  7893614a31fbeacd1966994e310ed4f760772658
+#   solc 0.7.6    ethereum/solidity  7338295feebfb3f044e265d5cf05ef1841b258b1
+#   foundry v1.0.0 foundry-rs/foundry 8692e926198056d0228c1e166b1b6c34a5bed66c
+
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+out = "out"
+libs = []
+solc = "0.8.28"
+# Bytecode-affecting settings for the VUX unit are intentionally NOT frozen
+# here: no accepted authority freezes them, and no VUX contract exists yet
+# (Sprint 1 is provenance only). They are decided when deployable VUX source
+# lands. They cannot affect POOL_INIT_CODE_HASH, which is produced by the
+# separate =0.7.6 unit below.
+fs_permissions = [{ access = "read", path = "./out-v3core" }]
+
+[profile.v3core]
+# Vendored upstream tree only. Nothing VUX-owned compiles in this profile in
+# Sprint 1; VuxPoolDeployer.sol (Sprint 4) is VUX-owned derivative source and
+# lives outside the immutable upstream census even though it shares this unit.
+src = "vendor/uniswap-v3-core-v1.0.0/contracts"
+test = "vendor/uniswap-v3-core-v1.0.0/contracts"
+script = "vendor/uniswap-v3-core-v1.0.0/contracts"
+out = "out-v3core"
+cache_path = "cache-v3core"
+libs = []
+solc = "0.7.6"
+# The complete set of bytecode-affecting settings verified by the accepted
+# refreeze §7 to reproduce
+#   POOL_INIT_CODE_HASH = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54
+# Source: upstream hardhat.config.ts at the pin. Changing ANY of these
+# invalidates the hash and requires a new operator-accepted refreeze
+# (refreeze §7 obligation 3). tools/provenance/verify-init-code-hash.sh fails
+# closed on mismatch.
+optimizer = true
+optimizer_runs = 800
+evm_version = "istanbul"
+bytecode_hash = "none"

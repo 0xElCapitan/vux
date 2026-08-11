@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "delta_date": "2026-08-09",
+  "status": "PROVENANCE_DELTA_CURRENT_ACCEPTED",
+  "activation": "ACTIVATED_BY_OPERATOR_ACCEPTANCE_2026-08-09",
+  "base_markdown": {
+    "path": "docs/authority/vux-v1-licence-provenance-source-pin-freeze-2026-08.md",
+    "sha256": "50c3584a1483b40ffb6391260a2bf42df32220c64724fdcc672ca62c01ace3a2"
+  },
+  "base_registry": {
+    "path": "docs/authority/vux-v1-source-registry-2026-08.json",
+    "sha256": "6fc9fa81d80eda1f1017c6cb79f297b9a608150538e76ad97d8de1c8b5d2fe04"
+  },
+  "project_license_changed": false,
+  "source_pins_added": [],
+  "file_reuse_allowlist_added": [],
+  "dependencies_selected": [],
+  "notices_changed": false,
+  "default_deny_preserved": true,
+  "vux_original_surfaces": [
+    "static 80/8/12 routing and Reserve-favoring dust arithmetic",
+    "separate Strategic receipt, custody boundary, and principal/revenue accounting",
+    "Hard-only D_R measurement under the corrected split",
+    "POL principal versus incremental fee-yield classification",
+    "VUX POL-fee burn outcome",
+    "WETH POL-fee one-way Hard Reserve routing outcome",
+    "general realized Strategic revenue classification and policy surface",
+    "future VUX LSG admission, allocation-signal, bounded-execution, and emergency boundary",
+    "protocol-owned POL VUX non-voting treatment"
+  ],
+  "source_classification_clarifications": [
+    {
+      "repository": "Heesho/liquid-signal-governance",
+      "commit_sha": "14b5fbbbe1945f2e6501f84976e5f12b39fb227a",
+      "base_source_disposition_preserved": "DEFERRED_NOT_V1_NO_COPY_OR_IMPORT",
+      "corrected_product_interpretation": "VUX-original LSG is a core mature product surface; the external repository remains unauthorized implementation source"
+    },
+    {
+      "repository": "Heesho/gumball6900",
+      "base_source_disposition_preserved": "REFERENCE_ONLY_NO_COPY_CLEARANCE",
+      "corrected_product_interpretation": "POL-special VYRF is an economic outcome, not authority to port gumball code"
+    },
+    {
+      "repository": "OlympusDAO/olympus-v3",
+      "base_source_disposition_preserved": "REFERENCE_ONLY_NO_COPY_OR_IMPORT",
+      "corrected_product_interpretation": "treasury and POL precedent does not authorize code reuse"
+    }
+  ],
+  "future_refreeze_required_for": [
+    "any new external source or newer revision",
+    "any Liquid Signal Governance source file",
+    "any gumball6900 source file",
+    "any Olympus implementation source",
+    "any ROOT or GIGA integration source",
+    "any dependency outside the base registry after exact SDD selection"
+  ]
+}

@@ -1,0 +1,2 @@
+@openzeppelin/contracts/=vendor/openzeppelin-contracts-v5.2.0/contracts/
+@uniswap/v3-core/contracts/=vendor/uniswap-v3-core-v1.0.0/contracts/

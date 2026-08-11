@@ -190,23 +190,99 @@ the §1 allowlist.
 
 ## 6. Implementation dependencies
 
-**None selected. None installed. None pinned.**
+**Selected (accepted SDD v1.6.0) and authorized by the accepted refreeze
+(operator acceptance 2026-08-10). None installed. Nothing imported or
+vendored yet.**
 
 | dependency family | classification | licence family | status |
 |---|---|---|---|
-| [OpenZeppelin Contracts](https://github.com/OpenZeppelin/openzeppelin-contracts) | `V1_DEPENDENCY` | MIT | **Family cleared; no VUX release selected.** The exact release is deliberately reserved for the Loa architecture phase and must be resolved to an immutable commit or package-integrity digest, with imported paths recorded and the release's exact notice preserved, **before** any code is written. |
+| [OpenZeppelin Contracts](https://github.com/OpenZeppelin/openzeppelin-contracts) | `V1_DEPENDENCY` | MIT | **Exact release v5.2.0 selected and authorized; refreeze §6.1 accepted 2026-08-10.** Resolved to immutable commit `acd4ff74de833399287ed6b31b4debf6b2b35527`, with the complete closed 28-file imported-path census and the release's exact notice recorded **before** any code is written. |
+| [Uniswap v3-core](https://github.com/Uniswap/v3-core) | `V1_DEPENDENCY_VENDORED_SOURCE` | per file: BUSL-1.1 (now governed by Change License `GPL-2.0-or-later`) / `GPL-2.0-or-later` / MIT | **Exact release v1.0.0 selected and authorized; refreeze §6.2 accepted 2026-08-10.** Resolved to immutable commit `e3589b192d0be27e100cd0daaf6c97204fdb1899`, with a closed 32-file census for byte-identical vendoring. |
 
 Miner's lockfile resolving OpenZeppelin `4.9.6` describes the ancestor build
 only; it is not a VUX dependency decision. A version range such as `^x.y.z` is
 never the production authority.
 
-The AMM/POL venue and the toolchain are unselected. Canonical Robinhood Chain
+The canonical POL venue is protocol-deployed from the pinned Uniswap v3-core
+source (§6.2), and the toolchain pins (solc `=0.8.28` and `=0.7.6`, Foundry
+1.0.0) are recorded in the refreeze authority. Canonical Robinhood Chain
 WETH is an external deployed runtime contract, interacted with through a cleared
 interface — it is not source copied or linked into VUX.
 
 Each implementation dependency that is actually adopted must be added to this
 file with its exact release or pin and its verbatim required copyright, licence,
 and NOTICE material.
+
+### 6.1 OpenZeppelin Contracts v5.2.0 — accepted refreeze (operator acceptance 2026-08-10)
+
+| field | value |
+|---|---|
+| Repository | https://github.com/OpenZeppelin/openzeppelin-contracts |
+| Release / frozen source pin | tag `v5.2.0` → commit `acd4ff74de833399287ed6b31b4debf6b2b35527` (independently verified 2026-08-10) |
+| Commit date | `2025-01-09T09:04:47-06:00` |
+| Classification | `V1_DEPENDENCY` — implementation dependency, exact files only |
+| Licence | MIT — root `LICENSE` at the pin (git blob `b2fee8f211650092ffdcbd519ef3ffbc1c258b8f`, SHA-256 `8b3fddff3cff904ab9bd7c48a9288fb08ab4f47b179c07af6df7886b12cb04d6`); every authorized file declares `SPDX-License-Identifier: MIT` |
+| Authorized surface | exactly the 28 files enumerated in the refreeze census (the 7 SDD-selected import paths plus their closed transitive OZ-internal closure) |
+| Authority | [`docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md`](docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md) §3 + [`docs/authority/vux-v1-source-registry-oz-v3-refreeze-2026-08.json`](docs/authority/vux-v1-source-registry-oz-v3-refreeze-2026-08.json) |
+
+Required notice, reproduced verbatim from the pinned `LICENSE`:
+
+```text
+The MIT License (MIT)
+
+Copyright (c) 2016-2024 Zeppelin Group Ltd
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
+
+Unmodified imported files retain their `MIT` SPDX headers. MIT terms are
+GPLv3-compatible and survive conveyance of the combined GPL work. Importing any
+OpenZeppelin path outside the recorded census requires a new operator-accepted
+refreeze.
+
+### 6.2 Uniswap v3-core v1.0.0 — accepted refreeze (operator acceptance 2026-08-10)
+
+| field | value |
+|---|---|
+| Repository | https://github.com/Uniswap/v3-core |
+| Release / frozen source pin | tag `v1.0.0` (annotated tag object `ef64f51d0f0dca5346c903484f3e6a771dd69d59`) → commit `e3589b192d0be27e100cd0daaf6c97204fdb1899` (independently verified 2026-08-10) |
+| Commit date | `2021-05-04T11:46:59-05:00` |
+| Classification | `V1_DEPENDENCY_VENDORED_SOURCE` — byte-identical vendoring, exact files only |
+| Licence (root `LICENSE`, git blob `075a13ae390e521a9ccee36929e42725ed8ddf57`, SHA-256 `85c5cbc5be388d8bb38d8618de93c96e247ae5af20eb79dbafc1fb5b13b57b54`) | Business Source License 1.1 — Licensor **Uniswap Labs**; Licensed Work **Uniswap V3 Core** ("The Licensed Work is (c) 2021 Uniswap Labs"); Additional Use Grant "Any uses listed and defined at v3-core-license-grants.uniswap.eth" (not relied on); Change Date "The earlier of 2023-04-01 or a date specified at v3-core-license-date.uniswap.eth"; Change License **GNU General Public License v2.0 or later** |
+| Licence state at consumption | the Change Date passed no later than 2023-04-01 (the ENS-published date could only accelerate it), so every `BUSL-1.1` file at this pin is governed by the Change License `GPL-2.0-or-later`; 22 files carry per-file `GPL-2.0-or-later` headers and `contracts/libraries/FullMath.sol` carries `MIT`; VUX selects GPL version 3 under the or-later option |
+| Authorized surface | exactly the 32 files enumerated in the refreeze census (pool implementation + deployer + `NoDelegateCall`, all 16 libraries, 13 concrete interfaces) |
+| Explicitly excluded | `contracts/UniswapV3Factory.sol` implementation; **all** of v3-periphery (evidence pin only); every other upstream path |
+| Authority | [`docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md`](docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md) §4 + [`docs/authority/vux-v1-source-registry-oz-v3-refreeze-2026-08.json`](docs/authority/vux-v1-source-registry-oz-v3-refreeze-2026-08.json) |
+
+Obligations on the vendored tree: files land byte-identical to the recorded
+per-file blob OIDs/SHA-256s; upstream SPDX headers are retained verbatim —
+including the historical `BUSL-1.1` headers (the Change-Date conversion is
+recorded here and in the refreeze, never edited into upstream files); the
+vendored pool implementation is never edited; Uniswap Labs credit is preserved.
+`VuxPoolDeployer.sol` derives from the upstream deployer pattern and must carry
+`GPL-3.0-or-later` plus a full upstream-provenance header (repository, path,
+commit, blob, original `BUSL-1.1` licence, Change-Date basis, dated VUX
+modification notice, pointer to this file) — it must never be presented as
+wholly VUX-original. GPL corresponding-source obligations apply on conveyance.
+Vendoring or importing any v3-core path outside the recorded census requires a
+new operator-accepted refreeze.
 
 ---
 
