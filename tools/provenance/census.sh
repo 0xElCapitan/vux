@@ -31,6 +31,12 @@ BASE_MD="docs/authority/vux-v1-licence-provenance-source-pin-freeze-2026-08.md"
 BASE_MD_SHA256="50c3584a1483b40ffb6391260a2bf42df32220c64724fdcc672ca62c01ace3a2"
 TPN="THIRD_PARTY_NOTICES.md"
 TPN_SHA256="963e2cfb8fe8306ee6d2cfd6e14fa417a7a61fd7bfddc3fe5aedc2b577170873"
+# Toolchain authority (2026-08-12). Pinned for the same reason as the others: a
+# gate that read a mutated toolchain refreeze would enforce the mutation.
+TOOLCHAIN_MD="docs/authority/vux-v1-foundry-v1.5-toolchain-refreeze-2026-08.md"
+TOOLCHAIN_MD_SHA256="439bdef308a79d1df20e4e43e2c3ec138af5bcd77dce3113a1a31befac20830a"
+TOOLCHAIN_JSON="docs/authority/vux-v1-foundry-v1.5-toolchain-refreeze-2026-08.json"
+TOOLCHAIN_JSON_SHA256="f83853492bd6894457813ef96dc23745cb1b52f04b684397623cacbc185224aa"
 
 # --- Accepted pins (refreeze §2/§6/§7) --------------------------------------
 OZ_REPO="OpenZeppelin/openzeppelin-contracts"
@@ -57,8 +63,11 @@ SOLC_MAIN_VERSION="0.8.28"
 SOLC_MAIN_COMMIT="7893614a31fbeacd1966994e310ed4f760772658"
 SOLC_V3_VERSION="0.7.6"
 SOLC_V3_COMMIT="7338295feebfb3f044e265d5cf05ef1841b258b1"
-FOUNDRY_TAG="v1.0.0"
-FOUNDRY_COMMIT="8692e926198056d0228c1e166b1b6c34a5bed66c"
+# Foundry moved v1.0.0 -> v1.5.0 on 2026-08-12 by operator decision; the Foundry
+# row of refreeze §6 is superseded by TOOLCHAIN_MD (below), which changes the
+# orchestrator and nothing else.
+FOUNDRY_TAG="v1.5.0"
+FOUNDRY_COMMIT="1c57854462289b2e71ee7654cd6666217ed86ffd"
 
 POOL_INIT_CODE_HASH="0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54"
 

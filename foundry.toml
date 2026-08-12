@@ -16,7 +16,12 @@
 #
 #   solc 0.8.28   ethereum/solidity  7893614a31fbeacd1966994e310ed4f760772658
 #   solc 0.7.6    ethereum/solidity  7338295feebfb3f044e265d5cf05ef1841b258b1
-#   foundry v1.0.0 foundry-rs/foundry 8692e926198056d0228c1e166b1b6c34a5bed66c
+#   foundry v1.5.0 foundry-rs/foundry 1c57854462289b2e71ee7654cd6666217ed86ffd
+#
+# The Foundry line is the one selection that has moved since Sprint 1. It is
+# governed by docs/authority/vux-v1-foundry-v1.5-toolchain-refreeze-2026-08.md,
+# which supersedes the v1.0.0 selection in refreeze §6 and changes nothing else
+# — neither solc pin, no build setting, no dependency, no vendored byte.
 
 [profile.default]
 src = "src"

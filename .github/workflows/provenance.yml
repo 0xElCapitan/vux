@@ -20,9 +20,12 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Accepted toolchain pin (refreeze §6): foundry v1.0.0 →
-  # 8692e926198056d0228c1e166b1b6c34a5bed66c
-  FOUNDRY_VERSION: v1.0.0
+  # Accepted toolchain pin — Foundry v1.5.0 toolchain refreeze (2026-08-12),
+  # which supersedes the v1.0.0 selection of provenance refreeze §6 and changes
+  # nothing else. Exact release tag only: `stable`, `latest`, `nightly`, and
+  # branch names are never authority.
+  FOUNDRY_VERSION: v1.5.0
+  FOUNDRY_COMMIT: 1c57854462289b2e71ee7654cd6666217ed86ffd
   # [profile.ci] differs from the default only in fuzz depth (>=10,000 runs,
   # sdd.md:L853). run-all.sh overrides it explicitly for the vendored =0.7.6
   # build, whose settings are frozen by the refreeze.
@@ -44,18 +47,26 @@ jobs:
         with:
           version: ${{ env.FOUNDRY_VERSION }}
 
-      # The pin is only evidence if it is asserted. Installing the pinned release
-      # and printing the version left the pinned-environment claim resting on a
-      # human reading a log; this fails the build when the toolchain diverges.
+      # The pin is only evidence if it is asserted, and the workflow input is not
+      # the assertion — it is the request. What must be checked is what the
+      # installed binary says it is. A version-string match alone would accept
+      # any build calling itself 1.5.0, so the exact 40-character release commit
+      # is required; the version string is checked too, so a commit that ever
+      # shipped under a different tag cannot satisfy it either.
       - name: Assert the pinned Foundry toolchain
         run: |
-          ver="$(forge --version | head -1)"
+          ver="$(forge --version)"
           echo "$ver"
           jq --version
           case "$ver" in
-            *"${FOUNDRY_VERSION#v}"*) echo "toolchain matches the accepted pin ${FOUNDRY_VERSION} (refreeze §6)" ;;
+            *"$FOUNDRY_COMMIT"*) : ;;
+            *) echo "::error::expected Foundry commit ${FOUNDRY_COMMIT}, got: $ver"; exit 1 ;;
+          esac
+          case "$ver" in
+            *"${FOUNDRY_VERSION#v}"*) : ;;
             *) echo "::error::expected Foundry ${FOUNDRY_VERSION}, got: $ver"; exit 1 ;;
           esac
+          echo "toolchain is exactly foundry ${FOUNDRY_VERSION} @ ${FOUNDRY_COMMIT} (2026-08-12 toolchain refreeze)"
 
       - name: Run all provenance gates and tests
         run: bash tools/provenance/run-all.sh
@@ -95,6 +106,24 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
         with:
           version: ${{ env.FOUNDRY_VERSION }}
+
+      # Probe 12's verdict is toolchain-dependent in the strongest sense: under
+      # v1.0.0 the mixed-case extension is refused outright ("unexpected file
+      # extension") and under v1.5.0 it compiles and executes. This job does not
+      # run verify-pins.sh, so without this step the one probe whose meaning
+      # depends on the toolchain would be the one probe running unasserted.
+      - name: Assert the pinned Foundry toolchain
+        run: |
+          ver="$(forge --version)"
+          echo "$ver"
+          case "$ver" in
+            *"$FOUNDRY_COMMIT"*) : ;;
+            *) echo "::error::expected Foundry commit ${FOUNDRY_COMMIT}, got: $ver"; exit 1 ;;
+          esac
+          case "$ver" in
+            *"${FOUNDRY_VERSION#v}"*) : ;;
+            *) echo "::error::expected Foundry ${FOUNDRY_VERSION}, got: $ver"; exit 1 ;;
+          esac
 
       # Plants unauthorized source outside the census AND outside the declared
       # VUX source roots — contracts/ (Hardhat convention) and lib/ (Foundry's

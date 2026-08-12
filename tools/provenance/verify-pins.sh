@@ -14,6 +14,12 @@ set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/census.sh"
 cd "$REPO_ROOT"
 
+# --- the authority that selects the toolchain -------------------------------
+echo "== toolchain authority =="
+require_authority "$TOOLCHAIN_MD"   "$TOOLCHAIN_MD_SHA256"
+require_authority "$TOOLCHAIN_JSON" "$TOOLCHAIN_JSON_SHA256"
+(( FAILURES == 0 )) && pass "toolchain refreeze authority byte-identical to the accepted values"
+
 # --- pins recorded, full length ---------------------------------------------
 echo "== recorded pins =="
 check_pin() {
@@ -71,13 +77,31 @@ check_compiler() {
 check_compiler "=$SOLC_MAIN_VERSION unit" "$SOLC_MAIN_VERSION" "$SOLC_MAIN_COMMIT" "out"
 check_compiler "=$SOLC_V3_VERSION unit"   "$SOLC_V3_VERSION"   "$SOLC_V3_COMMIT"   "out-v3core"
 
-# Foundry itself is recorded, not bytecode-affecting: every setting that changes
-# the pool's creation code is explicit in foundry.toml and independently proven
-# by the POOL_INIT_CODE_HASH gate. CI installs the pinned release; the running
-# version is reported here so any divergence is visible in the log.
-if command -v forge >/dev/null 2>&1; then
-  info "running forge: $(forge --version 2>/dev/null | head -1)"
-  info "pinned release: foundry $FOUNDRY_TAG @ $FOUNDRY_COMMIT (installed by CI)"
+# --- the Foundry that is actually running -----------------------------------
+# Toolchain identity is part of the evidence chain, not ambient context. This
+# was previously an info() print, on the reasoning that Foundry is an
+# orchestrator rather than a compiler; that reasoning is incomplete. The
+# orchestrator decides what reaches solc and what solc is told: probe 12 of
+# demo-boundary-negative.sh passes under v1.5.0 and hard-fails under v1.0.0
+# ("unexpected file extension"), and an unset evm_version inherits the
+# orchestrator's default into solc's metadata. Which forge ran therefore changes
+# what the evidence means, so a divergence must fail the run rather than scroll
+# past in a log. Ambient PATH version is not evidence.
+#
+# Authority: docs/authority/vux-v1-foundry-v1.5-toolchain-refreeze-2026-08.md §8
+echo
+echo "== running Foundry identity =="
+if ! command -v forge >/dev/null 2>&1; then
+  fail "forge is not on PATH — the authoritative toolchain foundry $FOUNDRY_TAG @ $FOUNDRY_COMMIT cannot be verified"
+else
+  forge_id="$(forge --version 2>/dev/null || true)"
+  if [[ "$forge_id" != *"$FOUNDRY_COMMIT"* ]]; then
+    fail "running Foundry does not self-report the authoritative commit $FOUNDRY_COMMIT (foundry $FOUNDRY_TAG):"$'\n'"$forge_id"
+  elif [[ "$forge_id" != *"${FOUNDRY_TAG#v}"* ]]; then
+    fail "running Foundry reports the authoritative commit but not version $FOUNDRY_TAG:"$'\n'"$forge_id"
+  else
+    pass "running Foundry is foundry $FOUNDRY_TAG @ $FOUNDRY_COMMIT (self-reported)"
+  fi
 fi
 
 # --- short-SHA and mutable-reference detection ------------------------------

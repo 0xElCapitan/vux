@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "delta_date": "2026-08-12",
+  "status": "TOOLCHAIN_REFREEZE_CURRENT_ACCEPTED",
+  "activation": "ACTIVATED_BY_OPERATOR_DECISION_2026-08-12",
+  "scope": "TOOLCHAIN_AUTHORITY_ONLY",
+  "markdown": {
+    "path": "docs/authority/vux-v1-foundry-v1.5-toolchain-refreeze-2026-08.md"
+  },
+  "supersedes_foundry_selection_in": [
+    {
+      "path": "docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md",
+      "sha256": "27aa37ec82fffaea4deb63d5ccd87f66a7e71bad1afa9e7d95d814035e8e3203",
+      "edited_by_this_node": false,
+      "disposition": "current except its Foundry toolchain row, which this delta supersedes"
+    },
+    {
+      "path": "docs/authority/vux-v1-source-registry-oz-v3-refreeze-2026-08.json",
+      "sha256": "db3144135251af34f6bef9da61300a2644c381c4763f2347753657de6afaf4f1",
+      "edited_by_this_node": false,
+      "disposition": "current; its recorded foundry commit is historical from 2026-08-12 forward"
+    },
+    {
+      "path": "grimoires/loa/sdd.md",
+      "edited_by_this_node": true,
+      "sha256_before": "19241ed7db8a89b419e746463c6121f5b77c8237d760829e2f2604536c37392a",
+      "sha256_after": "42785845410c9121af15aa29e18b501548d7d6e6f630f4c0c213ace36fc19cff",
+      "sha256_before_ref": "operator-accepted SDD v1.6.0 content at commit f997c077",
+      "disposition": "historical pin preserved verbatim; superseded-by pointer added in place, positioned after the final row of the 2.1 table so the table renders intact"
+    }
+  ],
+  "toolchain_transition": {
+    "component": "foundry",
+    "repository": "foundry-rs/foundry",
+    "previous": {
+      "tag": "v1.0.0",
+      "commit_sha": "8692e926198056d0228c1e166b1b6c34a5bed66c",
+      "release_published": "2025-01-31"
+    },
+    "current": {
+      "tag": "v1.5.0",
+      "commit_sha": "1c57854462289b2e71ee7654cd6666217ed86ffd",
+      "tag_object_type": "commit",
+      "release_published": "2025-11-24T06:14:42Z",
+      "commit_date": "2025-11-16T19:29:16Z",
+      "prerelease": false,
+      "draft": false
+    },
+    "verification_method": [
+      "github git-ref api refs/tags/v1.5.0 resolved to object.sha",
+      "github releases api tags/v1.5.0 confirmed non-draft non-prerelease",
+      "github commit object confirmed present on foundry-rs/foundry",
+      "official foundryup -i v1.5.0 install with attestation verification",
+      "installed binary self-report of tag and 40-character commit"
+    ],
+    "mutable_reference_used": false
+  },
+  "unchanged": {
+    "solc_main": {
+      "version": "0.8.28",
+      "commit_sha": "7893614a31fbeacd1966994e310ed4f760772658"
+    },
+    "solc_v3core": {
+      "version": "0.7.6",
+      "commit_sha": "7338295feebfb3f044e265d5cf05ef1841b258b1"
+    },
+    "v3core_build_settings": {
+      "optimizer": true,
+      "optimizer_runs": 800,
+      "evm_version": "istanbul",
+      "bytecode_hash": "none"
+    },
+    "pool_init_code_hash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+    "source_reuse_authorization_changed": false,
+    "dependencies_changed": false,
+    "forge_std_introduced": false,
+    "vendored_source_changed": false,
+    "vendored_identity_count": 63,
+    "product_solidity_changed": false,
+    "license_posture": "GPL-3.0-or-later",
+    "protocol_or_economic_parameters_changed": false
+  },
+  "changed_beyond_selection": {
+    "source_admission_surface": {
+      "changed": true,
+      "markdown_section": "4.1",
+      "v1_0_0_behavior": "explicitly imported Solidity sources with an odd extension (.txt) or with no extension are rejected outright: 'Error: unexpected file extension', forge build and forge test both exit 1; the file never reaches solc",
+      "v1_5_0_behavior": "the same sources are accepted: they reach metadata.sources, compile, and a deployed instance executes",
+      "demonstrated": "directly, in an isolated project outside this repository, under each exact toolchain identity",
+      "implication": "the v1.5.0 migration changes the source-admission and therefore the provenance/security surface, even though accepted product executable bytecode is semantically unchanged",
+      "m1_reachable_under_new_toolchain": true,
+      "m1_reachable_form_created_by_this_transition": true,
+      "safe_to_land": true,
+      "safe_to_land_basis": "the current subject contains no unauthorized odd-extension source (77 Solidity files, fully classified, zero unauthorized) and Sprint-3 product Solidity remains blocked until M-1 closure; M-1 additionally requires a deliberate import from inside an authorized root"
+    }
+  },
+  "unrelated_v1_0_0": [
+    {
+      "repository": "Uniswap/v3-core",
+      "tag": "v1.0.0",
+      "commit_sha": "e3589b192d0be27e100cd0daaf6c97204fdb1899",
+      "note": "different upstream project; untouched by this refreeze"
+    }
+  ],
+  "enforcement_surfaces": [
+    "foundry.toml",
+    "tools/provenance/census.sh",
+    "tools/provenance/verify-pins.sh",
+    "tools/provenance/README.md",
+    ".github/workflows/provenance.yml"
+  ],
+  "binding_operational_rule": "Toolchain identity is part of the evidence chain. Every substantive VUX implementation, review, audit, local validation, and CI node MUST verify the exact authoritative Foundry identity before relying on Foundry-dependent evidence. Ambient PATH version is not evidence.",
+  "parity_validation": {
+    "method": "same repository, same accepted solc pins and build settings, Foundry orchestrator varied",
+    "abi_identical": true,
+    "method_identifiers_identical": true,
+    "solc_identity_identical": true,
+    "v3core_pool_creation_bytecode_identical": true,
+    "product_executable_code_identical_metadata_stripped": true,
+    "product_artifact_hash_identical": false,
+    "difference_cause": "solc metadata evmVersion recorded cancun under v1.0.0 and prague under v1.5.0, because foundry.toml [profile.default] deliberately leaves evm_version unset and therefore inherits the Foundry default",
+    "difference_classification": "metadata-only; no opcode change",
+    "digest_convention": "SHA-256 over the artifact's bytecode.object / deployedBytecode.object field taken as its lowercase hex STRING: 0x prefix removed, no trailing newline, hashing the ASCII hex characters and not the decoded bytes. Stripped-code values use the same preimage after removing the trailing n+2 bytes (2*(n+2) hex characters), where n is the big-endian value of the object's final two bytes. Reproduce: jq -r '.bytecode.object' out/VUX.sol/VUX.json | sed 's/^0x//' | tr -d '\\n' | sha256sum",
+    "code_sha256_metadata_stripped": {
+      "VUX.creation": "3f8ffe9ebacd3b5962fbef8aa19e3b8fb00916e356c9bca0773d405691a52fa6",
+      "VUX.deployed": "7377122c247ecc7da63099b3818c1db506c33f71eee2c6dfa8b9429275a32ed2",
+      "HardReserve.creation": "2184162f1cdecde87cbaecd09a0a80429cff48a33baf0fa2909712aca100e105",
+      "HardReserve.deployed": "065241a187cc91b53e174775c387cf6966e76e0d55b567ccd9e606074d804a07"
+    }
+  },
+  "probe_12_status": {
+    "corrected": false,
+    "preserved": true,
+    "v1_0_0_behavior": "forge build and forge test hard-fail with 'unexpected file extension'",
+    "v1_5_0_behavior": "src/CaseReach.SOL present in metadata.sources; deployed instance executed; test PASS",
+    "a1_finding": "UPHELD under authoritative toolchain",
+    "sprint_1_n2": "REMAINS RETRACTED",
+    "red_ci_run": "31573121028",
+    "red_ci_cause": "probe authored from v1.5.0 behavior while CI installed v1.0.0"
+  },
+  "m1_status": {
+    "real_under_v1_5_0": true,
+    "evidence": [
+      "src/Arbitrary.txt imported, present in metadata.sources, executed",
+      "src/NoExtension (no extension) imported, present in metadata.sources, executed"
+    ],
+    "remediated_by_this_node": false,
+    "reachable_form_created_by_this_transition": true,
+    "reachable_form_note": "under the superseded v1.0.0 orchestrator both probes hard-fail with 'unexpected file extension' and never reach solc; the v1.5.0 selection removes that accidental fence (see changed_beyond_selection.source_admission_surface)",
+    "carry_forward": "bounded provenance-hardening node before Sprint-3 product implementation",
+    "carry_forward_disposition": "newly load-bearing rather than inherited; binding pre-Sprint-3 condition, not discharged, narrowed, or deferred by this document"
+  },
+  "carried_forward_obligations": [
+    "M-1 provenance hardening before Sprint-3 product implementation; newly load-bearing because this transition creates M-1's reachable form",
+    "explicit evm_version freeze for [profile.default] at the Sprints 7-8 deployment-bytecode freeze",
+    "red-CI recovery via a forward fix commit; f997c077 and 89a92055 are never amended or force-pushed"
+  ]
+}

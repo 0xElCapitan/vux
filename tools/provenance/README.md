@@ -15,7 +15,7 @@ This is exactly what `.github/workflows/provenance.yml` runs.
 | script | enforces |
 |---|---|
 | `verify-census.sh` | accepted-authority integrity; exact 28 + 32 + 3 census; per-file byte identity (the drift gate); **zero unauthorized Solidity source anywhere in the repository** (default-deny); zero unenumerated files of any type under `vendor/`; excluded surfaces absent repository-wide (refreeze §8) |
-| `verify-pins.sh` | both solc pins recorded at full 40 characters *and* self-reported by the compilers that actually ran; Foundry pin recorded; no mutable upstream reference; no short SHA; every GitHub Action pinned by commit |
+| `verify-pins.sh` | both solc pins recorded at full 40 characters *and* self-reported by the compilers that actually ran; the toolchain refreeze authority byte-identical; the Foundry pin recorded *and* self-reported by the `forge` that is actually running (fail-closed — ambient `PATH` version is not evidence); no mutable upstream reference; no short SHA; every GitHub Action pinned by commit |
 | `verify-spdx.sh` | upstream SPDX retained verbatim on all 63 vendored files; v3-core licence tally 9/22/1; VUX-owned SPDX policy (PROV-8); no invented copyright holder |
 | `verify-notices.sh` | `LICENSE` is GPLv3; `THIRD_PARTY_NOTICES.md` matches its accepted baseline hash and carries the required upstream notices |
 | `verify-quarantine.sh` | PRD §17 research-guidance values never appear as implementation authority |
