@@ -15,6 +15,13 @@ pragma solidity =0.8.28;
 ///         address below is Foundry's well-known cheatcode account,
 ///         `address(uint160(uint256(keccak256("hevm cheat code"))))`.
 interface Vm {
+    /// @dev One emitted log, as returned by `getRecordedLogs`.
+    struct Log {
+        bytes32[] topics;
+        bytes data;
+        address emitter;
+    }
+
     // --- time and block context (Dutch pricing, halving schedule) ---
     function warp(uint256 newTimestamp) external;
     function roll(uint256 newBlockNumber) external;
@@ -35,6 +42,12 @@ interface Vm {
 
     // --- expected events (event-completeness assertions) ---
     function expectEmit(bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData) external;
+    /// @dev `expectEmit` proves an event WAS emitted. Exhaustive claims — "the
+    ///      genesis constructor credited no other address", "no sanitization
+    ///      event fired" — are claims about the COMPLETE log set, which only
+    ///      capture-and-enumerate can support.
+    function recordLogs() external;
+    function getRecordedLogs() external returns (Log[] memory logs);
 
     // --- balances and fixture addresses ---
     function deal(address to, uint256 give) external;
@@ -42,12 +55,25 @@ interface Vm {
     function addr(uint256 privateKey) external pure returns (address);
     function label(address account, string calldata newLabel) external;
 
+    // --- CREATE address prediction ---
+    /// @dev The VUX↔HardReserve immutable references form a 2-cycle, so one edge
+    ///      is always constructed against a predicted address (sdd.md:L157). Test
+    ///      fixtures reproduce that production topology rather than inventing a
+    ///      setter, so they need the same prediction the deployer performs.
+    function getNonce(address account) external view returns (uint64);
+    function computeCreateAddress(address deployer, uint256 nonce) external pure returns (address);
+
     // --- fuzzing ---
     function assume(bool condition) external pure;
 
     // --- filesystem and JSON (build-artifact provenance checks) ---
     function readFile(string calldata path) external view returns (string memory data);
     function parseJsonBytes(string calldata json, string calldata key) external pure returns (bytes memory);
+    /// @dev Object keys at `key`. Over a build artifact's `.methodIdentifiers`
+    ///      this yields the contract's complete external signature set, which is
+    ///      how the structural-absence claims are proven against the compiled
+    ///      ABI rather than against the source text.
+    function parseJsonKeys(string calldata json, string calldata key) external pure returns (string[] memory keys);
 
     // --- formatting (assertion messages) ---
     function toString(uint256 value) external pure returns (string memory);

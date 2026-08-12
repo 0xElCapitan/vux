@@ -23,6 +23,10 @@ env:
   # Accepted toolchain pin (refreeze §6): foundry v1.0.0 →
   # 8692e926198056d0228c1e166b1b6c34a5bed66c
   FOUNDRY_VERSION: v1.0.0
+  # [profile.ci] differs from the default only in fuzz depth (>=10,000 runs,
+  # sdd.md:L853). run-all.sh overrides it explicitly for the vendored =0.7.6
+  # build, whose settings are frozen by the refreeze.
+  FOUNDRY_PROFILE: ci
 
 jobs:
   gates:
@@ -75,16 +79,29 @@ jobs:
         run: git diff --exit-code && git status --porcelain --untracked-files=no
 
   source-boundary-negative-demonstration:
-    name: source boundary fails closed on out-of-root source
+    name: source boundary fails closed on out-of-root and mis-cased source
     runs-on: ubuntu-latest
-    # Needs only git + jq: the source-boundary gates never invoke the compiler.
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
+      # The eleven negative probes need only git + jq — the source-boundary gates
+      # themselves never invoke the compiler. Probe 12 does: it is a POSITIVE
+      # control proving that a mixed-case `.SOL` extension really is
+      # build-reachable, read off solc's own `metadata.sources` plus an executed
+      # deployment rather than off a resolver diagnostic (sprint-2 audit A-1,
+      # which retracts sprint-1 N-2). It builds a throwaway project in a temp
+      # directory, never this checkout, so the restoration assertion below is
+      # unaffected.
+      - uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
       # Plants unauthorized source outside the census AND outside the declared
       # VUX source roots — contracts/ (Hardhat convention) and lib/ (Foundry's
-      # dependency directory) — asserts each gate fails for the boundary reason
-      # rather than by accident, removes every probe, and asserts green again.
+      # dependency directory) — plus mixed-case extensions at the repository
+      # root, in docs/, and inside a pruned Loa zone; asserts each gate fails for
+      # the boundary reason rather than by accident, removes every probe, and
+      # asserts green again.
       - name: Prove the source boundary closes
         run: bash tools/provenance/demo-boundary-negative.sh
 

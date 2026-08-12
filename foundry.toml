@@ -25,12 +25,40 @@ script = "script"
 out = "out"
 libs = []
 solc = "0.8.28"
-# Bytecode-affecting settings for the VUX unit are intentionally NOT frozen
-# here: no accepted authority freezes them, and no VUX contract exists yet
-# (Sprint 1 is provenance only). They are decided when deployable VUX source
-# lands. They cannot affect POOL_INIT_CODE_HASH, which is produced by the
-# separate =0.7.6 unit below.
-fs_permissions = [{ access = "read", path = "./out-v3core" }]
+# Bytecode-affecting settings for the VUX unit remain deliberately unset, and
+# Sprint 2 — the sprint that landed the first deployable VUX source — records
+# that as a decision rather than an omission:
+#
+#   * No accepted authority freezes them, and unlike the =0.7.6 unit below there
+#     is no constant to reproduce, so nothing here is load-bearing for evidence.
+#   * The SDD's gas posture is "correctness-first … no optimization that changes
+#     rounding or ordering semantics" (sdd.md:L274). Enabling the optimizer to
+#     save gas on a monetary core, with no requirement asking for it, is exactly
+#     the trade that posture declines.
+#   * `evm_version` is a property of the deployment chain (an R-14
+#     deployment-time fact), not of this sprint; pinning it here would freeze an
+#     assumption about RH-chain opcode support that nobody has verified.
+#
+# These are revisited when deployment bytecode is frozen (Sprints 7–8), where
+# the chain facts exist. They cannot affect POOL_INIT_CODE_HASH, which is
+# produced by the separate =0.7.6 unit below.
+#
+# Read access to ./out is required by the structural-absence suites, which
+# assert against the compiled ABI and runtime bytecode rather than the source
+# text (test/token/VuxToken.t.sol, test/reserve/HardReserveSurface.t.sol).
+fs_permissions = [
+    { access = "read", path = "./out" },
+    { access = "read", path = "./out-v3core" },
+]
+
+[profile.ci]
+# Inherits everything from [profile.default]; the only difference is fuzz depth.
+# The SDD's testing strategy requires "forge fuzz (>=10,000 runs CI)"
+# (sdd.md:L853) for the property suites carrying the redemption arithmetic.
+# Kept out of the default profile deliberately: a 40x slower local test cycle
+# pushes developers toward running the suite less often, which costs more
+# correctness than the extra depth buys. CI selects it via FOUNDRY_PROFILE.
+fuzz = { runs = 10_000 }
 
 [profile.v3core]
 # Vendored upstream tree only. Nothing VUX-owned compiles in this profile in

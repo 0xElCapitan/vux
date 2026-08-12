@@ -146,30 +146,86 @@ census_all_paths() {
 #   unauthorized  anything else — fails closed
 #
 # Declaring a new source root is therefore a visible, reviewable edit to
-# VUX_SOURCE_ROOTS rather than a silent exemption, and relocating source cannot
-# move it out of any gate's reach. Filesystem enumeration is deliberate: a
-# `git ls-files` scope would let an uncommitted (or gitignored) file escape.
+# VUX_SOURCE_ROOTS rather than a silent exemption, and neither relocating source
+# nor re-casing its extension can move it out of any gate's reach. Filesystem
+# enumeration is deliberate: a `git ls-files` scope would let an uncommitted (or
+# gitignored) file escape.
 VUX_SOURCE_ROOTS=(src test script)
 
-# Excluded from the universe, each because it is not repository source:
-#   .git                                git object store, not a working tree
-#   out out-v3core cache cache-v3core   Foundry build output — note its artifact
-#                                       layout creates DIRECTORIES named "*.sol"
-#   broadcast                           gitignored launch artifacts (sdd.md:L270)
-#   .claude grimoires .beads .run .ck   Loa framework/state zones, never compiled
+# Excluded from the universe, split by WHY — the two classes carry different
+# obligations, so they are no longer one undifferentiated list:
+#
+#   BUILD_ARTIFACT_PRUNE  not working-tree source at all. `.git` is the object
+#                         store; the rest is generated and gitignored. Foundry's
+#                         artifact layout additionally creates DIRECTORIES named
+#                         "*.sol" under out/, which is why they must be pruned.
+#                         Nothing git-trackable lives here, so exclusion is safe
+#                         unconditionally.
+#   LOA_ZONE_PRUNE        Loa framework/state zones, never compiled — but
+#                         git-TRACKABLE. Pruning them for walk cost alone would
+#                         leave a place where a `.sol` file sits unclassified and
+#                         is still pulled into the build by an explicit import
+#                         from a declared VUX root. They are therefore pruned AND
+#                         asserted Solidity-free (`loa_zone_solidity`), so the
+#                         exemption is conditional, not a hole.
+#
 # Nothing else is excluded. `lib/` (Foundry's conventional dependency directory)
 # and `node_modules/` are deliberately IN scope — an unauthorized dependency
 # landing there is exactly the failure this boundary exists to catch.
-SOURCE_UNIVERSE_PRUNE=(.git out out-v3core cache cache-v3core broadcast .claude grimoires .beads .run .ck)
+BUILD_ARTIFACT_PRUNE=(.git out out-v3core cache cache-v3core broadcast)
+LOA_ZONE_PRUNE=(.claude grimoires .beads .run .ck)
+SOURCE_UNIVERSE_PRUNE=("${BUILD_ARTIFACT_PRUNE[@]}" "${LOA_ZONE_PRUNE[@]}")
 
 # Every Solidity file in the working tree: repo-relative, forward-slashed, sorted.
 # Symlinks are included on purpose — a symlinked *.sol is still source a compiler
 # would follow, and `-type f` alone would make it invisible to every gate.
+#
+# Extension matching is case-INSENSITIVE, and that is load-bearing rather than
+# defensive breadth (sprint-2 audit A-1). solc resolves an import through its own
+# filesystem callback against the import string byte-for-byte, so `Foo.SOL` is
+# real compiled source: it appears in the artifact's `metadata.sources`, its code
+# is embedded in the importing contract, and a deployed instance executes it. A
+# case-SENSITIVE walk made this universe narrower than the compiler's actual
+# reach, and every consumer derived from it — default-deny classification
+# (classify_sources), prohibited-source scanning, SPDX, the §17 quarantine —
+# inherited that blind spot, while `loa_zone_solidity` below already matched
+# case-insensitively. One universe definition now governs every consumer on the
+# same terms, so the two can no longer disagree about what counts as Solidity.
+#
+# This retracts the sprint-1 audit's N-2 refutation, which read Foundry's
+# "Unable to resolve imports" warning as proof that `Foo.SOL` was
+# build-unreachable. That warning comes from Foundry's PRE-resolution
+# source-graph walker and is printed in the same run as `Compiler run
+# successful!` — a resolver diagnostic describes the tool's discovery pass, never
+# what compiled. demo-boundary-negative.sh's build-reachability control proves
+# the premise from compiler metadata and execution instead.
 source_universe() {
   local prune=() p
   for p in "${SOURCE_UNIVERSE_PRUNE[@]}"; do prune+=(-path "./$p" -o); done
-  find . \( "${prune[@]}" -false \) -prune -o \( -type f -o -type l \) -name '*.sol' -print 2>/dev/null \
+  find . \( "${prune[@]}" -false \) -prune -o \( -type f -o -type l \) -iname '*.sol' -print 2>/dev/null \
     | sed 's|^\./||; s|\\|/|g' | LC_ALL=C sort
+}
+
+# Every Solidity-shaped file inside a pruned Loa/state zone. Empty is the only
+# acceptable answer, and `verify-census.sh` fails loudly when it is not.
+#
+# Why this exists (sprint-1 audit finding N-1): those zones are git-trackable, so
+# a `.sol` placed in one is invisible to classify_sources — and an out-of-root
+# `.sol` IS compiled and emitted as an artifact when a file inside a declared VUX
+# root imports it explicitly (audit-executed reachability probe). Pruning is kept
+# for walk cost; the assertion is what makes the prune safe.
+#
+# Matching is case-insensitive, as it always was here — this is a "nothing
+# Solidity-shaped lives here" claim, and breadth is free when the only correct
+# answer is zero. The universe walk above now matches on the same terms
+# (sprint-2 audit A-1); previously this assertion was BROADER than the primary
+# boundary it guards, which is the inverse of the intended relationship.
+loa_zone_solidity() {
+  local z present=()
+  for z in "${LOA_ZONE_PRUNE[@]}"; do [[ -d "$REPO_ROOT/$z" ]] && present+=("$z"); done
+  (( ${#present[@]} > 0 )) || return 0
+  ( cd "$REPO_ROOT" && find "${present[@]}" \( -type f -o -type l \) -iname '*.sol' -print 2>/dev/null ) \
+    | sed 's|\\|/|g' | LC_ALL=C sort
 }
 
 # Classify the source universe. Emits "<class>\t<path>", one per line.

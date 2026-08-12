@@ -28,6 +28,7 @@ run_gate "LICENSE and third-party notices"         "$HERE/verify-notices.sh"
 run_gate "PRD §17 research-guidance quarantine"    "$HERE/verify-quarantine.sh"
 run_gate "launch-secret and broadcast hygiene"     "$HERE/verify-launch-hygiene.sh"
 run_gate "POOL_INIT_CODE_HASH reproduction"        "$HERE/verify-init-code-hash.sh"
+run_gate "deployed surface and runtime capability" "$HERE/inspect-runtime-surface.sh"
 
 printf '\n\033[1m──────── test suite ────────\033[0m\n'
 forge test || failed+=("forge test")

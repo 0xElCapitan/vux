@@ -84,6 +84,23 @@ abstract contract BaseTest {
         if (actual == unexpected) fail(string.concat(what, ": expected address other than ", vm.toString(actual)));
     }
 
+    // --- fuzz input shaping ---------------------------------------------------
+
+    /// @dev Map a fuzzed word into `[min, max]`. Input shaping, not assertion
+    ///      loosening — the assertions it feeds stay exact. Preferred over
+    ///      `vm.assume` for wide restrictions, which discards most runs and
+    ///      quietly weakens a suite that claims ≥10,000 effective cases.
+    ///
+    ///      Modulo introduces a mild bias toward the low end of the range; that
+    ///      is accepted deliberately, because the boundary values that matter
+    ///      here (0, 1, `S_MIN`, `S − S_MIN`) are additionally covered by
+    ///      dedicated unit tests rather than left to the fuzzer to stumble onto.
+    function bound(uint256 x, uint256 min, uint256 max) internal pure returns (uint256) {
+        if (min > max) fail("bound: min > max");
+        if (min == 0 && max == type(uint256).max) return x;
+        return min + (x % (max - min + 1));
+    }
+
     // --- ordering -----------------------------------------------------------
 
     function assertLt(uint256 a, uint256 b, string memory what) internal pure {

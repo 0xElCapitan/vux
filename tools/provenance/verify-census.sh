@@ -6,7 +6,8 @@
 #   * exactly 28 + 32 + 3 vendored upstream files exist;
 #   * every one matches its accepted identity byte-for-byte (drift gate);
 #   * zero unauthorized Solidity source exists ANYWHERE in the repository —
-#     default-deny over the whole source universe, not a scanned directory list;
+#     default-deny over the whole source universe, not a scanned directory list,
+#     and independent of extension case (sprint-2 audit A-1);
 #   * zero unenumerated files of any type exist under vendor/;
 #   * the explicitly excluded surfaces (refreeze §8) are absent, detected
 #     repository-wide so relocation cannot bypass them.
@@ -103,6 +104,21 @@ else
   pass "all $expected_census accepted census rows present in the classified source universe"
 fi
 
+# The prune list is the one place a default-deny boundary can still be sidestepped.
+# Build output is generated and gitignored, but the Loa zones are git-trackable,
+# so their exemption is made CONDITIONAL rather than absolute: they stay pruned
+# from the walk (cost), and must contain no Solidity at all. Without this, a .sol
+# committed under grimoires/ or .claude/ would be classified by nobody and still
+# compile once a file in a declared VUX root imported it (sprint-1 audit N-1).
+zone_sol="$(loa_zone_solidity)"
+if [[ -n "$zone_sol" ]]; then
+  while IFS= read -r f; do
+    fail "Solidity inside a pruned Loa/state zone — unclassifiable by the source boundary yet build-reachable via an explicit import from a VUX source root (sprint-1 audit N-1): $f"
+  done <<< "$zone_sol"
+else
+  pass "zero Solidity in the pruned Loa/state zones (${LOA_ZONE_PRUNE[*]}) — the prune stays safe"
+fi
+
 # Extension-agnostic exactness inside vendor/: the classification above covers
 # Solidity everywhere, this covers a file of ANY type smuggled into vendor/.
 if [[ -d vendor ]]; then
@@ -123,7 +139,11 @@ fi
 echo
 echo "== excluded-source detection (refreeze §8, repository-wide) =="
 # UniswapV3Factory.sol: the *interface* is authorized, the implementation is not.
-factory_files="$(printf '%s\n' "$all_sources" | grep -E '(^|/)UniswapV3Factory\.sol$' || true)"
+# Matched case-insensitively for the same reason the source universe is (A-1):
+# this is the one detector below that keys on a FILENAME rather than on content,
+# so a case-sensitive match would still miss `UniswapV3Factory.SOL` sitting
+# inside a declared VUX root — where the default-deny check does not fire.
+factory_files="$(printf '%s\n' "$all_sources" | grep -iE '(^|/)UniswapV3Factory\.sol$' || true)"
 if [[ -n "$factory_files" ]]; then
   fail "UniswapV3Factory.sol implementation present — excluded by refreeze §8:"$'\n'"$factory_files"
 else
