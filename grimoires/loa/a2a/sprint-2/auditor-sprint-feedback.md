@@ -1442,8 +1442,10 @@ the acceptance:** subject digest reproduced `a6313a4d5a8a75f0edf0a68b13adaf4c51f
 audit exit and this acceptance. Lifecycle closure (ledger, index, beads epic)
 was performed **as this node's own action**, downstream of and authorized by
 the acceptance above — see `grimoires/loa/NOTES.md` and
-`grimoires/loa/a2a/index.md` for the closure record, and commit `<pending>`
-for the landing commit.
+`grimoires/loa/a2a/index.md` for the closure record. **Landed on `master` as
+`89a92055`**; the committed tree's 18-file subject was re-hashed from the
+commit object itself (`git show 89a92055:<path>`, not the working tree) and
+its aggregate digest reproduced byte-exactly to the accepted value.
 
 **Scope of this node's actions, mirroring the acceptance's explicit boundary:**
 sprint-2 lifecycle closure (ledger `completed`, index `LANDED_VERIFIED`, beads
