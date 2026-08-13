@@ -39,9 +39,9 @@
         {
           "global_id": 3,
           "local_label": "sprint-3",
-          "status": "planned",
+          "status": "completed",
           "created": "2026-08-10T20:34:27Z",
-          "completed": null
+          "completed": "2026-08-13T20:00:00Z"
         },
         {
           "global_id": 4,
@@ -85,6 +85,6 @@
   "active_bugfix": null,
   "global_sprint_counter": 8,
   "bugfix_cycles": [],
-  "last_updated": "2026-08-12T07:04:22Z",
+  "last_updated": "2026-08-13T20:00:00Z",
   "next_sprint_number": 9
 }

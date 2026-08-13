@@ -25,6 +25,16 @@ interface Vm {
     // --- time and block context (Dutch pricing, halving schedule) ---
     function warp(uint256 newTimestamp) external;
     function roll(uint256 newBlockNumber) external;
+    /// @dev Reads the current timestamp through a call the optimizer cannot fold
+    ///      away. Since Sprint 3 the VUX unit compiles with `via_ir` +
+    ///      `optimizer` (foundry.toml), and `TIMESTAMP` is genuinely invariant
+    ///      within a real transaction — so the optimizer is entitled to evaluate
+    ///      `block.timestamp` once and reuse it. `vm.warp` violates that
+    ///      assumption, which silently breaks any test that reads
+    ///      `block.timestamp` both **before and after** a warp in one frame: both
+    ///      reads collapse to the same value. Use this instead in that shape.
+    ///      A single read per frame is unaffected.
+    function getBlockTimestamp() external view returns (uint256);
 
     // --- caller identity (narrow-authority gate negatives) ---
     function prank(address sender) external;
@@ -48,6 +58,13 @@ interface Vm {
     ///      capture-and-enumerate can support.
     function recordLogs() external;
     function getRecordedLogs() external returns (Log[] memory logs);
+
+    // --- raw storage inspection ---
+    /// @dev FR-5.5 requires that no storage cell anywhere records the unmet
+    ///      `Qraw − Qsafe`. That is a claim about the absence of state, which no
+    ///      getter can demonstrate — a contract without a getter can still hold
+    ///      the value. Reading the slots directly is the only way to assert it.
+    function load(address target, bytes32 slot) external view returns (bytes32);
 
     // --- balances and fixture addresses ---
     function deal(address to, uint256 give) external;
