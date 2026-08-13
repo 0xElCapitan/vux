@@ -13,7 +13,7 @@ description: |
 loa-agent: reviewing-code
 extracted-from: cycle-002 sprint-1 /review-sprint (VUX provenance foundation)
 extraction-date: 2026-08-11
-version: 1.0.0
+version: 1.1.0
 tags:
   - code-review
   - ci-gates
@@ -198,6 +198,42 @@ EXIT=1
 - [ ] Probe removed; `git status --porcelain` diffed pre/post and identical
 - [ ] Suite re-run green on the pristine tree
 - [ ] Finding cites `file:line` of each narrow scan root, not just the symptom
+- [ ] The probe run was **quiescent** — nothing else wrote to the tree (see below)
+
+### The inventory check needs a quiescent tree (added 2026-08-11, cycle-002 sprint-2)
+
+The pre/post `git status --porcelain --untracked-files=all` hash is what makes
+"the probe left nothing behind" a fact rather than a hope. It also compares the
+*whole* working tree, so **anything** writing during the run trips it:
+
+```
+FAIL  working-tree inventory changed: e23c5f46… -> 43fee96a…
+  ok    probe root ./contracts removed
+  ok    probe root ./lib removed
+  ok    grimoires/loa/boundary-probe-zone.sol removed
+```
+
+Observed live while the demonstration ran in the background and an editor was
+concurrently writing `NOTES.md`. Every probe artifact was correctly removed; the
+inventory line was reporting the editor's write.
+
+The check is behaving correctly, and the resolution rule matters more than the
+cause, because the two readings are asymmetric:
+
+- Reading a real leftover as "just concurrency" leaves dirt in the tree and a
+  false claim in the report.
+- Reading concurrency as a real leftover costs one re-run.
+
+So: **never dismiss an inventory mismatch by explanation — resolve it by a
+controlled re-run** with nothing else touching the tree, and record the hash from
+*that* run. If the second run also mismatches, it is real. When the run is long
+(a whole-tree walk per gate ×N probes), start it and then stop editing; a fence
+demonstration is not something to multitask against.
+
+Optional hardening if this recurs: scope the inventory to the probe roots plus
+the gates' own inputs rather than the whole tree. Not done here on purpose — a
+whole-tree comparison is the only version that catches a probe writing somewhere
+nobody predicted, which is precisely the class this technique exists to find.
 
 ---
 
@@ -265,6 +301,7 @@ find vendor contracts -type f
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0.0 | 2026-08-11 | Initial extraction from cycle-002 sprint-1 review |
+| 1.1.0 | 2026-08-11 | Added the quiescent-tree requirement for the pre/post inventory check (cycle-002 sprint-2: a concurrent editor write tripped it while every probe artifact was correctly removed) |
 
 ---
 
