@@ -14,12 +14,29 @@
 # evidence that a mixed-case extension really is build-reachable, so the negative
 # probes cannot degrade into asserting that the gate catches something harmless.
 #
+# Probe 13 is the standing isolating probe for the case-insensitive
+# `UniswapV3Factory` FILENAME detector (sprint-2 audit L-4): planted inside a
+# declared VUX root so default-deny cannot fire, leaving that one detector as the
+# only thing that can catch it — and the absence of the default-deny reason is
+# asserted, not assumed.
+#
+# Probes 14-16 close the naming axis that no filename predicate can reach
+# (sprint-2 audit M-1, escalated by Foundry v1.5.0 refreeze §4.1): Solidity whose
+# name is `.txt` or has no extension at all, imported from a declared VUX root.
+# Under the accepted v1.5.0 toolchain these are admitted, compiled and executable
+# while the extension-keyed walk cannot see them. Each carries its own POSITIVE
+# control taken from `metadata.sources` — the compiler's own record of what it
+# compiled — so the catch is never asserted against a premise that did not hold.
+#
 # Every probe is planted, proven to fail for the RIGHT reason (not merely to
 # fail), removed, and the gate proven green again — the same fence-closes-and-
-# reopens discipline that makes the drift demonstration trustworthy. Probe roots
-# are removed unconditionally via a trap and the working-tree inventory is
-# compared before and after, so the tree is never left dirty even if the run is
-# interrupted.
+# reopens discipline that makes the drift demonstration trustworthy. Reason
+# matching is anchored on `^FAIL` (sprint-2 audit L-3): unanchored, a reason can
+# be satisfied by the gate's own `ok` lines, which degrades a probe into
+# "something failed". The baseline control proves that anchoring is load-bearing
+# by running every matcher against a GREEN gate. Probe roots are removed
+# unconditionally via a trap and the working-tree inventory is compared before
+# and after, so the tree is never left dirty even if the run is interrupted.
 #
 # Usage: tools/provenance/demo-boundary-negative.sh
 #
@@ -51,9 +68,36 @@ CASE_PROBES=(
   "grimoires/loa/boundary-probe-zone-case.sOl"
 )
 
+# Probe 13 (audit L-4) isolates the `UniswapV3Factory` filename detector by
+# planting INSIDE a declared VUX root, where default-deny cannot fire. The
+# mixed-case extension is deliberate: that detector is the one check that keys on
+# a filename rather than on content, so the case axis is exactly where it is
+# weakest.
+FACTORY_PROBE="test/UniswapV3Factory.SOL"
+
+# Probes 14-16 (audit M-1). The payload names are not Solidity names, so nothing
+# but the compiler can put them in the source universe — which is why these are
+# the only probes that must REBUILD to take effect. The importer lives in a
+# declared VUX root because that is the only place an import can originate from.
+COMPILED_IMPORTER="test/BoundaryProbeImporter.sol"
+COMPILED_IMPORTER_ARTIFACT="out/BoundaryProbeImporter.sol"
+COMPILED_PAYLOADS=(
+  "docs/boundary-probe-payload.txt"
+  "docs/boundary-probe-payload-noext"
+  "test/boundary-probe-prohibited.txt"
+)
+
 # Throwaway Foundry project for the probe-12 control, created OUTSIDE the
 # repository so a compiler invocation cannot perturb the working-tree inventory.
 SCRATCH=""
+
+# The gates now assert compiler-admitted source evidence, and probes 12/14-16 are
+# compiler-grounded, so the toolchain is a hard precondition rather than a
+# per-probe convenience.
+if ! command -v forge >/dev/null 2>&1; then
+  echo "refusing to run: forge is not on PATH — the compiler-admitted half of the source universe cannot be produced or probed" >&2
+  exit 2
+fi
 
 for r in "${PROBE_ROOTS[@]}"; do
   if [[ -e "$r" ]]; then
@@ -61,7 +105,7 @@ for r in "${PROBE_ROOTS[@]}"; do
     exit 2
   fi
 done
-for f in "$ZONE_PROBE" "${CASE_PROBES[@]}"; do
+for f in "$ZONE_PROBE" "${CASE_PROBES[@]}" "$FACTORY_PROBE" "$COMPILED_IMPORTER" "${COMPILED_PAYLOADS[@]}"; do
   if [[ -e "$f" ]]; then
     echo "refusing to run: $f already exists — this script would delete it" >&2
     exit 2
@@ -71,9 +115,14 @@ done
 cleanup() {
   local r f
   for r in "${PROBE_ROOTS[@]}"; do rm -rf "./${r:?}"; done
-  rm -f "./${ZONE_PROBE:?}"
-  for f in "${CASE_PROBES[@]}"; do rm -f "./${f:?}"; done
+  rm -f "./${ZONE_PROBE:?}" "./${FACTORY_PROBE:?}" "./${COMPILED_IMPORTER:?}"
+  for f in "${CASE_PROBES[@]}" "${COMPILED_PAYLOADS[@]}"; do rm -f "./${f:?}"; done
+  # The importer's artifact is the only place a probe payload is recorded as
+  # compiled source, so removing it is what takes the payload back out of the
+  # universe — without this an interrupted run would leave the gate red.
+  rm -rf "./${COMPILED_IMPORTER_ARTIFACT:?}"
   [[ -n "$SCRATCH" ]] && rm -rf "$SCRATCH"
+  rm -f "${BUILD_LOG:-}"
   return 0
 }
 trap cleanup EXIT
@@ -85,22 +134,47 @@ note() { printf '\n\033[1m── %s\033[0m\n' "$*"; }
 ok()   { printf '  ok    %s\n' "$*"; }
 bad()  { printf '  FAIL  %s\n' "$*" >&2; status=1; }
 
+# Does gate output carry this reason ON A FAILURE LINE?
+#
+# The `^FAIL` anchor is the whole point (sprint-2 audit L-3). Unanchored, a
+# reason regex is matched against the gate's *entire* output, which contains its
+# `ok` lines too — `ok  zero unauthorized Solidity source …` satisfies
+# /unauthorized Solidity source/, and `ok  zero Solidity in the pruned Loa/state
+# zones …` satisfies /pruned Loa\/state zone/. Five of the eleven probes
+# therefore degraded to "the gate failed for SOME reason", which is exactly the
+# attribution error the standing suite exists to prevent. census.sh's fail()
+# writes `FAIL  <reason>` at column 0 (colour is disabled when stdout is not a
+# tty, which is always the case under command substitution), so the anchor is
+# stable. The baseline control below proves the anchor is load-bearing rather
+# than decorative.
+reason_matches() { printf '%s\n' "$1" | grep -E '^FAIL' | grep -qE "$2"; }
+
 # Run a gate, require it to FAIL, and require the failure to be the boundary
 # violation rather than a broken probe setup.
+#
+# The optional 4th argument is a reason that must NOT appear: an isolating probe
+# proves which detector fired by asserting the absence of the others, not by
+# assuming it (`prove-which-fence-caught-it`).
 expect_fail() {
-  local gate="$1" reason="$2" label="$3" out rc
+  local gate="$1" reason="$2" label="$3" not_reason="${4:-}" out rc
   out="$(bash "$HERE/$gate" 2>&1)"; rc=$?
   if (( rc == 0 )); then
     bad "$gate PASSED with the probe present — the fence is open [$label]"
     return
   fi
-  if ! printf '%s\n' "$out" | grep -qE "$reason"; then
-    bad "$gate failed (exit $rc) but not for the boundary reason [$label]; expected /$reason/, got:"
-    printf '%s\n' "$out" | grep -E 'FAIL' | head -4 >&2
+  if ! reason_matches "$out" "$reason"; then
+    bad "$gate failed (exit $rc) but not for the boundary reason [$label]; expected /$reason/ on a FAIL line, got:"
+    printf '%s\n' "$out" | grep -E '^FAIL' | head -4 >&2
+    return
+  fi
+  if [[ -n "$not_reason" ]] && reason_matches "$out" "$not_reason"; then
+    bad "$gate ALSO failed for /$not_reason/ [$label] — the probe is not isolating the intended detector"
+    printf '%s\n' "$out" | grep -E '^FAIL' | head -4 >&2
     return
   fi
   ok "$gate failed closed for the right reason [$label] (exit $rc)"
-  printf '%s\n' "$out" | grep -E "$reason" | head -2 | cut -c1-150 | sed 's/^/          /'
+  [[ -n "$not_reason" ]] && printf '          isolated: no FAIL line matches /%s/\n' "$not_reason"
+  printf '%s\n' "$out" | grep -E '^FAIL' | grep -E "$reason" | head -2 | cut -c1-150 | sed 's/^/          /'
 }
 
 expect_green() {
@@ -115,8 +189,41 @@ expect_green() {
 unplant() {
   local r f
   for r in "${PROBE_ROOTS[@]}"; do rm -rf "./${r:?}"; done
-  rm -f "./${ZONE_PROBE:?}"
-  for f in "${CASE_PROBES[@]}"; do rm -f "./${f:?}"; done
+  rm -f "./${ZONE_PROBE:?}" "./${FACTORY_PROBE:?}" "./${COMPILED_IMPORTER:?}"
+  for f in "${CASE_PROBES[@]}" "${COMPILED_PAYLOADS[@]}"; do rm -f "./${f:?}"; done
+}
+
+BUILD_LOG="$(mktemp)"
+
+# Recompile the =0.8.28 unit. Probes 14-16 change the compilation GRAPH, and the
+# compiler-admitted half of the source universe is read from build artifacts, so
+# a probe that is not compiled has not been planted in any meaningful sense.
+# The importer's artifact directory is removed first so a payload cannot survive
+# in a stale artifact after its source is gone.
+rebuild() {
+  local label="$1"
+  rm -rf "./${COMPILED_IMPORTER_ARTIFACT:?}"
+  if forge build >"$BUILD_LOG" 2>&1; then
+    return 0
+  fi
+  bad "forge build failed [$label] — the compiler-admitted probe could not be established"
+  tail -5 "$BUILD_LOG" | sed 's/^/          /' >&2
+  return 1
+}
+
+# The importer artifact's own `metadata.sources` is the compiler's record of what
+# it compiled — the positive control for probes 14-16, and the only oracle that
+# is authoritative here. Neither a resolver diagnostic nor the presence of an
+# emitted artifact directory is evidence of admission (sprint-2 audit §8.1).
+assert_compiled() {
+  local payload="$1" label="$2" artifact="$COMPILED_IMPORTER_ARTIFACT/BoundaryProbeImporter.json" sources
+  sources="$(jq -r '.metadata.sources | keys[]' "$artifact" 2>/dev/null | tr -d '\r' || true)"
+  if printf '%s\n' "$sources" | grep -qxF "$payload"; then
+    ok "POSITIVE control: solc recorded $payload in metadata.sources — the toolchain admitted it as source [$label]"
+  else
+    bad "$payload is absent from metadata.sources [$label] — the premise behind this probe did not hold"
+    printf '%s\n' "$sources" | sed 's/^/          /' >&2
+  fi
 }
 
 # Minimal, syntactically valid Solidity. Probes must fail the gate on provenance
@@ -132,7 +239,35 @@ plant_sol() {
   } > "$path"
 }
 
+# Every expected-failure reason this demonstration matches on, in one place so
+# the baseline control can prove none of them is satisfiable by a passing gate.
+REASONS=(
+  'unauthorized Solidity source'
+  'unauthorized compiler-admitted source'
+  'pruned Loa/state zone'
+  'prohibited-source reference'
+  'UniswapV3Factory\.sol implementation present'
+  'v3-periphery code use detected'
+  'declares SPDX'
+  'guidance value present as implementation authority'
+)
+
 # --- baseline ---------------------------------------------------------------
+# Both compilation units are built first: the source universe now includes what
+# the compiler admitted, and verify-census.sh fails closed when a unit has
+# produced no artifacts at all.
+note "baseline — compile both units so the gates have compiler-admitted source evidence"
+if FOUNDRY_PROFILE=v3core forge build >"$BUILD_LOG" 2>&1; then
+  ok "vendored =0.7.6 unit built"
+else
+  bad "the =0.7.6 unit failed to build"; tail -5 "$BUILD_LOG" | sed 's/^/          /' >&2
+fi
+if forge build >"$BUILD_LOG" 2>&1; then
+  ok "=0.8.28 unit built"
+else
+  bad "the =0.8.28 unit failed to build"; tail -5 "$BUILD_LOG" | sed 's/^/          /' >&2
+fi
+
 note "baseline — every gate this demonstration exercises must be green first"
 for g in verify-census.sh verify-spdx.sh verify-quarantine.sh; do
   if bash "$HERE/$g" >/dev/null 2>&1; then ok "$g green before any probe"; else bad "$g is already red"; fi
@@ -140,6 +275,30 @@ done
 if (( status != 0 )); then
   echo "aborting: baseline is not green, so nothing could be demonstrated." >&2
   exit 1
+fi
+
+# --- baseline control — the reason matchers are not satisfiable by a PASS ----
+# A probe that matches its reason anywhere in gate output proves only that the
+# gate failed, not that it failed for the reason claimed (sprint-2 audit L-3).
+# This runs every matcher against the concatenated output of all three GREEN
+# gates: none may match on a `^FAIL` line, because a green gate emits none. The
+# count of matchers that WOULD match unanchored is what makes the anchor
+# load-bearing — remove the anchor from reason_matches() and this control fails.
+note "baseline control — no reason matcher may be satisfied by a green gate (audit L-3)"
+green_out="$( { bash "$HERE/verify-census.sh"; bash "$HERE/verify-spdx.sh"; bash "$HERE/verify-quarantine.sh"; } 2>&1 )"
+control_failures=0
+unanchored_hits=0
+for r in "${REASONS[@]}"; do
+  if reason_matches "$green_out" "$r"; then
+    bad "reason /$r/ is satisfied by a PASSING gate — a probe using it would report a false catch"
+    control_failures=$((control_failures + 1))
+  elif printf '%s\n' "$green_out" | grep -qE "$r"; then
+    unanchored_hits=$((unanchored_hits + 1))
+  fi
+done
+if (( control_failures == 0 )); then
+  ok "none of the ${#REASONS[@]} reason matchers is satisfiable by a green gate"
+  printf '          %d of them WOULD match unanchored — the ^FAIL anchor is load-bearing, not decorative\n' "$unanchored_hits"
 fi
 
 # An authorized donor: with the census gate green above, every file under
@@ -372,6 +531,89 @@ SOLFILE
   rm -rf "$SCRATCH"; SCRATCH=""
 fi
 
+# --- probe 13 — the filename detector, isolated (sprint-2 audit L-4) ---------
+# `UniswapV3Factory.sol` is the one refreeze §8 detector that keys on a FILENAME
+# rather than on content, and it was the single line changed by the A-1
+# remediation with no standing probe of its own: probes 2 and 11 both fire
+# default-deny at the same time, so neither can attribute a catch to it. This one
+# is planted INSIDE a declared VUX source root, where default-deny cannot fire by
+# construction — and the absence of the default-deny reason is asserted, so a
+# future regression that silently drops `-iE` cannot hide behind another gate's
+# failure.
+note "probe 13 — refreeze §8 filename detector, isolated inside a declared VUX root (.SOL)"
+plant_sol "$FACTORY_PROBE" 'contract FactoryDetectorProbe { function drain(address to) external {} }'
+echo "  planted: $FACTORY_PROBE  (declared VUX root — default-deny is structurally silent here)"
+expect_fail verify-census.sh 'UniswapV3Factory\.sol implementation present' "filename detector, isolated" 'unauthorized Solidity source'
+unplant
+expect_green verify-census.sh
+
+# --- probes 14-16 — the axis no filename predicate can reach (audit M-1) -----
+# Probes 8-11 proved the gates see a case-VARIANT of the Solidity extension.
+# These prove they see source that is not named like Solidity at all. Under the
+# accepted Foundry v1.5.0 toolchain an imported `.txt` or extensionless file
+# reaches solc, is recorded in `metadata.sources`, is embedded in the importing
+# contract and executes — while `find -iname '*.sol'` returns nothing for it.
+# (Under the superseded v1.0.0 orchestrator the same import was refused with
+# "unexpected file extension", which is why the refreeze escalated M-1 from
+# inherited to newly load-bearing.) Widening the extension list would only move
+# the boundary to the next unenumerated name, so the universe now also contains
+# what the compiler says it compiled, and these probes exercise that half.
+#
+# Each probe rebuilds — the compiler is what admits the payload, so a probe that
+# is not compiled has not been planted — and each asserts the compiler's own
+# record of admission before asserting the catch.
+note "probe 14 — Solidity in a .txt file, imported from a declared VUX root"
+plant_sol "${COMPILED_PAYLOADS[0]}" 'contract BoundaryProbeTxtPayload { function drain(address to) external {} }'
+plant_sol "$COMPILED_IMPORTER" 'import "../docs/boundary-probe-payload.txt";
+
+contract BoundaryProbeImporter {
+    function reach() external returns (address) { return address(new BoundaryProbeTxtPayload()); }
+}'
+echo "  planted: ${COMPILED_PAYLOADS[0]}  (invisible to the Solidity filename walk) + $COMPILED_IMPORTER"
+if rebuild "probe 14"; then
+  assert_compiled "${COMPILED_PAYLOADS[0]}" "probe 14"
+  expect_fail verify-census.sh 'unauthorized compiler-admitted source' "imported .txt payload" 'unauthorized Solidity source'
+fi
+unplant
+rebuild "probe 14 restore" && expect_green verify-census.sh
+
+note "probe 15 — Solidity in an EXTENSIONLESS file, imported from a declared VUX root"
+plant_sol "${COMPILED_PAYLOADS[1]}" 'contract BoundaryProbeNoExtPayload { function drain(address to) external {} }'
+plant_sol "$COMPILED_IMPORTER" 'import "../docs/boundary-probe-payload-noext";
+
+contract BoundaryProbeImporter {
+    function reach() external returns (address) { return address(new BoundaryProbeNoExtPayload()); }
+}'
+echo "  planted: ${COMPILED_PAYLOADS[1]}  (no extension at all) + $COMPILED_IMPORTER"
+if rebuild "probe 15"; then
+  assert_compiled "${COMPILED_PAYLOADS[1]}" "probe 15"
+  expect_fail verify-census.sh 'unauthorized compiler-admitted source' "imported extensionless payload" 'unauthorized Solidity source'
+fi
+unplant
+rebuild "probe 15 restore" && expect_green verify-census.sh
+
+# The default-deny catch alone would not prove the CONSUMERS of the universe
+# recovered — the prohibited-source scan is a separate grep over the same list.
+# This payload sits inside a declared VUX root, so default-deny is silent and the
+# content scan is the only detector that can fire. It reproduces the exact shape
+# the sprint-2 audit demonstrated at §8: a `.txt` carrying all three prohibited
+# source names, passing every gate green.
+note "probe 16 — prohibited-source names inside a compiler-admitted .txt in a declared VUX root"
+plant_sol "${COMPILED_PAYLOADS[2]}" '// adapted from Olympus, gumball6900, and give.fun
+contract BoundaryProbeProhibitedPayload {}'
+plant_sol "$COMPILED_IMPORTER" 'import "./boundary-probe-prohibited.txt";
+
+contract BoundaryProbeImporter {
+    function reach() external returns (address) { return address(new BoundaryProbeProhibitedPayload()); }
+}'
+echo "  planted: ${COMPILED_PAYLOADS[2]}  (Olympus / gumball6900 / give.fun) + $COMPILED_IMPORTER"
+if rebuild "probe 16"; then
+  assert_compiled "${COMPILED_PAYLOADS[2]}" "probe 16"
+  expect_fail verify-census.sh 'prohibited-source reference' "prohibited names, compiler-admitted .txt" 'unauthorized compiler-admitted source'
+fi
+unplant
+rebuild "probe 16 restore" && expect_green verify-census.sh
+
 # --- restoration ------------------------------------------------------------
 note "restoration"
 cleanup
@@ -385,16 +627,22 @@ fi
 for r in "${PROBE_ROOTS[@]}"; do
   if [[ -e "$r" ]]; then bad "probe root ./$r survived cleanup"; else ok "probe root ./$r removed"; fi
 done
-if [[ -e "$ZONE_PROBE" ]]; then bad "$ZONE_PROBE survived cleanup"; else ok "$ZONE_PROBE removed"; fi
-for f in "${CASE_PROBES[@]}"; do
+for f in "$ZONE_PROBE" "$FACTORY_PROBE" "$COMPILED_IMPORTER" "${CASE_PROBES[@]}" "${COMPILED_PAYLOADS[@]}"; do
   if [[ -e "$f" ]]; then bad "$f survived cleanup"; else ok "$f removed"; fi
 done
+# A payload lives on in the compiled half of the universe until its importer's
+# artifact is gone, so artifact removal is part of restoration, not housekeeping.
+if [[ -e "$COMPILED_IMPORTER_ARTIFACT" ]]; then
+  bad "$COMPILED_IMPORTER_ARTIFACT survived cleanup — a probe payload would still be recorded as compiled source"
+else
+  ok "$COMPILED_IMPORTER_ARTIFACT removed"
+fi
 if [[ -n "$SCRATCH" && -e "$SCRATCH" ]]; then bad "throwaway project $SCRATCH survived cleanup"; else ok "throwaway build project removed"; fi
 for g in verify-census.sh verify-spdx.sh verify-quarantine.sh; do expect_green "$g"; done
 
 printf '\n'
 if (( status == 0 )); then
-  printf '\033[32mSource-boundary fence proven closed on all 11 probes and reopened; mixed-case build-reachability proven from compiler evidence.\033[0m\n'
+  printf '\033[32mSource-boundary fence proven closed on all 15 negative probes and reopened; mixed-case and non-Solidity-name build-reachability proven from compiler evidence.\033[0m\n'
 else
   printf '\033[31mSource-boundary demonstration FAILED.\033[0m\n' >&2
 fi

@@ -90,19 +90,19 @@ jobs:
         run: git diff --exit-code && git status --porcelain --untracked-files=no
 
   source-boundary-negative-demonstration:
-    name: source boundary fails closed on out-of-root and mis-cased source
+    name: source boundary fails closed on out-of-root, mis-cased and non-Solidity-named source
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
-      # The eleven negative probes need only git + jq — the source-boundary gates
-      # themselves never invoke the compiler. Probe 12 does: it is a POSITIVE
-      # control proving that a mixed-case `.SOL` extension really is
-      # build-reachable, read off solc's own `metadata.sources` plus an executed
-      # deployment rather than off a resolver diagnostic (sprint-2 audit A-1,
-      # which retracts sprint-1 N-2). It builds a throwaway project in a temp
-      # directory, never this checkout, so the restoration assertion below is
-      # unaffected.
+      # The toolchain is a hard requirement for this job, not a convenience. The
+      # source universe now includes what the compiler admitted — read from both
+      # units' build artifacts, extension-independently (sprint-2 audit M-1) —
+      # so the demonstration builds the repository at baseline and again around
+      # probes 14-16, whose payloads (`.txt`, extensionless) enter the universe
+      # only because solc compiled them. Probe 12 additionally builds a throwaway
+      # project in a temp directory, never this checkout, so the restoration
+      # assertion below is unaffected.
       - uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
         with:
           version: ${{ env.FOUNDRY_VERSION }}
@@ -128,9 +128,10 @@ jobs:
       # Plants unauthorized source outside the census AND outside the declared
       # VUX source roots — contracts/ (Hardhat convention) and lib/ (Foundry's
       # dependency directory) — plus mixed-case extensions at the repository
-      # root, in docs/, and inside a pruned Loa zone; asserts each gate fails for
-      # the boundary reason rather than by accident, removes every probe, and
-      # asserts green again.
+      # root, in docs/, and inside a pruned Loa zone, plus Solidity named `.txt`
+      # and with no extension at all, imported from a declared VUX root; asserts
+      # each gate fails for the boundary reason on a `^FAIL` line rather than by
+      # accident, removes every probe, and asserts green again.
       - name: Prove the source boundary closes
         run: bash tools/provenance/demo-boundary-negative.sh
 

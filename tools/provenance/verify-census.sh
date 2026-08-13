@@ -5,9 +5,14 @@
 #   * the accepted authority artifacts are themselves unmutated;
 #   * exactly 28 + 32 + 3 vendored upstream files exist;
 #   * every one matches its accepted identity byte-for-byte (drift gate);
-#   * zero unauthorized Solidity source exists ANYWHERE in the repository —
-#     default-deny over the whole source universe, not a scanned directory list,
-#     and independent of extension case (sprint-2 audit A-1);
+#   * zero unauthorized source exists ANYWHERE in the repository — default-deny
+#     over the whole source universe, not a scanned directory list, independent
+#     of extension case (sprint-2 audit A-1) and independent of the filename
+#     altogether for anything the accepted toolchain actually compiled
+#     (sprint-2 audit M-1);
+#   * both declared compilation units have produced compiler-admitted source
+#     evidence, so the extension-independent half of the universe cannot
+#     silently degrade to empty;
 #   * zero unenumerated files of any type exist under vendor/;
 #   * the explicitly excluded surfaces (refreeze §8) are absent, detected
 #     repository-wide so relocation cannot bypass them.
@@ -72,27 +77,62 @@ verify_family sha256 < <(census_v3)
 verify_family blob   < <(census_miner)
 (( drift > 0 )) || pass "$checked/$checked vendored files byte-identical to accepted identities"
 
+# --- compiler-admitted source evidence (the extension-independent half) -----
+# The universe's second half is only evidence if the compiler actually produced
+# it. An absent or partial build would silently shrink the universe back to the
+# filename predicate M-1 is about, so a unit with no artifacts is a FAILURE here
+# rather than an empty contribution.
+echo
+echo "== compiler-admitted source evidence =="
+compiled_default="$(compiled_sources out)"
+compiled_v3core="$(compiled_sources out-v3core)"
+count_lines() { printf '%s\n' "$1" | sed '/^$/d' | wc -l | tr -d ' '; }
+n_compiled_default="$(count_lines "$compiled_default")"
+n_compiled_v3core="$(count_lines "$compiled_v3core")"
+for unit in "out:$n_compiled_default:[profile.default]" "out-v3core:$n_compiled_v3core:[profile.v3core]"; do
+  d="${unit%%:*}"; rest="${unit#*:}"; n="${rest%%:*}"; profile="${rest#*:}"
+  if [[ "$n" == "0" ]]; then
+    fail "no compiler-admitted source evidence under $d/ — the $profile unit has not been built, so the extension-independent half of the source universe is empty. Build both units first (tools/provenance/run-all.sh does this)."
+  else
+    pass "$profile: $n source(s) recorded by the compiler in $d/"
+  fi
+done
+compiled_all="$(printf '%s\n%s\n' "$compiled_default" "$compiled_v3core" | sed '/^$/d' | LC_ALL=C sort -u)"
+
 # --- default-deny over the whole repository source universe -----------------
-# The census defends itself: every Solidity file in the working tree must be
-# either an enumerated census row or inside a declared VUX source root. A file
-# in any other location fails, so unauthorized source cannot escape by choosing
-# a directory no detector happens to scan.
+# The census defends itself: every file in the source universe must be either an
+# enumerated census row or inside a declared VUX source root. A file in any
+# other location fails, so unauthorized source cannot escape by choosing a
+# directory no detector happens to scan — nor by choosing a name no detector
+# recognises, since the universe includes everything the compiler compiled.
 echo
 echo "== repository source boundary (default-deny) =="
 classified="$(classify_sources)"
+walked="$(filesystem_sol_sources)"
 all_sources="$(printf '%s\n' "$classified" | cut -f2 | sed '/^$/d')"
 unauthorized="$(printf '%s\n' "$classified" | awk -F'\t' '$1 == "unauthorized" { print $2 }')"
-n_total="$(printf '%s\n' "$all_sources" | sed '/^$/d' | wc -l | tr -d ' ')"
+n_total="$(count_lines "$all_sources")"
+n_walked="$(count_lines "$walked")"
+n_compiled="$(count_lines "$compiled_all")"
+n_compiled_only="$(LC_ALL=C comm -13 <(printf '%s\n' "$walked") <(printf '%s\n' "$compiled_all") | sed '/^$/d' | wc -l | tr -d ' ')"
 n_vendored="$(printf '%s\n' "$classified" | awk -F'\t' '$1 == "vendored"' | wc -l | tr -d ' ')"
 n_vux="$(printf '%s\n' "$classified" | awk -F'\t' '$1 == "vux"' | wc -l | tr -d ' ')"
-info "source universe: $n_total Solidity file(s) — $n_vendored vendored (census), $n_vux VUX-owned (roots: ${VUX_SOURCE_ROOTS[*]})"
+info "source universe: $n_total file(s) — $n_vendored vendored (census), $n_vux VUX-owned (roots: ${VUX_SOURCE_ROOTS[*]})"
+info "  evidence: $n_walked from the Solidity filename walk, $n_compiled compiler-admitted, $n_compiled_only reachable ONLY through the compiler"
 
+# Which half admitted a violator is reported explicitly, because the two carry
+# different meanings: the walk catches a file that merely EXISTS, the compiler
+# half catches one that is already IN A BUILD regardless of what it is called.
 if [[ -n "$unauthorized" ]]; then
   while IFS= read -r f; do
-    fail "unauthorized Solidity source — neither an accepted census row nor inside a declared VUX source root (${VUX_SOURCE_ROOTS[*]}): $f"
+    if printf '%s\n' "$walked" | grep -qxF "$f"; then
+      fail "unauthorized Solidity source — neither an accepted census row nor inside a declared VUX source root (${VUX_SOURCE_ROOTS[*]}): $f"
+    else
+      fail "unauthorized compiler-admitted source — the accepted toolchain compiled this file, yet it is neither an accepted census row nor inside a declared VUX source root (${VUX_SOURCE_ROOTS[*]}); its filename kept it out of the Solidity walk (sprint-2 audit M-1): $f"
+    fi
   done <<< "$unauthorized"
 else
-  pass "zero unauthorized Solidity source anywhere in the repository ($n_total file(s) classified)"
+  pass "zero unauthorized source in the classified universe ($n_total file(s) classified)"
 fi
 
 # The walk must SEE the whole census, or a pruning bug would hide vendor/ and

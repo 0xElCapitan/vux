@@ -31,6 +31,25 @@ OFFSET="$(( SIZE / 2 ))"
 echo "target        : $TARGET"
 echo "original sha  : $ORIGINAL_SHA"
 
+# The gate's source universe now includes what the compiler admitted, read from
+# both units' build artifacts, and it fails closed when a unit has produced none
+# (sprint-2 audit M-1). Building here keeps this demonstration self-contained:
+# the drift gate is `verify-census.sh`, so its preconditions are this script's
+# preconditions.
+if ! command -v forge >/dev/null 2>&1; then
+  echo "FAIL: forge is not on PATH — the drift gate's compiler-admitted source evidence cannot be produced." >&2
+  exit 2
+fi
+BUILD_LOG="$(mktemp)"
+if ! { FOUNDRY_PROFILE=v3core forge build && forge build; } >"$BUILD_LOG" 2>&1; then
+  echo "FAIL: could not build both compilation units — nothing demonstrated." >&2
+  tail -5 "$BUILD_LOG" >&2
+  rm -f "$BUILD_LOG"
+  exit 1
+fi
+rm -f "$BUILD_LOG"
+echo "build         : both compilation units built"
+
 # Baseline: the gate must be green before the mutation, or the demonstration
 # proves nothing.
 if ! bash "$HERE/verify-census.sh" >/dev/null 2>&1; then

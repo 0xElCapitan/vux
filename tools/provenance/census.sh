@@ -147,18 +147,24 @@ census_all_paths() {
 #
 # The gates must reason about the repository's ACTUAL source universe, not a
 # hand-maintained list of directories that an unauthorized file can simply step
-# outside of. Every Solidity file in the working tree is classified into exactly
+# outside of. Every source file the universe contains is classified into exactly
 # one of three classes:
 #
 #   vendored      a path enumerated by the accepted registry (the 63-file census)
 #   vux           inside a declared VUX-owned source root
 #   unauthorized  anything else — fails closed
 #
+# The universe itself is the UNION of two independent bodies of evidence
+# (source_universe below): what the filesystem looks like, and what the accepted
+# toolchain actually compiled. Neither alone is sufficient, and the union is
+# maintained in one place so no consumer can drift onto a narrower definition.
+#
 # Declaring a new source root is therefore a visible, reviewable edit to
-# VUX_SOURCE_ROOTS rather than a silent exemption, and neither relocating source
-# nor re-casing its extension can move it out of any gate's reach. Filesystem
-# enumeration is deliberate: a `git ls-files` scope would let an uncommitted (or
-# gitignored) file escape.
+# VUX_SOURCE_ROOTS rather than a silent exemption, and neither relocating source,
+# re-casing its extension, nor renaming it out of the Solidity extension
+# altogether can move it out of any gate's reach. Filesystem enumeration is
+# deliberate: a `git ls-files` scope would let an uncommitted (or gitignored)
+# file escape.
 VUX_SOURCE_ROOTS=(src test script)
 
 # Excluded from the universe, split by WHY — the two classes carry different
@@ -185,9 +191,58 @@ BUILD_ARTIFACT_PRUNE=(.git out out-v3core cache cache-v3core broadcast)
 LOA_ZONE_PRUNE=(.claude grimoires .beads .run .ck)
 SOURCE_UNIVERSE_PRUNE=("${BUILD_ARTIFACT_PRUNE[@]}" "${LOA_ZONE_PRUNE[@]}")
 
-# Every Solidity file in the working tree: repo-relative, forward-slashed, sorted.
-# Symlinks are included on purpose — a symlinked *.sol is still source a compiler
-# would follow, and `-type f` alone would make it invisible to every gate.
+# Foundry's artifact output directories, one per declared compilation unit
+# (foundry.toml `[profile.default] out` and `[profile.v3core] out`). These are the
+# only places the toolchain records what it compiled, so they are the evidence
+# base for compiled_sources() below — and they are pruned from the filesystem
+# walk above, which is why the two halves cannot collide.
+BUILD_OUT_DIRS=(out out-v3core)
+
+# Every source file the ACCEPTED TOOLCHAIN actually compiled — the half of the
+# universe that is extension-independent by construction.
+#
+# Why this exists (sprint-2 audit M-1, escalated by the Foundry v1.5.0 refreeze
+# §4.1): the walk below decides membership from a FILENAME predicate, and no
+# filename predicate can be complete. Foundry v1.5.0 admits an imported Solidity
+# source whose name is `Payload.txt` or has no extension at all — it reaches
+# solc, appears in the artifact's `metadata.sources`, is embedded in the
+# importing contract, and executes from a deployed instance. Under the
+# superseded v1.0.0 orchestrator the same import was refused outright
+# ("unexpected file extension"), so this is a reachable form the accepted
+# toolchain move CREATED rather than inherited.
+#
+# Widening the extension allowlist cannot fix that — it only moves the boundary
+# to the next unenumerated name. This asks the compiler instead: solc records in
+# every artifact's `metadata.sources` the exact set of files that produced it,
+# keyed by the path it resolved, repo-relative and forward-slashed. That record
+# is the toolchain's own answer to "what did you compile?", and it is keyed on
+# nothing that a rename can change.
+#
+# Complement, never replacement: this half cannot see a dormant unauthorized file
+# that nothing imports, which is exactly what the filesystem walk is good at.
+# Both are needed, which is why source_universe() is their union.
+#
+# Freshness contract: this reads the artifacts of the LAST build, so the callers
+# that must not miss a newly-imported source build first — run-all.sh compiles
+# both units before any gate, and both negative demonstrations compile at
+# baseline and again around every probe that changes the compilation graph.
+# verify-census.sh fails closed when a unit has produced no artifacts at all, so
+# the compiled half can never silently degrade to empty.
+#
+# With no arguments, scans every declared unit; with arguments, only those.
+compiled_sources() {
+  local dirs=("$@") d present=()
+  (( ${#dirs[@]} > 0 )) || dirs=("${BUILD_OUT_DIRS[@]}")
+  for d in "${dirs[@]}"; do [[ -d "$REPO_ROOT/$d" ]] && present+=("$d"); done
+  (( ${#present[@]} > 0 )) || return 0
+  ( cd "$REPO_ROOT" && find "${present[@]}" -name '*.json' -not -path '*/build-info/*' -print0 2>/dev/null \
+    | xargs -0 -r jq -r 'if has("metadata") then (.metadata.sources | keys[]) else empty end' 2>/dev/null ) \
+    | tr -d '\r' | sed 's|\\|/|g; s|^\./||' | sed '/^$/d' | LC_ALL=C sort -u
+}
+
+# Every Solidity-NAMED file in the working tree: repo-relative, forward-slashed,
+# sorted. Symlinks are included on purpose — a symlinked *.sol is still source a
+# compiler would follow, and `-type f` alone would make it invisible to every gate.
 #
 # Extension matching is case-INSENSITIVE, and that is load-bearing rather than
 # defensive breadth (sprint-2 audit A-1). solc resolves an import through its own
@@ -198,8 +253,8 @@ SOURCE_UNIVERSE_PRUNE=("${BUILD_ARTIFACT_PRUNE[@]}" "${LOA_ZONE_PRUNE[@]}")
 # reach, and every consumer derived from it — default-deny classification
 # (classify_sources), prohibited-source scanning, SPDX, the §17 quarantine —
 # inherited that blind spot, while `loa_zone_solidity` below already matched
-# case-insensitively. One universe definition now governs every consumer on the
-# same terms, so the two can no longer disagree about what counts as Solidity.
+# case-insensitively. The union in source_universe() now governs every consumer
+# on the same terms, so they can no longer disagree about what counts as source.
 #
 # This retracts the sprint-1 audit's N-2 refutation, which read Foundry's
 # "Unable to resolve imports" warning as proof that `Foo.SOL` was
@@ -208,11 +263,28 @@ SOURCE_UNIVERSE_PRUNE=("${BUILD_ARTIFACT_PRUNE[@]}" "${LOA_ZONE_PRUNE[@]}")
 # successful!` — a resolver diagnostic describes the tool's discovery pass, never
 # what compiled. demo-boundary-negative.sh's build-reachability control proves
 # the premise from compiler metadata and execution instead.
-source_universe() {
+filesystem_sol_sources() {
   local prune=() p
   for p in "${SOURCE_UNIVERSE_PRUNE[@]}"; do prune+=(-path "./$p" -o); done
   find . \( "${prune[@]}" -false \) -prune -o \( -type f -o -type l \) -iname '*.sol' -print 2>/dev/null \
-    | sed 's|^\./||; s|\\|/|g' | LC_ALL=C sort
+    | sed 's|^\./||; s|\\|/|g' | sed '/^$/d' | LC_ALL=C sort
+}
+
+# THE authoritative source universe — the one definition every provenance-
+# sensitive gate consumes. Two independent bodies of evidence, unioned:
+#
+#   filesystem_sol_sources()  what the tree LOOKS like  — catches dormant source
+#                             nothing imports, at the cost of a name predicate
+#   compiled_sources()        what the toolchain COMPILED — extension-independent,
+#                             at the cost of seeing only what is imported
+#
+# Each covers the other's blind spot, and neither is authoritative alone. A file
+# admitted by either is classified by classify_sources() and reaches every
+# consumer (default-deny, prohibited-source scanning, SPDX, the §17 quarantine)
+# on identical terms, so the consumers can no longer disagree about what counts
+# as source.
+source_universe() {
+  { filesystem_sol_sources; compiled_sources; } | sed '/^$/d' | LC_ALL=C sort -u
 }
 
 # Every Solidity-shaped file inside a pruned Loa/state zone. Empty is the only
@@ -256,9 +328,11 @@ classify_sources() {
   done < <(source_universe)
 }
 
-# Every Solidity file the project OWNS — the declared VUX roots plus anything
-# that escaped them. Vendored upstream is excluded: its bytes are frozen by the
-# drift gate, so authored-source policy (SPDX, §17) does not apply to it.
+# Every source file the project OWNS — the declared VUX roots plus anything that
+# escaped them, on both universe halves, so a compiler-admitted file that is not
+# named `*.sol` is held to authored-source policy rather than opting out of it.
+# Vendored upstream is excluded: its bytes are frozen by the drift gate, so
+# authored-source policy (SPDX, §17) does not apply to it.
 vux_owned_sources() { classify_sources | awk -F'\t' '$1 != "vendored" { print $2 }'; }
 
 # grep over a newline-delimited file list, tolerating an empty list. -H is
