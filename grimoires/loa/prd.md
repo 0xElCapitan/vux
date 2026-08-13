@@ -1,10 +1,10 @@
 # Product Requirements Document: VUX v1
 
-**Version:** 2.0.0 (fresh derivation — planning cycle-002 "VUX v1 Strategic Treasury")
-**Date:** 2026-08-09
-**Author:** PRD Architect Agent (Loa `/plan-and-analyze`, unattended operator-dispatched node)
-**Status:** `PRD_ACCEPTED` — requirements baseline for `/architect`
-**Operator acceptance:** 2026-08-10 — `OPERATOR_ACCEPTANCE`
+**Version:** 2.1.1 (v2.0.0 + adaptive-routing reconciliation amendment + focused revenue-surface remediation, both 2026-08-12 — Appendix C incl. §C.7; base derivation: planning cycle-002 "VUX v1 Strategic Treasury")
+**Date:** 2026-08-09 (amended 2026-08-12)
+**Author:** PRD Architect Agent (Loa `/plan-and-analyze`, unattended operator-dispatched node); v2.1.0 amendment by the authorized consolidated reconciliation node
+**Status:** `PRD_ACCEPTED` (v2.0.0, 2026-08-10) — v2.1.1 (adaptive-routing amendment + §C.7 revenue-surface remediation) renders the 2026-08-12 founder acceptance; reconciliation-package operator acceptance pending (Appendix C)
+**Operator acceptance:** 2026-08-10 — `OPERATOR_ACCEPTANCE` (v2.0.0 baseline); the v2.1.0 amendment's controlling authority is the `FOUNDER_ACCEPTANCE_COMPLETE` record of 2026-08-12
 
 ---
 
@@ -24,15 +24,15 @@
 
 | # | authority (all `CURRENT_ACCEPTED`, operator acceptance 2026-08-09) | SHA-256 | cited as |
 |---:|---|---|---|
-| 1 | `docs/authority/vux-founder-parameter-freeze-strategic-treasury-supersession-2026-08.md` | `b9b6a81db8c318e91601b3349283cab1654964c05d1d8e360b4971b7b1828723` | FREEZE (frozen rows: F-1…F-57) |
-| 2 | `docs/authority/vux-v1-canonical-specification-strategic-treasury-supersession-2026-08.md` | `d2b2d1a344b75b2e45790af60039ea4ad420626281e0c80191638cd88d8a950a` | SPEC (invariants: INV-1…INV-37) |
+| 1 | `docs/authority/vux-founder-parameter-freeze-strategic-treasury-supersession-2026-08.md` — **as amended 2026-08-12 by** `vux-founder-parameter-freeze-adaptive-routing-supersession-2026-08.md` (Appendix C) | `b9b6a81db8c318e91601b3349283cab1654964c05d1d8e360b4971b7b1828723` (base; delta hash in Appendix C) | FREEZE (frozen rows: F-1…F-57) + FREEZE-Δ (rows A-1…A-3, §§3–7) |
+| 2 | `docs/authority/vux-v1-canonical-specification-strategic-treasury-supersession-2026-08.md` — **as amended 2026-08-12 by** `vux-v1-canonical-specification-adaptive-routing-supersession-2026-08.md` (Appendix C) | `d2b2d1a344b75b2e45790af60039ea4ad420626281e0c80191638cd88d8a950a` (base; delta hash in Appendix C) | SPEC (invariants: INV-1…INV-37, three rows amended) + SPEC-Δ |
 | 3 | `docs/authority/vux-v1-strategic-treasury-provenance-boundary-delta-2026-08.md` | `5e1790276e290a08c58c1fe0accd40fc5d94b5a2ddc94dbb2c91aa90fce12ec3` | DELTA |
 | 4 | `docs/authority/vux-v1-source-registry-strategic-treasury-delta-2026-08.json` | `79e2df97606027e020c2ec3100647dc60f4e7b53fcb3ab1f00128ba91df4b97f` | REG-DELTA |
 | 5 | `docs/authority/vux-v1-licence-provenance-source-pin-freeze-2026-08.md` (preserved base) | `50c3584a1483b40ffb6391260a2bf42df32220c64724fdcc672ca62c01ace3a2` | LIC |
 | 5 | `docs/authority/vux-v1-source-registry-2026-08.json` (preserved base) | `6fc9fa81d80eda1f1017c6cb79f297b9a608150538e76ad97d8de1c8b5d2fe04` | REG |
-| 6 | `docs/authority/vux-v1-authority-supersession-map-2026-08.md` | `a6554f795dedd27d6551b4a19e195c4134e8b2de0b9db427837fa61fd442dbbe` | MAP |
+| 6 | `docs/authority/vux-v1-authority-supersession-map-2026-08.md` (updated 2026-08-12: §1 + new §10; current hash in Appendix C) | `a6554f795dedd27d6551b4a19e195c4134e8b2de0b9db427837fa61fd442dbbe` (pre-update) | MAP |
 
-Newer and more specific accepted authority governs overlap. The predecessor FREEZE/SPEC (`vux-founder-parameter-freeze-2026-08.md`, `vux-v1-canonical-specification-2026-08.md`) are superseded **in full** and were not merged into this PRD (MAP §1). No superseded parameter (notably `80/20/0` routing) is restored here.
+Newer and more specific accepted authority governs overlap. As of 2026-08-12 that includes the adaptive-routing acceptance set — the `FOUNDER_ACCEPTANCE_COMPLETE` record plus the FREEZE/SPEC supersession deltas (rows 1–2 above; full identities and hashes in Appendix C) — whose named rows supersede the base FREEZE/SPEC statements this PRD previously carried (notably static `80/8/12` ordinary routing). The predecessor FREEZE/SPEC (`vux-founder-parameter-freeze-2026-08.md`, `vux-v1-canonical-specification-2026-08.md`) remain superseded **in full** (MAP §1). No superseded parameter (notably `80/20/0` routing, or the pre-delta static split) is restored here.
 
 ### 1.3 What this document is
 
@@ -44,7 +44,7 @@ This PRD defines **WHAT** VUX v1 must do and the product, economic, and security
 
 > **Sources**: SPEC §2, §3; FREEZE §1, F-33; MAP §8
 
-VUX v1 is a Robinhood-Chain (RH) protocol combining six co-designed surfaces: (1) a permissionless WETH-paid King-of-the-Hill (KOTH) mining game that **is** the public TGE and the only post-genesis issuance path; (2) an enforceable, ownerless, immutable raw-WETH **Hard Reserve** giving every VUX unit a fee-free pro-rata exit right; (3) a separately custodied, productive **Strategic Treasury** capitalized by a static 12% leg of every takeover payment; (4) bounded holder-directed Strategic allocation through **LSG** — a core *mature* capability, inactive until operators affirmatively activate it; (5) protocol-owned VUX/WETH market infrastructure (**POL**) with a frozen special fee policy (**VYRF**: VUX fees burn; WETH fees strengthen the Hard Reserve); and (6) realized economic activity that may compound Strategic capital, accrete Hard backing, fund legitimate operations, and reward useful allocation — never from Hard Reserve principal.
+VUX v1 is a Robinhood-Chain (RH) protocol combining six co-designed surfaces: (1) a permissionless WETH-paid King-of-the-Hill (KOTH) mining game that **is** the public TGE and the only post-genesis issuance path; (2) an enforceable, ownerless, immutable raw-WETH **Hard Reserve** giving every VUX unit a fee-free pro-rata exit right; (3) a separately custodied, productive **Strategic Treasury** capitalized by the adaptive Strategic residual of every takeover payment (up to the floor-rounded 12% cap — FR-4); (4) bounded holder-directed Strategic allocation through **LSG** — a core *mature* capability, inactive until operators affirmatively activate it; (5) protocol-owned VUX/WETH market infrastructure (**POL**) with a frozen special fee policy (**VYRF**: VUX fees burn; WETH fees strengthen the Hard Reserve); and (6) realized economic activity that may compound Strategic capital, accrete Hard backing, fund legitimate operations, and reward useful allocation — never from Hard Reserve principal.
 
 The corrected product identity is:
 
@@ -73,7 +73,7 @@ Token launches routinely fail their holders in four repeating ways:
 
 ### 3.2 The VUX answer
 
-VUX makes the launch game itself the distribution mechanism (one throne, one price ladder, one clock), makes the exit right physical and ownerless (raw canonical RH WETH, pro-rata, fee-free, immutable), caps every mint by the exact WETH the settlement physically added to the Hard Reserve (VEM), and gives holders a durable reason to stay: a first-class, separately risked Strategic Treasury that receives 12% of every takeover, may compound productively under bounded operator/risk authority, and — at maturity — accepts bounded holder allocation signal (LSG) without ever touching the Reserve, minting, or security controls.
+VUX makes the launch game itself the distribution mechanism (one throne, one price ladder, one clock), makes the exit right physical and ownerless (raw canonical RH WETH, pro-rata, fee-free, immutable), caps every mint by the exact WETH the settlement physically added to the Hard Reserve (VEM), and gives holders a durable reason to stay: a first-class, separately risked Strategic Treasury that receives the Strategic residual of every takeover (up to 12%, per the adaptive 8%-floor routing law), may compound productively under bounded operator/risk authority, and — at maturity — accepts bounded holder allocation signal (LSG) without ever touching the Reserve, minting, or security controls.
 
 ### 3.3 Desired state (verifiable)
 
@@ -121,7 +121,7 @@ VUX must never promise that ROOT, GIGA, POL, stable assets, expected yield, or S
 
 | ID | Goal | Measurement | Validation method |
 |----|------|-------------|-------------------|
-| G-1 | Faithful monetary core: genesis, KOTH, static `80/8/12` routing, VEM, redemption behave exactly as frozen | INV-1…INV-22 hold under test; frozen parameter table (§24 / Appendix A) matches implementation constants verbatim | Acceptance tests per FR-1…FR-7; `/review-sprint` + `/audit-sprint` traceability to this PRD |
+| G-1 | Faithful monetary core: genesis, KOTH, the adaptive 8%-floor routing law, VEM, redemption behave exactly as frozen | INV-1…INV-22 hold under test; frozen parameter table (§24 / Appendix A) matches implementation constants verbatim | Acceptance tests per FR-1…FR-7; `/review-sprint` + `/audit-sprint` traceability to this PRD |
 | G-2 | Dual-treasury separation: Strategic capital physically and accountingly distinct; failure-independent | INV-23…INV-31, INV-35 hold; failure rows FB-5…FB-8, FB-13 demonstrably true | Scenario tests per §11; audit review |
 | G-3 | Truthful UX: raw clock vs. live estimate vs. settled mint never conflated | FR-15 acceptance criteria pass on every user-facing surface | UX review against SPEC §21 canonical wording |
 | G-4 | LSG-ready boundary: activation authority exists, inactive at launch, bounded role enforced | FR-13 acceptance criteria; INV-32…INV-34 | Design review + tests when built; boundary text review now |
@@ -181,7 +181,7 @@ VUX must never promise that ROOT, GIGA, POL, stable assets, expected yield, or S
 
 ### 7.2 Minimum launch capability (P0)
 
-Exact genesis supply and low-float VUX/WETH POL; one canonical RH WETH throne; static `80/8/12` settlement; ownerless Hard Reserve + fee-free redemption; Hard-only VEM; truthful mining UX; physically and accountingly separate Strategic receipt; bootstrap zero-mint; POL principal-vs-fee-yield classification and the POL-special VYRF outcome; product-level accounting sufficient to observe Hard, Strategic, settlement, fee, and burn facts; **inactive LSG with an explicit operator-controlled activation authority and the preserved non-voting-POL rule** (SPEC §4.1).
+Exact genesis supply and low-float VUX/WETH POL; one canonical RH WETH throne; adaptive 8%-floor settlement routing (FR-4); ownerless Hard Reserve + fee-free redemption; Hard-only VEM; truthful mining UX; physically and accountingly separate Strategic receipt; bootstrap zero-mint; POL principal-vs-fee-yield classification and the POL-special VYRF outcome; product-level accounting sufficient to observe Hard, Strategic, settlement, fee, and burn facts; **inactive LSG with an explicit operator-controlled activation authority and the preserved non-voting-POL rule** (SPEC §4.1).
 
 Launch does **not** require complex active Strategies, ROOT/GIGA exposure, or active token voting. Before LSG activation, operators may retain raw Strategic WETH or use a narrow authorized bootstrap policy (F-51).
 
@@ -206,13 +206,13 @@ Flow steps are product-observable outcomes; internal ordering/decomposition is `
 **Actor:** Contender. **Preconditions:** Deployment complete; Hard Reserve is genesis King; clock disabled.
 **Flow:**
 1. Contender pays the bootstrap Dutch price (opening ≈$50 WETH-equivalent, decaying; floor ≈$1) in canonical RH WETH.
-2. Canonical split applies: 80% outgoing-King leg + nominal 8% leg + all split dust → Hard Reserve (because the Reserve is outgoing King); 12% → Strategic custody.
+2. Canonical split applies (at `Qraw = 0` the adaptive law degenerates: `hardTarget = hardFloor`, `strategic = strategicCap`): 80% outgoing-King leg + nominal 8% leg + all split dust → Hard Reserve (because the Reserve is outgoing King); the floor-rounded 12% → Strategic custody.
 3. Zero VUX mints (`Qraw = 0`).
 4. Payer becomes first public King; the public epoch clock starts at the current schedule rate.
 
 **Postconditions:** ≈88%+ of `P` in Hard; 12% in Strategic; supply unchanged.
 **Acceptance criteria:**
-- [ ] Settlement observably routes ≥88% of `P` to Hard and exactly `floor(P×1,200/10,000)` to Strategic.
+- [ ] Settlement observably routes ≥88% of `P` to Hard and exactly `floor(P×1,200/10,000)` (= `strategicCap`; adaptive-law degeneracy at `Qraw = 0`) to Strategic.
 - [ ] `Qmint = 0` and no address received bootstrap VUX, WETH, a free clock, or a free reign.
 - [ ] The payer's epoch opens at the schedule's current UPS.
 
@@ -221,16 +221,16 @@ Flow steps are product-observable outcomes; internal ordering/decomposition is `
 **Actor:** Contender. **Preconditions:** A public King sits; current Dutch price `P` known.
 **Flow:**
 1. Contender pays `P` canonical WETH.
-2. Split: `king = floor(P×8,000/10,000)` → outgoing King; `strategic = floor(P×1,200/10,000)` → Strategic; `reserve = P − king − strategic` → Hard.
+2. Adaptive split (FR-4): `king = floor(P×8,000/10,000)` → outgoing King; `hardTarget = min(retained, max(hardFloor, D_need))` → Hard; `strategic = retained − hardTarget` (≤ `strategicCap`, possibly 0) → Strategic.
 3. Outgoing epoch settles: `Qraw = min(elapsed, 3,000 s) × epochUPS`; `Qsafe = floor(D_R × S_pre / B_pre)`; `Qmint = min(Qraw, Qsafe)` mints to the outgoing King.
 4. Contender becomes King; successor epoch opens at `max(MINIMUM_OPENING, 2 × P)` and decays linearly over 3,000 s to the floor.
 
 **Postconditions:** All three legs sum to `P`; Hard `B/S` non-decreasing; supply increased by exactly `Qmint`.
 **Acceptance criteria:**
 - [ ] The three routed amounts are exact per the frozen arithmetic and observably distinguishable.
-- [ ] `D_R` is measured after the Hard contribution physically arrives; an inconsistent measurement rejects the settlement.
+- [ ] `D_R` is measured after the Hard contribution physically arrives; a measurement inconsistent with the routed `hardTarget` rejects the settlement.
 - [ ] Settlement is atomic: all authorized throne/payment/accounting/backing/issuance effects commit, or none.
-- [ ] No branch of primary settlement reads time-phase, macro, NAV, ROOT/GIGA price, market price, oracle data, or operator preference.
+- [ ] No branch of primary settlement reads time-phase, macro, NAV, ROOT/GIGA price, market price, oracle data, or operator preference — the settlement-local inputs `(P, Qraw, B_pre, S_pre)` are the sole sanctioned adaptivity.
 
 ### UC-3: Reign and displacement (King's lifecycle)
 
@@ -269,10 +269,10 @@ Flow steps are product-observable outcomes; internal ordering/decomposition is `
 
 ### UC-7: Strategic receipt and adaptive deployment (operator)
 
-**Actor:** Operator/risk authority. **Preconditions:** Strategic custody holds the accumulated 12% legs.
+**Actor:** Operator/risk authority. **Preconditions:** Strategic custody holds the accumulated Strategic legs.
 **Flow:** Operator stages deployment (or deliberately does not) among admitted Strategies/POL/dry powder; classification by source and substance is preserved at every step.
 **Acceptance criteria:**
-- [ ] Static receipt forces no deployment; capital may remain raw WETH indefinitely (F-107 analog: FREEZE §4 "Strategic deployment timing"; SPEC §20.3).
+- [ ] Routing receipt forces no deployment; capital may remain raw WETH indefinitely (F-107 analog: FREEZE §4 "Strategic deployment timing"; SPEC §20.3 as amended).
 - [ ] No deployment, loss, or rebalancing changes `B`, redemption, VEM, or mint authority.
 - [ ] Every inflow/return is classified as exactly one of: Hard accretion; Strategic contributed/returned principal; POL fee yield by denomination; other realized revenue by denomination; unrealized mark (SPEC §6) — and classification is never changed merely to fund a preferred recipient.
 
@@ -291,7 +291,7 @@ Flow steps are product-observable outcomes; internal ordering/decomposition is `
 **Actor:** Operator (activation); Signaler (use). **Preconditions:** Internal readiness thresholds met in operator judgment; affirmative operator activation.
 **Flow:** Operator activates LSG; eligible holders express relative preferences for **marginal Strategic allocation among admitted opportunities**; bounded execution follows within admission caps; operators retain emergency remove/recall.
 **Acceptance criteria:**
-- [ ] Before activation, the 12% Strategic leg remains Strategic (never redirected to Hard) (F-51).
+- [ ] Before activation, the Strategic residual leg remains Strategic — LSG absence never redirects it to Hard (F-51).
 - [ ] Activation state, admitted Strategy identity, bounded allocation signal/result, and responsible authority are observable (SPEC §15).
 - [ ] Protocol-owned POL VUX has zero LSG voting power at all times (F-38).
 - [ ] No LSG pathway can touch the Hard Reserve, minting, arbitrary recipients, low-level security parameters, exploit response, or ordinary upgrades (F-48).
@@ -360,21 +360,21 @@ Requirements:
 - [ ] An epoch straddling a halving settles at its opening snapshot.
 - [ ] `Qraw` caps at exactly `3,000 × epochUPS`.
 
-### FR-4: Ordinary Settlement & Static Routing (P0)
+### FR-4: Ordinary Settlement & Adaptive 8%-Floor Routing (P0)
 
-**Description:** Every ordinary takeover payment is exhausted by the frozen three-leg split.
+**Description:** Every ordinary takeover payment is exhausted by the frozen adaptive three-leg law: King fixed at 80%; Hard between the nominal-8%-plus-dust floor and the full retained 20%, as safe issuance requires; Strategic the residual, capped at 12%.
 
 Requirements:
-1. For exact payment `P` (basis-point denominator 10,000): `king = floor(P × 8,000 / 10,000)`; `strategic = floor(P × 1,200 / 10,000)`; `reserve = P − king − strategic` (F-8; FREEZE §6; SPEC §12).
-2. Therefore: outgoing King receives at most exactly 80%; Strategic receives at most exactly 12% under floor rounding; Hard receives nominally at least 8% **plus all split dust**; the three legs sum to `P`; every other primary recipient receives exactly 0 (F-7; SPEC §12).
-3. Routing shall be static: no macro, market-price, NAV, Strategy-return, ROOT/GIGA-price, calendar-phase, oracle-mediated, or operator-discretion branch shall exist anywhere in primary settlement (F-9; SPEC §12).
-4. Adaptive decisions begin only **after** the Strategic leg is received and classified as Strategic principal (SPEC §12).
-5. Settlement shall be atomic and use full-precision arithmetic; the Strategic transfer receives zero issuance credit (FREEZE §6; SPEC §15).
-6. The complete economic settlement result shall follow SPEC §15's 13-step outcome (identify epoch/King; fix `P`; establish `B_pre`/`S_pre`; compute `Qraw`; collect payment; compute legs; deliver/classify Strategic and realize Hard contribution; measure exact `D_R` and reject inconsistency; compute `Qsafe`/`Qmint`; mint to outgoing King; deliver recycle; establish successor epoch/price; commit all or nothing) — exact call graph reserved to `/architect`.
+1. For exact payment `P` (basis-point denominator 10,000): `king = floor(P × 8,000 / 10,000)`; `retained = P − king`; `strategicCap = floor(P × 1,200 / 10,000)`; `hardFloor = retained − strategicCap`; `D_need = ceil(Qraw × B_pre / S_pre)`; `hardTarget = min(retained, max(hardFloor, D_need))`; `strategic = retained − hardTarget`. Hard receives `hardTarget`; Strategic receives `strategic` (FREEZE-Δ §3.1 / row A-1; SPEC-Δ §2; Appendix C).
+2. Therefore: outgoing King receives at most exactly 80%; Hard receives at least the nominal 8% **plus all split dust** (`hardFloor` carries the dust) and up to the full retained 20% when required for safe issuance; Strategic receives the residual, at most the floor-rounded 12% and possibly zero for extended periods near backing (accepted product identity); the three legs sum to `P`; every other primary recipient receives exactly 0 (FREEZE-Δ §3.1; SPEC-Δ §2).
+3. Narrowed prohibition: no macro, market-price, NAV, Strategy-return, ROOT/GIGA-price, calendar-phase, oracle-mediated, or operator-discretion branch shall exist anywhere in primary settlement; the settlement-local, deterministic monetary-closure computation on exactly `(P, Qraw, B_pre, S_pre)` is the sole sanctioned adaptivity — no carry, IOU, makeup, or entitlement input exists (FREEZE-Δ §3.2; SPEC-Δ §2).
+4. Adaptive *portfolio* decisions begin only **after** the Strategic leg is received and classified as Strategic principal (SPEC §12 as amended by SPEC-Δ §2).
+5. Settlement shall be atomic and use full-precision arithmetic (floors as written; `D_need` rounds up); the Strategic transfer receives zero issuance credit (FREEZE-Δ §3.1/§3.3; SPEC §15).
+6. The complete economic settlement result shall follow SPEC §15's 13-step outcome (identify epoch/King; fix `P`; establish `B_pre`/`S_pre`; compute `Qraw`; collect payment; compute the adaptive legs; deliver/classify Strategic and realize the Hard contribution; measure exact `D_R` and reject inconsistency with the routed `hardTarget`; compute `Qsafe`/`Qmint`; mint to outgoing King; deliver recycle; establish successor epoch/price; commit all or nothing) — exact call graph reserved to `/architect` (SPEC-Δ §4).
 
 **Acceptance criteria:**
-- [ ] Randomized `P` values: legs match the floor formulas exactly and sum to `P`; dust lands in Hard.
-- [ ] Code inspection: no conditional on any prohibited signal in the primary path.
+- [ ] Randomized `(P, Qraw, B_pre, S_pre)` regime testing (weak/cheap through strong/premium settlements): legs match the adaptive formulas exactly and sum to `P`; `hardFloor ≤ hardTarget ≤ retained`; `0 ≤ strategic ≤ strategicCap`; dust lands in Hard; `D_need ≤ hardFloor ⇒` exact equality with the prior static split.
+- [ ] Code inspection: no conditional on any prohibited signal in the primary path (adaptive inputs limited to `(P, Qraw, B_pre, S_pre)` plus own throne state).
 - [ ] Partial-failure injection: no state where some legs routed and others did not.
 
 ### FR-5: VEM Issuance Cap (P0)
@@ -385,7 +385,7 @@ Requirements:
 1. `B_pre` = Hard Reserve WETH before this settlement's contribution; `S_pre` = `VUX.totalSupply()` before this settlement's issuance; `D_R` = exact realized WETH increase in the Hard Reserve caused by this settlement, measured only after the Hard leg physically arrives (F-14; SPEC §13).
 2. `Qsafe = floor(D_R × S_pre / B_pre)`; `Qmint = min(Qraw, Qsafe)`; mathematically equivalent full-precision, overflow-safe arithmetic required (F-15; SPEC §13).
 3. Issuance invariant: `(B_pre + D_R)/(S_pre + Qmint) ≥ B_pre/S_pre` — equivalently `B_pre × Qmint ≤ D_R × S_pre`. Equality permits full `Qraw`. Issuance rounds down; any required-contribution calculation rounds up (F-16; SPEC §13).
-4. Zero issuance credit for: Strategic WETH/NAV, POL, ROOT, GIGA, stable assets, market prices, expected yield, oracle marks, quotes, later deposits, or the nominal 8% (F-14; SPEC §13).
+4. Zero issuance credit for: Strategic WETH/NAV, POL, ROOT, GIGA, stable assets, market prices, expected yield, oracle marks, quotes, later deposits, or the routed target (`hardTarget` is what is routed; only the measured `D_R` counts) (F-14; SPEC §13 as refined by SPEC-Δ §3).
 5. If `Qraw > Qsafe`: mint only `Qsafe`; the remainder never exists — no carry, IOU, debt, makeup emission, entitlement, high-water emission, Strategic-NAV mint, oracle-backed mint, or recapitalization mint, ever (F-17; SPEC §13).
 6. If `Qsafe > Qraw`: mint only `Qraw`; excess Hard contribution raises `B/S` (SPEC §13).
 
@@ -400,7 +400,7 @@ Requirements:
 
 Requirements:
 1. At deployment: outgoing King = ownerless Hard Reserve; bootstrap clock disabled; bootstrap `Qraw = 0` (F-25, F-26; SPEC §14).
-2. The first public paid takeover shall: be permissionless at the bootstrap Dutch price; apply the canonical split arithmetic; route the 80% outgoing-King leg + nominal Hard leg + all dust to the Hard Reserve (Reserve is outgoing King); route the 12% leg to Strategic custody; mint zero VUX; make the payer the first public King and start that epoch at the current schedule rate (F-27; SPEC §14).
+2. The first public paid takeover shall: be permissionless at the bootstrap Dutch price; apply the canonical split arithmetic (the adaptive law degenerates exactly at `Qraw = 0`: `hardTarget = hardFloor`, `strategic = strategicCap` — SPEC-Δ §5, confirm-only); route the 80% outgoing-King leg + nominal Hard leg + all dust to the Hard Reserve (Reserve is outgoing King); route the floor-rounded 12% leg to Strategic custody; mint zero VUX; make the payer the first public King and start that epoch at the current schedule rate (F-27; SPEC §14 **CONFIRMED**).
 3. Economic result: approximately 88% or greater Hard / 12% Strategic / zero minted VUX. No deployer, founder, operator, partner, or any person receives bootstrap WETH, VUX, a free clock, or a free reign (F-27; SPEC §14).
 
 **Acceptance criteria:**
@@ -430,19 +430,19 @@ Requirements:
 **Description:** First-class protocol-owned risk capital, physically and accountingly distinct from the Hard Reserve.
 
 Requirements:
-1. The Strategic Treasury shall receive exactly the floor-rounded 12% gross leg of every takeover from the first activation onward (F-7, F-33; MAP §3).
+1. The Strategic Treasury shall receive the Strategic residual of every takeover from the first activation onward: `strategic = retained − hardTarget`, between 0 and the floor-rounded 12% cap — exactly the cap at bootstrap and whenever `D_need ≤ hardFloor` (FREEZE-Δ §3.1; F-33; MAP §10).
 2. Hard and Strategic principal shall be physically and accountingly distinct; Strategic assets never enter `B` (F-10).
 3. Permitted Strategic composition (economic purposes, not an implementation list): raw Strategic WETH/dry powder; WETH/stable productive Strategies; protocol-owned VUX/WETH liquidity; verified/admitted ROOT, GIGA, Stock Token, or other RH-native opportunities; other admitted productive assets or market infrastructure (SPEC §16).
-4. Strategic principal includes: primary 12% contributions, externally authorized project capital, returned deployed principal, and returned LP principal. It is never Hard backing and never revenue merely because custody changes or a position exits (SPEC §16).
+4. Strategic principal includes: primary Strategic-leg contributions (the adaptive residual), externally authorized project capital, returned deployed principal, and returned LP principal. It is never Hard backing and never revenue merely because custody changes or a position exits (SPEC §16).
 5. Strategic failure independence: Strategic loss — including total loss — shall be incapable of reducing/withdrawing `B`, altering redemption, supporting VEM/minting, authorizing recapitalization emission, creating a Hard Reserve rescue entitlement, or permitting principal to be relabeled as revenue (F-34; SPEC §16).
 6. Strategic-zero survival: if Strategic NAV reaches zero, supply accounting, Hard redemption, KOTH, VEM, and FAIR issuance constraints remain functional subject to their own dependencies (F-35; SPEC §16).
-7. Static receipt forces no deployment; operators may stage, pause, or resume within risk boundaries; no fixed dry powder or cadence is canonical (SPEC §16, §20.3).
+7. Routing receipt forces no deployment; operators may stage, pause, or resume within risk boundaries; no fixed dry powder or cadence is canonical (SPEC §16, §20.3 as amended).
 8. `T_nav` (disclosed realizable Strategic NAV) is analytics/portfolio only; it never changes redemption or VEM (SPEC §6).
 
 **Acceptance criteria:**
 - [ ] No code path exists from any Strategic surface to Reserve principal, redemption math, or mint authority (review + tests).
 - [ ] Simulated 50%/80%/100% Strategic loss leaves `B`, redemption, VEM, and mint authority bit-identical (FB-5).
-- [ ] The 12% leg lands in Strategic custody in the same atomic settlement as the other legs.
+- [ ] The Strategic leg (when nonzero) lands in Strategic custody in the same atomic settlement as the other legs; a zero Strategic leg is a valid settlement outcome.
 
 ### FR-9: Strategic Principal / Revenue Classification (P0 accounting; P1 policy use)
 
@@ -491,17 +491,17 @@ Requirements:
 
 ### FR-12: General Realized Strategic Revenue Policy Surface (P1 policy; P0 boundary)
 
-**Description:** Principles frozen; exact percentages operator-reserved.
+**Description:** Principles frozen; waterfall percentages founder-accepted future doctrine (activation is P1/future); at P0 only a bounded revenue accounting/safety surface exists.
 
 Requirements:
 1. The general waterfall applies only to qualifying non-POL realized economics (SPEC §18).
-2. Frozen principles: returned principal is not revenue; unrealized marks are not distributable; realized cash yield/fees/profit may fund — under disclosed operator policy — Strategic compounding, Hard Reserve accretion, legitimate operations/contributors, LSG/signaler incentives, and market infrastructure; Hard Reserve principal may fund none of these; founders/operators receive no primary KOTH skim or privileged VUX allocation (F-41…F-43; SPEC §18).
+2. Frozen principles: returned principal is not revenue; unrealized marks are not distributable; realized cash yield/fees/profit may fund — under disclosed operator policy — Strategic compounding, Hard Reserve accretion, **actual approved operating expenses** for legitimate operations/contributors, and LSG/signaler incentives; market infrastructure remains a permitted Strategic use but is funded through Strategic capital deployment policy from Strategic capital — **never a dedicated realized-revenue waterfall leg** (FREEZE-Δ §5.1); Hard Reserve principal may fund none of these; founders/operators receive no primary KOTH skim or privileged VUX allocation (F-41…F-43; SPEC §18 as amended).
 3. VUX-denominated non-POL revenue is normally burned unless later explicit founder authority establishes another justified treatment (F-46).
-4. Exact general-waterfall percentages, operating shares/caps/reserves, and performance terms are operator-reserved and may evolve; the PRD shall provide the capability (a disclosed, classifiable, observable allocation policy surface) without fixing values (§16 herein; SPEC §18).
+4. The general-waterfall percentages are founder-accepted **future doctrine** (`50/25/20/5/0` + Operator Reserve semantics — FREEZE-Δ §5.1–§5.2; Appendix C §C.3): never stored v1 contract constants, and **not implemented by any P0 surface**. At P0, any operations payout is solely payment of an actual approved operating expense from realized revenue — it never encodes the future 25% Operator Reserve contribution, and no person holds a claim before an approved expense is incurred. The future Operator Reserve credit/accumulation/sweep/allocator-exclusion mechanics are a **P1/future design obligation** that must be designed before the accepted waterfall is activated. Operator-reserved remains the execution — qualifying-revenue computation (incl. realized-loss/high-water restoration), budget approval, quarterly reforecast, draws (§16 herein; SPEC §18 as amended; Appendix C §C.7).
 5. Sustainability posture: VUX must be capable of sustainably paying legitimate builders/operators from realized protocol economics if successful; if realized revenue is zero and external runway is exhausted, costs contract or receive separately disclosed funding — Reserve or mislabeled principal is never a fallback (SPEC §18).
 
 **Acceptance criteria:**
-- [ ] The policy surface can express and disclose allocations across the five permitted uses without code changes to frozen boundaries (capability test at build).
+- [ ] The P0 policy surface can express and disclose revenue allocations across exactly the four P0 uses (Strategic compounding; Hard accretion, WETH-only; actual approved operating expenses; signaler incentives) without code changes to frozen boundaries; no dedicated market-infrastructure revenue leg or earmark exists (capability test at build).
 - [ ] Negative test: no configuration of the policy surface can reach Reserve principal or mint.
 
 ### FR-13: LSG — Core Mature Capability (P1 core; P0 boundary + activation authority)
@@ -513,7 +513,7 @@ Requirements:
 2. Authority separation (frozen): operators/risk authorities retain Strategy admission, due diligence, risk limits/caps, bounded execution, and emergency removal/recall; protocol upgrades and low-level security are separate authorities; the Hard Reserve and minting are never LSG-controlled (F-48, F-49; SPEC §19).
 3. LSG shall be incapable of: choosing arbitrary recipients, withdrawing/encumbering Reserve principal, modifying KOTH routing, minting VUX, altering redemption, changing VEM, setting exploit response, or controlling ordinary upgrades (SPEC §19).
 4. Activation: inactive at launch; internally threshold-gated; requires an affirmative operator decision; operators may activate earlier or later based on actual distribution, Strategic capital, meaningful Strategy choice, implementation safety, and concentration; **no numeric readiness gate or calendar date is frozen** (F-50; SPEC §19).
-5. Pre-activation: the 12% Strategic leg remains Strategic — absence of active LSG never redirects it to Hard (F-51).
+5. Pre-activation: the Strategic residual leg remains Strategic — absence of active LSG never redirects it to Hard (F-51; an inactive/unqualified LSG epoch's future 20% revenue leg likewise compounds to Strategic, FREEZE-Δ §5.1).
 6. Protocol-owned POL VUX is always excluded from LSG voting power (F-38; SPEC §19).
 7. Signalers may be rewarded only from permitted realized protocol economics under disclosed policy; external or Strategy-funded incentives must be observable and cannot convert the admission/security boundary into token-vote control (SPEC §19).
 8. The exact voting, weighting, epoch, delegation, anti-capture, precision, keeper, and execution mechanism belongs to later requirements/design work and must satisfy this boundary (SPEC §19; §19 herein).
@@ -605,8 +605,8 @@ Requirements:
 
 | INV | invariant | carried by |
 |---:|---|---|
-| 18 | Ordinary payment uses exact static `king=floor(80%)`, `strategic=floor(12%)`, `reserve=remainder` arithmetic | FR-4 |
-| 19 | Reserve receives nominally at least 8% and all split dust | FR-4 |
+| 18 | Ordinary payment uses the exact adaptive arithmetic: `king=floor(80%)`; `hardTarget=min(retained, max(hardFloor, D_need))` to Hard; `strategic=retained−hardTarget` to Strategic (FREEZE-Δ §3.1) | FR-4 |
+| 19 | Reserve receives at least the nominal 8% plus all split dust (`hardFloor`), and up to the full retained 20% when required for safe issuance; Strategic receives the residual, capped at floor-rounded 12% | FR-4 |
 | 20 | No other primary recipient exists | FR-4 |
 | 21 | Settlement is atomic and successor state cannot rewrite the outgoing epoch or mint recipient | FR-4 |
 | 22 | First activation sends approximately 88% or greater Hard, 12% Strategic, and mints zero | FR-6 |
@@ -623,7 +623,7 @@ Requirements:
 | 28 | Returned LP/Strategy principal is principal, not revenue | FR-9, FR-11 |
 | 29 | Incremental VUX POL fee yield burns; incremental WETH POL fee yield enters Hard; both bypass the general waterfall | FR-11 |
 | 30 | Unrealized marks are not distributable realized revenue | FR-9 |
-| 31 | General revenue percentages and operations caps are operator-reserved within the frozen funding boundaries | FR-12, §16 |
+| 31 | The general waterfall percentages and Operator Reserve semantics are founder-accepted future doctrine; operator-reserved scope is policy execution — qualifying-revenue computation, budget approval, reforecast, and draw execution — within the frozen funding boundaries | FR-12, §16 |
 | 32 | LSG controls only relative marginal Strategic allocation among admitted Strategies | FR-13 |
 | 33 | LSG cannot reach Hard, minting, arbitrary recipients, security parameters, exploit response, or upgrades | FR-13 |
 | 34 | LSG activation requires affirmative operator action; no numeric readiness gate is founder-frozen | FR-13 |
@@ -737,8 +737,8 @@ Conceptual responsibilities — not required contracts, addresses, or module top
 |---|---|---|
 | VUX token | complete supply truth; exact genesis mint; KOTH/VEM-only post-genesis mint; transfers; authorized burns | discretionary/recovery mint |
 | Hard Reserve | hold raw canonical RH WETH; redeem pro rata | Strategic activity, governance, payroll, rescue, arbitrary paths, any owner |
-| KOTH/Rig | operate the one throne, Dutch price, epoch, payment, split, outgoing settlement | mint outside VEM; deviate from static `80/8/12` |
-| Strategic Treasury/custody | receive/account the 12% leg and protocol-owned risk capital | enter `B`; custody architecture is reserved to `/architect` |
+| KOTH/Rig | operate the one throne, Dutch price, epoch, payment, adaptive split, outgoing settlement | mint outside VEM; deviate from the frozen adaptive routing law (FR-4) |
+| Strategic Treasury/custody | receive/account the Strategic residual leg and protocol-owned risk capital | enter `B`; custody architecture is reserved to `/architect` |
 | POL | protocol-owned VUX/WETH market infrastructure | use Reserve funds; use post-genesis mint; redeem-as-treasury; vote |
 | POL fee policy | classify and route incremental fee yield by denomination | route POL fee yield through the general waterfall |
 | General revenue policy | classify realized non-POL economics; allocate permitted uses under disclosed operator policy | receive principal/marks; touch Reserve principal |
@@ -759,7 +759,7 @@ These are planning-level requirements binding this PRD and all later lifecycle p
 
 - **PROV-1 (posture)**: Project licence is `GPL-3.0-or-later`; existing `LICENSE`/`THIRD_PARTY_NOTICES.md` posture, source pins, file allowlist, dependency-selection gates, and **default-deny** policy remain authoritative and unchanged (SPEC §27; DELTA §2).
 - **PROV-2 (allowlist)**: Direct v1 reuse is limited to exactly three Miner Manifold files at `bcffbf1eb963810acb14a1fd1c73d03a53a085a8` — `contracts/Rig.sol` (blob `d362ef35…`), `contracts/Unit.sol` (blob `26d491eb…`), `contracts/interfaces/IUnit.sol` (blob `7069422c…`) — under file MIT grants + collaborator permission + conservative Euler `GPL-2.0-or-later` lineage for the Rig auction skeleton, with GPLv3 selected for VUX (LIC §§4–6; REG).
-- **PROV-3 (clean-source surfaces)**: The corrected surfaces are `VUX_ORIGINAL_CLEAN_SOURCE_REQUIRED` unless later provenance authority approves a specific source: static `80/8/12` settlement and Reserve-favoring dust arithmetic (except separately allowlisted generic Rig lineage); separate Strategic receipt/custody/principal-revenue accounting; Hard-only `D_R` measurement; POL principal-vs-fee-yield classification; VUX POL-fee burn; WETH POL-fee one-way Hard routing; general realized-revenue classification/policy surface; future LSG admission/signal/execution/emergency boundary; protocol-owned POL VUX non-voting treatment (DELTA §3; REG-DELTA).
+- **PROV-3 (clean-source surfaces)**: The corrected surfaces are `VUX_ORIGINAL_CLEAN_SOURCE_REQUIRED` unless later provenance authority approves a specific source: the ordinary settlement routing and Reserve-favoring dust arithmetic — DELTA §3's "static `80/8/12` settlement" surface, which the adaptive routing law inherits under the same rule (ACC §5.1, carried over) — (except separately allowlisted generic Rig lineage); separate Strategic receipt/custody/principal-revenue accounting; Hard-only `D_R` measurement; POL principal-vs-fee-yield classification; VUX POL-fee burn; WETH POL-fee one-way Hard routing; general realized-revenue classification/policy surface; future LSG admission/signal/execution/emergency boundary; protocol-owned POL VUX non-voting treatment (DELTA §3; REG-DELTA).
 - **PROV-4 (named prohibitions)**: No copying/porting/deriving from Liquid Signal Governance (`DEFERRED_NOT_V1`; its label is source-disposition only and does not exclude the VUX-original LSG product role — DELTA §4), gumball6900 (`REFERENCE_ONLY`; VYRF outcome is not a port authorization — DELTA §5), Olympus v3/docs (`REFERENCE_ONLY`), give.fun (transitive reference), Miner non-allowlisted files (Strategy/Hopper/Router/Multicall/IRig/tests), or any unlisted upstream (LIC §5, §16).
 - **PROV-5 (Hard Reserve & VEM originality)**: Hard Reserve and VEM are implemented from the canonical specification's equations; if later review finds material line/structure similarity to prohibited sources (e.g., gumball `Fund.sol`), the file is reclassified as derived and re-cleared before merge (LIC §§7–8).
 - **PROV-6 (pins)**: Full-40-character-SHA pins only; branches/tags/HEAD are never authority; any new source, newer revision, LSG/gumball/Olympus/ROOT/GIGA integration source, or unlisted dependency triggers a provenance refreeze **before** use (LIC §17; REG-DELTA `future_refreeze_required_for`).
@@ -775,20 +775,20 @@ These are planning-level requirements binding this PRD and all later lifecycle p
 
 ## 16. Operator-Reserved Decision Register
 
-> **Sources**: FREEZE §4 (complete); SPEC §16, §17.1, §§18–20, §26. Each reserved decision is preserved as reserved; the PRD specifies only the capability and boundary the product must provide. Freezing any of these values in a later artifact is a load-bearing failure.
+> **Sources**: FREEZE §4 (complete); SPEC §16, §17.1, §§18–20, §26. Each reserved decision is preserved as reserved **except where founder-accepted future doctrine (2026-08-12) has since fixed the value** — R-9 and R-10 below now carry founder-accepted percentages/semantics, with only their *execution* (computation, approval, reforecast, draws) operator-reserved; every other row remains fully reserved as before. The PRD specifies only the capability and boundary the product must provide. Freezing any of these values in a later artifact is a load-bearing failure.
 
 | # | reserved decision | required product capability | frozen boundary that still applies |
 |---:|---|---|---|
 | R-1 | Strategic portfolio weights | Allocation among verified/admitted assets, observable per §6 classes | Strategic assets remain outside `B` |
 | R-2 | POL size and portfolio share | POL can be grown/reduced; venues/ranges/custody choosable later | No mint, no Reserve principal; conduct rules FR-10.3 |
-| R-3 | Strategic deployment timing | Staging, pausing, resuming deployment | Static receipt never forces deployment |
+| R-3 | Strategic deployment timing | Staging, pausing, resuming deployment | Routing receipt never forces deployment |
 | R-4 | Strategic dry powder | Holding raw WETH indefinitely is a first-class state | Never counted as `B`; never VEM credit |
 | R-5 | Strategy admission | Admission/diligence/limits/removal/recall authority surface | Cannot reach Hard Reserve |
 | R-6 | LSG activation timing | Explicit operator-controlled activation authority, observable | Affirmative decision required; no calendar auto-activation |
 | R-7 | Internal LSG readiness thresholds | Thresholds settable/evolvable within the frozen LSG role | Distribution/capital/participation/safety/concentration tests are operator judgment; never founder-frozen numbers |
 | R-8 | ROOT/GIGA exposure | Admission path after verification of canonical facts | Bounded portfolio judgment only after documentation/deployment/rights/liquidity/custody facts exist |
-| R-9 | General realized-revenue waterfall percentages | Disclosed, evolvable allocation policy across the five permitted uses | Principal/marks excluded; Reserve excluded; no primary skim |
-| R-10 | Operations budget & compensation | Funding legitimate operations/contributors from realized economics or disclosed external runway | No primary flow, no Reserve principal, no mislabeled Strategic principal |
+| R-9 | General revenue policy **execution** (restated 2026-08-12 — percentages are no longer reserved: the waterfall is founder-accepted `50/25/20/5/0` doctrine, FREEZE-Δ §5.1) | Disclosed, classifiable, observable allocation surface applying the accepted waterfall at call time; qualifying-revenue computation incl. realized-loss/high-water restoration | Principal/marks excluded; Reserve excluded; no primary skim; percentages never stored as v1 contract constants |
+| R-10 | Operator Reserve administration & compensation execution (restated 2026-08-12 — the operator leg is the founder-accepted Operator Reserve, FREEZE-Δ §5.2) | Budget approval, ≈18-month forward-runway targeting (operating-policy parameter), quarterly reforecast, excess sweep, draw execution, transparent per-period reporting | No same-period entitlement; no primary flow; no Reserve principal; no automatic Hard or Strategic-principal fallback; no mislabeled Strategic principal |
 | R-11 | Signaler rewards | Reward surface fundable from permitted realized economics under disclosed policy | Observable; cannot convert security boundary into token-vote control |
 | R-12 | Bribe experiment sizing | Tactical, measured experiments with stop rules | Realized-economics funding by default; never Hard Reserve principal; never primary strategy |
 | R-13 | Market-infrastructure tactics (buybacks, purchased VUX for POL, venue/range choices) | Tactic execution under permitted funding | Cannot alter VEM/redemption; POL VUX must be existing/purchased |
@@ -802,20 +802,20 @@ Boundary reminder (FREEZE §4 tail): operator discretion is never authority to r
 
 > **Sources**: FREEZE §5; SPEC §18, §20, §26; MAP §3 ("RESERVED, NOT FROZEN")
 
-The following values are **RESEARCH GUIDANCE, NOT AUTHORITY**. No PRD requirement, SDD parameter, interface, default constant, UI copy, or implementation may present them as immutable founder parameters. They may appear in later operator policy documents as *chosen* (and changeable) values only.
+Re-expressed 2026-08-12 against the accepted doctrine (FREEZE-Δ §§5, 7; Appendix C §C.3). Three classes now exist: **superseded guidance** (must appear nowhere as an active value), **research guidance** (not authority; may appear in later operator policy documents as *chosen*, changeable values only), and **founder-accepted policy doctrine** (binding doctrine that must still never appear as a v1 contract constant, stored ratio, code parameter, or v1 acceptance criterion). No PRD requirement, SDD parameter, interface, default constant, UI copy, or implementation may present any of them as v1 implementation parameters.
 
-| guidance value | status |
+| value | status |
 |---|---|
-| General revenue `50% compound / 10% Hard / 25% operations / 10% signalers / 5% market infrastructure` | Simulation/comparison baseline only |
-| `25%` operator share | Guidance; not a canonical entitlement |
-| `2.5%` average Strategic-NAV operator ceiling | Guidance; not a frozen fee or cap |
-| LSG gates — 60 days, 5M distributed VUX, 50 holders, 10 effective participants, 35% holder ceiling, $250K Strategic capital | Illustrative readiness values only |
+| Five-way `50% compound / 10% Hard / 25% operations / 10% signalers / 5% market infrastructure`; old `25%` operator share as an entitlement share | **Superseded guidance** — replaced by the founder-accepted four-leg `50/25/20/5/0` waterfall + Operator Reserve (doctrine, not v1 code); historical only |
+| Accepted waterfall `50/25/20/5/0`; LSG timing `7-day age / 14-day epoch / first-24h signal`; ≈18-month Operator Reserve runway target | **Founder-accepted policy doctrine** (FREEZE-Δ §5.1–§5.3) — never v1 contract constants; the 18-month target is an operating-policy parameter under quarterly reforecast |
+| `2.5%` average Strategic-NAV ratio; old LSG gates (60 days, 5M distributed VUX, 50 holders, 35% holder ceiling, $250K); LSG research §16 evidence-gate set (current guidance posture) | **Research guidance** — 2.5% demoted to optional monitoring ratio; old gate values replaced by the §16 evidence set, which remains evidence-based operator-reserved guidance (nothing frozen, F-50) |
+| Future lending LLTV values — `≤25%` pilot, `≤1/3` mature candidate (both evidence-gated future doctrine); `40%` | **Future market-risk doctrine / reopening ceiling** — not v1 constants; `40%` exists **only** as a future research-reopening ceiling requiring a new founder decision and must never appear as an active recommended or planned parameter |
 | ROOT 10% pilot, 25% mature cap, 35% aggregate look-through cap | Prudent research guidance pending evidence and operator policy |
 | Dry powder 30% (first 180 days), 40–60% (downturn), 10% deployment per 30 days | Scenario guidance only |
 | LP-per-bribe-dollar, one-year depth, 35% retention, 1.5× direct-POL comparison thresholds | Measurement guidance only |
 
 **Acceptance criterion:**
-- [ ] Grep-level check on every later artifact: none of these values appears outside an explicitly labeled guidance/policy-example context.
+- [ ] Grep-level check on every later artifact: no superseded value appears at all outside labeled history; no doctrine value appears as a code constant/stored ratio/v1 acceptance parameter; no research value appears outside an explicitly labeled guidance/policy-example context; `40%` LLTV never appears as active.
 
 ---
 
@@ -835,8 +835,8 @@ Active LSG signaling (FR-13); general revenue waterfall use (FR-12); expanded PO
 
 | exclusion | reason |
 |---|---|
-| Crown Share, hVUX, Cooler-style lending, tournaments, multiple thrones, new emission seasons | Not authorized by v1 (SPEC §4.3) |
-| Oracle-mediated monetary router; any dynamic routing | Frozen static routing (F-9) |
+| Crown Share, hVUX, tournaments, multiple thrones, new emission seasons; **any lending machinery** — no lending hook, approved-market registry, wrapper/receipt interface, oracle surface, collateral-status storage in VUX, transfer restriction, special redemption path, or lender approval from Hard (standard ERC-20 + Reserve read surfaces preserve future optionality) | Not authorized by v1 (SPEC §4.3 confirmed; FREEZE-Δ row A-2; Appendix C §C.4) |
+| External/discretionary/oracle-mediated dynamic routing of any kind — the settlement-local adaptive law on `(P, Qraw, B_pre, S_pre)` is the sole sanctioned adaptivity | Narrowed frozen prohibition (FREEZE-Δ §3.2) |
 | Reserve-backed Strategy rescue; recapitalization mint | No authorized path (FB-15, FB-16) |
 | Privileged token allocation of any kind | FAIR doctrine (F-5) |
 | Anti-whale machinery, wallet caps, identity gates, punitive taxes, hidden allocations | Fair access ≠ equal outcomes (F-54; SPEC §22) |
@@ -906,15 +906,15 @@ Where a product requirement depends on one of these, this PRD states the require
 |---:|---|---|---|
 | 1 | What does the user do? | Take the throne (pay WETH), hold/mine, get displaced (receive 80% recycle + settled VUX), redeem anytime, or buy/sell openly; at maturity, signal Strategic allocation via LSG | §8 UC-1…UC-5, UC-9 |
 | 2 | What does the King receive? | On displacement: exactly `floor(P×8,000/10,000)` WETH recycle + exactly `Qmint = min(Qraw, Qsafe)` VUX | FR-4, FR-5 |
-| 3 | Where does each payment leg go? | `king = floor(80%)` → outgoing King; `strategic = floor(12%)` → Strategic Treasury; `reserve = remainder` (≥ nominal 8% + all dust) → Hard Reserve; 0% anyone else | FR-4 |
+| 3 | Where does each payment leg go? | `king = floor(80%)` → outgoing King; `hardTarget = min(retained, max(hardFloor, D_need))` (≥ nominal 8% + all dust, up to full retained 20%) → Hard Reserve; `strategic = retained − hardTarget` (residual ≤ 12%, possibly 0) → Strategic Treasury; 0% anyone else | FR-4 |
 | 4 | What safely funds VUX issuance? | Only exact measured current-settlement Hard Reserve WETH delta `D_R` | FR-5 |
-| 5 | What can never fund issuance? | Strategic WETH/NAV, POL, ROOT, GIGA, stable assets, prices, expected yield, oracle marks, quotes, later deposits, the nominal 8% | FR-5.4 |
+| 5 | What can never fund issuance? | Strategic WETH/NAV, POL, ROOT, GIGA, stable assets, prices, expected yield, oracle marks, quotes, later deposits, the routed target — only the measured `D_R` counts | FR-5.4 |
 | 6 | What is guaranteed by the Hard Reserve? | Fee-free pro-rata raw-WETH redemption: `floor(B×q/S)`, pre-redemption values, Reserve-favoring rounding, `S_MIN = 1` raw VUX, non-decreasing `B/S` through authorized issuance | FR-7 |
 | 7 | What is NOT guaranteed by Strategic NAV? | Anything: no redemption claim, no backing, no mint support, no rescue; it may go to zero with Hard untouched | FR-8.5–8.6, §4.2 |
 | 8 | What does 4 UPS mean? | An abundant raw faucet: maximum time opportunity (≈20.655M pre-tail raw), never target supply, entitlement, or promise | FR-3.5 |
 | 9 | What happens to unsupported raw opportunity? | It expires — no carry, IOU, debt, makeup, entitlement, or high-water emission | FR-5.5 |
 | 10 | What happens at bootstrap? | Reserve is genesis King; clock disabled; first takeover routes ≈88%+ Hard / 12% Strategic, mints zero, and starts the first public epoch | FR-6 |
-| 11 | What is Strategic principal? | Protocol-owned risk capital: 12% legs, authorized external project capital, returned deployed principal, returned LP principal — never Hard backing, never revenue by relabeling | FR-8.4, FR-9 |
+| 11 | What is Strategic principal? | Protocol-owned risk capital: Strategic residual legs (≤12%), authorized external project capital, returned deployed principal, returned LP principal — never Hard backing, never revenue by relabeling | FR-8.4, FR-9 |
 | 12 | What is realized revenue? | Source-classified realized cash yield/fees/profit only — never returned principal, never unrealized marks | FR-9.2, FR-12 |
 | 13 | How does POL-special VYRF work? | Incremental VUX fee yield burns; incremental WETH fee yield enters Hard one-way; returned LP principal stays Strategic; all bypass the general waterfall | FR-11 |
 | 14 | What does LSG control? | Only relative preference over marginal Strategic allocation among operator-admitted opportunities | FR-13.1 |
@@ -980,14 +980,14 @@ Where a product requirement depends on one of these, this PRD states the require
 | **S / B / N** | `VUX.totalSupply()` (complete) / raw canonical RH WETH physically in the Hard Reserve / conceptual `B/S` |
 | **S_MIN** | Permanent 1 raw VUX held by the Reserve; redemption floor for supply |
 | **Hard Reserve** | Ownerless, immutable, non-pausable raw-WETH redemption reserve; the exit right |
-| **Strategic Treasury** | First-class protocol-owned risk capital, separately custodied and accounted; receives the 12% leg |
+| **Strategic Treasury** | First-class protocol-owned risk capital, separately custodied and accounted; receives the Strategic residual leg (`retained − hardTarget`, ≤ 12%) |
 | **T_nav** | Disclosed realizable Strategic NAV — analytics only; never `B`, never backing |
 | **POL** | Protocol-owned VUX/WETH liquidity; a Strategic sleeve with frozen conduct rules |
 | **VYRF (POL-special)** | Frozen fee policy: incremental VUX fees burn; incremental WETH fees → Hard; principal stays Strategic |
 | **General waterfall** | Disclosed operator policy for qualifying non-POL realized revenue; percentages reserved |
 | **LSG** | Liquid Signal Governance: bounded holder signal over marginal Strategic allocation among admitted Strategies; core mature capability, operator-activated |
 | **Signaler** | Eligible VUX holder expressing LSG preferences (mature phase) |
-| **Split dust** | `P − floor(80%P) − floor(12%P)` remainder beyond the nominal 8%; always to Hard |
+| **Split dust / adaptive symbols** | Dust = the rounding remainder beyond the nominal 8% carried inside `hardFloor = retained − strategicCap`; always to Hard. Adaptive symbols (FR-4): `retained = P − king`; `strategicCap = floor(12%·P)`; `D_need = ceil(Qraw × B_pre / S_pre)`; `hardTarget = min(retained, max(hardFloor, D_need))`; `D_actual ≡ D_R` |
 | **Bootstrap** | One-time state: Reserve as genesis King, clock disabled, first takeover mints zero |
 | **Tail** | Permanent 0.015625 VUX/s pilot-light rate after day 240 |
 | **Dutch price** | Linear 3,000 s decay from opening to the immutable ≈$1 floor |
@@ -1008,7 +1008,7 @@ Where a product requirement depends on one of these, this PRD states the require
 | Genesis total supply `S0` | exactly `150,000 × 10^18 + 1` raw units |
 | Genesis discretionary allocation | 0 VUX to every person/discretionary address |
 | Post-genesis mint authority | KOTH/VEM settlement only, to the outgoing public King only |
-| Ordinary routing | `king = floor(P×8,000/10,000)`; `strategic = floor(P×1,200/10,000)`; `reserve = P − king − strategic` (nominal ≥8% + all dust to Hard); 0% others; static |
+| Ordinary routing (adaptive 8%-floor law, frozen verbatim — FREEZE-Δ §3.1) | `king = floor(P × 8,000 / 10,000)`; `retained = P − king`; `strategicCap = floor(P × 1,200 / 10,000)`; `hardFloor = retained − strategicCap` (nominal ≥8% + all dust, to Hard); `D_need = ceil(Qraw × B_pre / S_pre)`; `hardTarget = min(retained, max(hardFloor, D_need))` → Hard; `strategic = retained − hardTarget` → Strategic (≤ cap, may be 0); 0% others; settlement-local inputs `(P, Qraw, B_pre, S_pre)` only — external/discretionary/oracle routing prohibited |
 | VEM | `Qsafe = floor(D_R × S_pre / B_pre)`; `Qmint = min(Qraw, Qsafe)`; `B_pre × Qmint ≤ D_R × S_pre`; issuance rounds down; required-contribution rounds up |
 | Redemption | `payout = floor(B × q / S)` pre-redemption values; fee 0; Reserve-favoring rounding; `S_MIN = 1` raw VUX |
 | EPOCH_PERIOD | 3,000 seconds |
@@ -1046,3 +1046,53 @@ Where a product requirement depends on one of these, this PRD states the require
 | Traceability convention | FREEZE F-# = FREEZE §3 row #; SPEC §# = specification section; INV-# = SPEC §24 invariant; FB-# = §11 row (SPEC §25); LIC/REG/DELTA/REG-DELTA/MAP per §1.2 |
 
 **Terminal state:** `PRD_READY_FOR_REVIEW`. Next authorized node: **operator PRD review** (then `/architect` only after acceptance). This document invokes nothing.
+
+---
+
+## 26. Appendix C — Adaptive-Routing Amendment Record (v2.1.0, 2026-08-12)
+
+> **Sources**: `docs/authority/vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md` (ACC); the two supersession deltas (FREEZE-Δ, SPEC-Δ); MAP §10. This appendix is the v2.1.0 amendment's consolidated record; in-body edits above were made line-count-neutral so every `prd.md:L…` citation in the accepted SDD remains position-valid.
+
+### C.1 Amendment authority (pinned)
+
+| artifact | cited as | SHA-256 |
+|---|---|---|
+| `docs/authority/vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md` (`FOUNDER_ACCEPTANCE_COMPLETE`, 2026-08-12) | ACC | `a0d5d38bf9b631a12d6f22cbe66007f9c64cdb0f43a2d9de080b5f48c8f4dac3` |
+| `docs/authority/vux-founder-parameter-freeze-adaptive-routing-supersession-2026-08.md` | FREEZE-Δ | `89687ecc9b5ff849b2341d4684ee8e089675a776c7a5a69fc92d7dddc8892b51` |
+| `docs/authority/vux-v1-canonical-specification-adaptive-routing-supersession-2026-08.md` | SPEC-Δ | `04512412b416cad395e99bdb16e00b9082e3436e24369ef5b875b4f8e368c1aa` |
+| `docs/authority/vux-v1-authority-supersession-map-2026-08.md` (updated: §1 + §10; §10.4 revised at the 2026-08-12 remediation) | MAP | `ea07cfa200d44a99214d7332de996053312c5f4bedf68c970bc22ff3984e1f51` |
+
+The base FREEZE/SPEC files named in §1.2 are byte-preserved; their deltas govern the rows they name. Where any rendering here could be read differently from ACC, ACC controls.
+
+### C.2 Exact surfaces amended in this PRD (v2.0.0 → v2.1.0)
+
+Header/§1.2/§1 basis note; §2 and §3.2 residual-leg wording; G-1; §7.2 (P0 capability list); UC-1 step 2 + AC (degeneracy, confirm-only); UC-2 step 2 + ACs (adaptive split; `hardTarget` rejection; narrowed prohibition); UC-7 precondition; UC-9 AC (residual leg); FR-4 in full (retitled "Ordinary Settlement & Adaptive 8%-Floor Routing"); FR-5.4 ("routed target"); FR-6.2 (confirm-only degeneracy); FR-8.1 (residual receipt), FR-8.4; FR-12.2 (market-infrastructure harmonization), FR-12.4 (accepted waterfall doctrine); FR-13.5; INV-18/INV-19 (rewritten; INV-20, INV-21, INV-22 confirmed unchanged); §14 KOTH/Rig + Strategic rows; §16 R-9/R-10 (restated as execution-reservations); §17 (three-class re-expression + grep criterion); §18.3 (lending machinery + narrowed-prohibition rows); §21 rows 3, 5, 11; Glossary (Strategic Treasury; Split dust / adaptive symbols); Appendix A "Ordinary routing" row (frozen-verbatim adaptive carry). Everything else is unchanged from v2.0.0.
+
+### C.3 Future doctrine — accurately reserved, out of v1 implementation scope
+
+The following are **founder-accepted future doctrine** (binding; changeable only by a new founder decision; NOT v1 implementation requirements, contract constants, or Sprint-3 acceptance criteria):
+
+1. **Strategic realized-revenue waterfall** `50/25/20/5/0` (compound-or-Dry-Powder / Operator Reserve / qualified active LSG / Hard one-way / speculative-zero) over qualifying realized net non-POL revenue (net of direct realization costs and realized-loss/high-water restoration); unused/unqualified legs compound; POL VYRF unchanged; market infrastructure funded via Strategic capital deployment policy, never a dedicated leg (FREEZE-Δ §5.1).
+2. **Operator Reserve** — protocol-owned, purpose-limited contribution reserve; ≈18-month approved-forward-runway target as an operating-policy parameter; quarterly reforecast; excess sweeps; no same-period entitlement; no automatic Hard or Strategic-principal fallback; excluded from the allocator opportunity set (FREEZE-Δ §5.2).
+3. **LSG doctrine** — C-class mature pillar; no passive staking; canonical-custody-only eligibility (aged 7 days, freshly signaling in the first 24 hours of a 14-day epoch, opening weight fixed, frozen through close); zero rights for protocol-owned/POL/collateral/external-LP/inactive/liquid VUX; one raw VUX → one custody-defined status → at most one claim; global reward pool with no correctness/profit multipliers and no reward-bearing delegation initially; Dry Powder is an allocation state; non-economic Capital Allocator Record data reservation (~12-month history posture) satisfied by already-planned observability; activation evidence-gated per the research §16 set (guidance, nothing frozen) and inactive at v1 launch (FREEZE-Δ §5.3–§5.7).
+4. **Future lending / holder liquidity** — externally funded isolated VUX/WETH market (Morpho-style candidate, not a dependency); exact Hard redemption value as the only collateral valuation basis; WETH debt first; LLTV ≤25% pilot / ≤1/3 preferred mature candidate after evidence; 40% only a research-reopening ceiling, never an active planned value; Hard/Strategic/POL never lend, subsidize, guarantee, backstop, or absorb bad debt; looping unsupported; stablecoin surface fully deferred; collateral and external-LP VUX receive zero LSG rights (FREEZE-Δ §5.8).
+
+None of the above adds any requirement to FR-1…FR-16, any invariant, any failure behavior, or any launch criterion. The only code-facing change accepted 2026-08-12 is the adaptive routing law (FR-4), and it reaches implementation only through this reconciled PRD, the reconciled SDD, and the reconciled Sprint Plan.
+
+### C.4 v1-binding non-requirements carried from ACC §7
+
+No lending machinery of any kind before Sprint 3 (no hook, registry, wrapper/receipt interface, oracle surface, collateral-status storage, transfer restriction, special redemption path, or lender approval from Hard — FREEZE-Δ row A-2); no LSG mechanism work in Sprint 3 (the Sprint-4 P0 activation boundary ships as planned: inactive, `address(0)` module); no waterfall constants in code (call-time-argument revenue design stands; no stored ratios; no Operator Reserve contract or automation); no Dry Powder token or contract; no leaderboard/scoring implementation; no stablecoin or WETH/USD oracle architecture reservation; no `40%` LLTV artifact anywhere active. The one-status principle (FREEZE-Δ row A-3) is design doctrine, not v1 status machinery.
+
+### C.5 Explicit confirmations
+
+- **VEM unchanged**: measured-delta issuance (`D_actual ≡ D_R`), `Qsafe`/`Qmint`, monotone `B/S`, no-carry, full-precision arithmetic, fail-closed inconsistent-delta rejection (now against `hardTarget`) — FR-5 substance preserved; only FR-5.4's "nominal 8%" wording became "routed target".
+- **Bootstrap unchanged (confirm-only)**: Reserve as genesis King, `Qraw = 0`, ≈88%+/12%/zero-mint, price targets and cushion procedure — the adaptive law degenerates to the identical split (FR-6, INV-22, UC-1).
+- **Sprint 1–2 history preserved**: nothing in this amendment reopens, re-grades, or re-labels landed Sprint 1 (`23263e18`) or Sprint 2 (`89a92055`) work, their reviews, audits, or operator acceptances, including the Sprint-2 carried conditions (M-1/L-3/L-4).
+
+### C.6 Sprint-3 gating (standing)
+
+`/implement sprint-3` remains blocked until **both** independent conditions close: (a) operator acceptance of this consolidated reconciliation package (authority deltas + MAP §10 + PRD v2.1.1 + SDD v1.7.1 + Sprint Plan v1.1.1, i.e. the amended chain including the §C.7 remediation); and (b) the M-1/L-3/L-4 provenance-tooling hardening condition (operator acceptance 2026-08-12, Sprint-2 carry) — untouched by this amendment.
+
+### C.7 Focused revenue-surface remediation (v2.1.1, 2026-08-12)
+
+Operator review found that v2.1.0 claimed doctrine compatibility while preserving executable five-leg waterfall semantics. Corrected surfaces (supplementing §C.2): FR-12 Description; FR-12.2 (market infrastructure removed from the revenue-fundable uses — it remains a permitted Strategic use funded through Strategic capital deployment policy from Strategic capital, never a dedicated realized-revenue waterfall leg); FR-12.4 (P0 operations payouts are solely actual-approved-expense payments — no P0 surface encodes the future 25% Operator Reserve contribution; the reserve's credit/accumulation/sweep/allocator-exclusion mechanics are a P1/future design obligation before waterfall activation); FR-12 first acceptance criterion ("five permitted uses" → the four P0 uses with no market-infrastructure leg/earmark). Correspondingly, the SDD's distribution surface is four-leg (`allocateRevenue(asset, toCompound, toHard, toOps, toSignalers)`; `marketInfraBudget` deleted — SDD Appendix F note F-2 as revised) and Sprint 4 Task 4.5 is narrowed to that corrected P0 boundary. Adaptive routing (FR-4), Sprint 3 scope, and all other v2.1.0 content are untouched; no waterfall constant, Operator Reserve contract/automation, or 18-month target enters contract logic.

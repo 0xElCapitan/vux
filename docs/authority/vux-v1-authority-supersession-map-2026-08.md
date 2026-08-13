@@ -3,20 +3,22 @@
 **Date:** 2026-08-09  
 **Status:** `SUPERSESSION_MAP_CURRENT_ACCEPTED`  
 **Operator acceptance:** 2026-08-09 — `OPERATOR_ACCEPTANCE`  
-**Lifecycle disposition:** bounded authority reconciliation; no downstream lifecycle invoked
+**Lifecycle disposition:** bounded authority reconciliation; no downstream lifecycle invoked  
+**Updated:** 2026-08-12 — §1 and §10 amended by the authorized consolidated reconciliation node (adaptive-routing supersession, controlling record `vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md`); §§2–9 preserved unedited as accepted history and read subject to §10.
 
 ## 1. Activation rule and current authority
 
-Operator acceptance was recorded on 2026-08-09. The successor documents are current, the predecessor Founder Freeze and Canonical Specification are superseded in full, and authority is unambiguous:
+Operator acceptance of the strategic-treasury supersession was recorded on 2026-08-09; the founder adaptive-routing acceptance was recorded 2026-08-12 and rendered into supersession deltas by the consolidated reconciliation node (§10). Current authority is unambiguous:
 
 | precedence | current authority | disposition |
 |---:|---|---|
-| 1 | `vux-founder-parameter-freeze-strategic-treasury-supersession-2026-08.md` | complete current Founder Parameter Freeze |
-| 2 | `vux-v1-canonical-specification-strategic-treasury-supersession-2026-08.md` | complete current VUX v1 product specification |
-| 3 | `vux-v1-strategic-treasury-provenance-boundary-delta-2026-08.md` and `vux-v1-source-registry-strategic-treasury-delta-2026-08.json` | narrow corrected-surface source delta |
-| 4 | `vux-v1-licence-provenance-source-pin-freeze-2026-08.md` and `vux-v1-source-registry-2026-08.json` | preserved base licence/pin/reuse authority where not clarified by the delta |
-| 5 | this map | authoritative old-to-new disposition and lifecycle record |
-| 6 | prior research/closure artifacts | evidence/history only where not superseded above |
+| 1 | `vux-founder-parameter-freeze-strategic-treasury-supersession-2026-08.md` **as amended by** `vux-founder-parameter-freeze-adaptive-routing-supersession-2026-08.md` | current Founder Parameter Freeze (base + 2026-08-12 delta; delta wins on its named rows) |
+| 2 | `vux-v1-canonical-specification-strategic-treasury-supersession-2026-08.md` **as amended by** `vux-v1-canonical-specification-adaptive-routing-supersession-2026-08.md` | current VUX v1 product specification (base + 2026-08-12 delta) |
+| 3 | `vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md` | controlling founder decision record for the 2026-08-12 supersession; governs interpretation of the two deltas |
+| 4 | `vux-v1-strategic-treasury-provenance-boundary-delta-2026-08.md` and `vux-v1-source-registry-strategic-treasury-delta-2026-08.json` | narrow corrected-surface source delta |
+| 5 | `vux-v1-licence-provenance-source-pin-freeze-2026-08.md` and `vux-v1-source-registry-2026-08.json`, supplemented by the self-describing OZ/v3-core refreeze (`vux-v1-oz-v3-provenance-refreeze-2026-08.md` + JSON) and Foundry v1.5 toolchain refreeze (`vux-v1-foundry-v1.5-toolchain-refreeze-2026-08.md` + JSON) | preserved licence/pin/reuse authority chain |
+| 6 | this map | authoritative old-to-new disposition and lifecycle record |
+| 7 | prior research/closure artifacts | evidence/history only where not superseded above |
 
 The old Founder Freeze and Canonical Specification remain preserved and are no longer current. No earlier research conclusion may override the successor set.
 
@@ -158,7 +160,7 @@ The supersession does not reopen:
 | Can founders/operators receive primary mining flow? | No. Legitimate realized economics or disclosed external runway may fund operations. |
 | Why own VUX after mining cools? | Hard exit right plus productive Strategic NAV, protocol-owned liquidity, bounded allocation influence, compounding, and verified ecosystem optionality. |
 
-## 9. Lifecycle disposition
+## 9. Lifecycle disposition (2026-08-09 — historical; completed)
 
 This node creates authority only. It does not edit the stale PRD, choose architecture, implement code, select dependencies, create a sprint, commit, push, or invoke Loa.
 
@@ -166,4 +168,48 @@ Authorized next node:
 
 > fresh Loa `/plan-and-analyze`
 
-**STOP. Wait for operator review.**
+*(2026-08-12 note: that cycle ran and completed — PRD v2.0.0, SDD v1.6.0, Sprint Plan v1.0.0 all operator-accepted; Sprints 1–2 landed. The current lifecycle state is recorded in §10.)*
+
+## 10. Adaptive-routing supersession (2026-08-12)
+
+### 10.1 Event and artifacts
+
+The founder accepted the adaptive 8%-floor retained-capital routing law, the Strategic realized-revenue waterfall / Operator Reserve doctrine, the LSG epochal doctrine, and the future holder-liquidity (lending) doctrine on 2026-08-12. The authorized consolidated reconciliation node rendered that acceptance into successor authority deltas and reconciled the planning chain. Pinned artifacts:
+
+| artifact | SHA-256 | role |
+|---|---|---|
+| `vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md` | `a0d5d38bf9b631a12d6f22cbe66007f9c64cdb0f43a2d9de080b5f48c8f4dac3` | controlling founder decision record (`FOUNDER_ACCEPTANCE_COMPLETE`) |
+| `vux-founder-parameter-freeze-adaptive-routing-supersession-2026-08.md` | `89687ecc9b5ff849b2341d4684ee8e089675a776c7a5a69fc92d7dddc8892b51` | Founder Freeze supersession delta (current, with base) |
+| `vux-v1-canonical-specification-adaptive-routing-supersession-2026-08.md` | `04512412b416cad395e99bdb16e00b9082e3436e24369ef5b875b4f8e368c1aa` | Canonical Specification supersession delta (current, with base) |
+
+### 10.2 Preserved predecessor evidence (unedited by the 2026-08-12 node)
+
+| predecessor | SHA-256 at supersession | disposition |
+|---|---|---|
+| `vux-founder-parameter-freeze-strategic-treasury-supersession-2026-08.md` | `b9b6a81db8c318e91601b3349283cab1654964c05d1d8e360b4971b7b1828723` | remains current base, amended by the freeze delta; byte-preserved |
+| `vux-v1-canonical-specification-strategic-treasury-supersession-2026-08.md` | `d2b2d1a344b75b2e45790af60039ea4ad420626281e0c80191638cd88d8a950a` | remains current base, amended by the spec delta; byte-preserved |
+| this map (pre-update) | `a6554f795dedd27d6551b4a19e195c4134e8b2de0b9db427837fa61fd442dbbe` | §§2–9 preserved; §1 and this §10 amended/added |
+
+### 10.3 Rule-level supersession summary
+
+Full dispositions are in the controlling record §5 and the two deltas; the load-bearing rows:
+
+| old current-authority rule | replacement | classification |
+|---|---|---|
+| Ordinary routing: static gross `80/8/12` (FREEZE #7–#8; SPEC §12) | Adaptive 8%-floor law: `king = floor(80%)`; `hardTarget = min(retained, max(hardFloor, D_need))`; `strategic = retained − hardTarget` (Hard ∈ [8%+dust, 20%]; Strategic ∈ [0%, 12%]; dust to Hard) | **SUPERSEDED** |
+| "Static `80/8/12`; no dynamic router" (FREEZE #9; SPEC §12 prohibition) | External/discretionary/oracle prohibition retained verbatim; the settlement-local monetary-closure branch on `(P, Qraw, B_pre, S_pre)` is the sole sanctioned adaptivity | **REFINED (narrowed)** |
+| VEM measured-delta issuance; monotone `B/S`; no carry (FREEZE #14–#18; SPEC §13) | Unchanged; `D_actual ≡ D_R`; "not an assumed 8%" reworded "not the routed target" | **CONFIRMED** |
+| Bootstrap ≈88%+/12%/0-mint (FREEZE #25–#28; SPEC §14) | Unchanged — the adaptive law degenerates to the identical split at `Qraw = 0` | **CONFIRMED** |
+| General waterfall percentages operator-reserved (FREEZE §4; SPEC §18, §24.4 #31) | Percentages founder-accepted `50/25/20/5/0` + Operator Reserve semantics (≈18-month operating-policy runway target); execution remains operator-reserved; never v1 contract constants | **SUPERSEDED IN PART** |
+| `50/10/25/10/5` baseline, 25% share, 2.5% NAV ceiling as guidance (FREEZE §5) | Five-way baseline superseded as guidance; 25% is now the Operator Reserve leg (doctrine); 2.5% demoted to optional monitoring ratio | **SUPERSEDED as guidance** |
+| LSG illustrative gate values (FREEZE §5 row) | Replaced as guidance by the LSG research §16 evidence-gate set; nothing frozen (FREEZE #50 / SPEC #34 preserved) | **REPLACED as guidance** |
+| LSG mechanism unreserved beyond role boundary (SPEC §4.2, §19, §26) | Economic design doctrine founder-accepted (custody eligibility, one-status, 7d/14d/24h timing, global pool, attribution rejections, evidence-gated activation); implementation and activation remain reserved, now bounded | **CONFIRMED + doctrine ADDED** |
+| (no lending statement beyond SPEC §4.3 exclusion) | Future lending doctrine added (isolated external market; exact-Hard-redemption valuation; LLTV ≤25% pilot / ≤1/3 mature / 40% reopening-ceiling only; Hard/Strategic/POL never lend or backstop); zero pre-Sprint-3 lending machinery (v1-binding) | **ADDED** |
+
+No genesis, supply, Hard Reserve, redemption, pricing, mining-clock, POL/VYRF, provenance, or licence rule is reopened; §7's preserved load-bearing rules stand except the ordinary-routing rows named above.
+
+### 10.4 Planning-chain disposition
+
+The reconciled planning chain (PRD v2.1.1, SDD v1.7.1, Sprint Plan v1.1.1 — revised 2026-08-12 by the focused reconciliation remediation, which corrected the P0 revenue-distribution surface to four legs, redefined `toOps` as actual-approved-expense payment only, deleted the dedicated market-infrastructure revenue leg/earmark, and marked the future Operator Reserve credit/accumulation/sweep/allocator-exclusion mechanics as a P1/future design obligation; hashes pinned in `grimoires/loa/sprint.md` and `grimoires/loa/NOTES.md`; version references to v2.1.0/v1.7.0/v1.1.0 in the two supersession deltas read on these revised documents) renders these decisions; Sprint 1 (landed `23263e18`) and Sprint 2 (landed `89a92055`) history is preserved unchanged. `/implement sprint-3` remains blocked until **both** (a) the consolidated reconciliation is accepted and (b) the independent M-1/L-3/L-4 provenance-tooling hardening condition (operator acceptance 2026-08-12, Sprint-2 carry) is closed.
+
+**STOP. Wait for operator review of the reconciliation package.**

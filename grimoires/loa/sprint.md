@@ -1,11 +1,15 @@
 # Sprint Plan: VUX v1 — cycle-002 "VUX v1 Strategic Treasury"
 
-**Version:** 1.0.0
-**Date:** 2026-08-10
-**Author:** Sprint Planner Agent (Loa `/sprint-plan`, unattended operator-dispatched node)
-**Status:** `SPRINT_PLAN_ACCEPTED`
-**Operator acceptance:** 2026-08-10 — `OPERATOR_ACCEPTANCE`
+**Version:** 1.1.1 (v1.0.0 + adaptive-routing reconciliation amendment + focused revenue-surface remediation, both 2026-08-12 — Sprint 3 now implements the adaptive 8%-floor routing law; Sprint 4 Task 4.5 narrowed to the corrected four-leg P0 revenue boundary; see the amendment note below)
+**Date:** 2026-08-10 (amended 2026-08-12)
+**Author:** Sprint Planner Agent (Loa `/sprint-plan`, unattended operator-dispatched node); v1.1.0 amendment by the authorized consolidated reconciliation node
+**Status:** `SPRINT_PLAN_ACCEPTED` (v1.0.0, 2026-08-10) — v1.1.0 renders the 2026-08-12 founder acceptance; reconciliation-package operator acceptance pending
+**Operator acceptance:** 2026-08-10 — `OPERATOR_ACCEPTANCE` (v1.0.0); the v1.1.0 amendment's controlling authority is `docs/authority/vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md` (`FOUNDER_ACCEPTANCE_COMPLETE`)
 **Cycle:** `cycle-002` (Sprint Ledger: local `sprint-1…8` = global `sprint-1…8`, 1:1)
+
+### v1.1.0 amendment note (2026-08-12 — adaptive-routing reconciliation)
+
+Sprint 3's objective, acceptance criteria, and Tasks 3.2/3.4/3.5 now target the **adaptive 8%-floor retained-capital routing law** (PRD FR-4 v2.1.0; SDD v1.7.0 Appendix F note F-1) instead of the superseded static `80/8/12` legs. Sprint 1 (landed `23263e18`) and Sprint 2 (landed `89a92055`) are untouched history. **`/implement sprint-3` remains blocked until BOTH independent pre-Sprint-3 conditions close:** (a) operator acceptance of the consolidated reconciliation package (authority deltas + MAP §10 + PRD v2.1.1 + SDD v1.7.1 + this plan v1.1.1, incl. the 2026-08-12 revenue-surface remediation); and (b) the M-1/L-3/L-4 provenance-tooling hardening node (Sprint-2 carry, operator acceptance 2026-08-12) — not performed by the reconciliation node. Future doctrine accepted alongside the routing law (revenue waterfall `50/25/20/5/0` + Operator Reserve, LSG 7/14 epochal doctrine, future lending/LLTV posture) adds **zero** scope to any sprint in this plan — see PRD Appendix C §§C.3–C.4 and SDD Appendix F notes F-2/F-3/F-4 for the boundary.
 
 ### Operator-accepted implementation interpretations (recorded verbatim; not a plan revision)
 
@@ -16,10 +20,14 @@ These clarify already-accepted authority for Sprint 1 and Sprint 4 and do not al
 
 ## Authority Chain (binding inputs — all hashes verified at plan time)
 
-| artifact | path | status | SHA-256 |
+| artifact | path | status | SHA-256 (re-pinned 2026-08-12) |
 |---|---|---|---|
-| PRD | `grimoires/loa/prd.md` (v2.0.0) | `PRD_ACCEPTED` | `4e5cacf72d276377cb20897d9e1fe8aea721cc5edb2b0fd55e5cfde79ec89377` |
-| SDD | `grimoires/loa/sdd.md` (v1.6.0) | `SDD_ACCEPTED` | `19241ed7db8a89b419e746463c6121f5b77c8237d760829e2f2604536c37392a` |
+| PRD | `grimoires/loa/prd.md` (v2.1.1 — v2.0.0 accepted baseline `4e5cacf72d276377cb20897d9e1fe8aea721cc5edb2b0fd55e5cfde79ec89377` + adaptive-routing amendment + 2026-08-12 revenue-surface remediation) | `PRD_ACCEPTED` + amendment pending reconciliation acceptance | `791c52f2ad05c794188b218e877957889bc97b6399b965b9c5fe003ef0e2406e` |
+| SDD | `grimoires/loa/sdd.md` (v1.7.1 — v1.6.0 accepted baseline `19241ed7db8a89b419e746463c6121f5b77c8237d760829e2f2604536c37392a`, which the 2026-08-12 Foundry-v1.5 toolchain note had already amended to `42785845410c9121af15aa29e18b501548d7d6e6f630f4c0c213ace36fc19cff` before this reconciliation; + adaptive-routing amendment + 2026-08-12 revenue-surface remediation) | `SDD_ACCEPTED` + amendment pending reconciliation acceptance | `b7270458e1417171dd812f34039263eca45cd676f8009dbfaf202d90aac6b175` |
+| Founder acceptance (adaptive routing / LSG / holder liquidity) | `docs/authority/vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md` | `FOUNDER_ACCEPTANCE_COMPLETE` | `a0d5d38bf9b631a12d6f22cbe66007f9c64cdb0f43a2d9de080b5f48c8f4dac3` |
+| Founder Freeze adaptive-routing delta | `docs/authority/vux-founder-parameter-freeze-adaptive-routing-supersession-2026-08.md` | `FOUNDER_AUTHORITY_CURRENT_ACCEPTED` (with base) | `89687ecc9b5ff849b2341d4684ee8e089675a776c7a5a69fc92d7dddc8892b51` |
+| Canonical Specification adaptive-routing delta | `docs/authority/vux-v1-canonical-specification-adaptive-routing-supersession-2026-08.md` | `CANONICAL_AUTHORITY_CURRENT_ACCEPTED` (with base) | `04512412b416cad395e99bdb16e00b9082e3436e24369ef5b875b4f8e368c1aa` |
+| Authority supersession map | `docs/authority/vux-v1-authority-supersession-map-2026-08.md` (updated §1 + §10; §10.4 revised at remediation) | `SUPERSESSION_MAP_CURRENT_ACCEPTED` | `ea07cfa200d44a99214d7332de996053312c5f4bedf68c970bc22ff3984e1f51` |
 | OZ/v3 provenance refreeze | `docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md` | `PROVENANCE_REFREEZE_CURRENT_ACCEPTED` | `27aa37ec82fffaea4deb63d5ccd87f66a7e71bad1afa9e7d95d814035e8e3203` |
 | Refreeze registry delta | `docs/authority/vux-v1-source-registry-oz-v3-refreeze-2026-08.json` | `PROVENANCE_REFREEZE_CURRENT_ACCEPTED` | `db3144135251af34f6bef9da61300a2644c381c4763f2347753657de6afaf4f1` |
 | THIRD_PARTY_NOTICES.md | `THIRD_PARTY_NOTICES.md` (§6/§6.1/§6.2 accepted) | accepted | `963e2cfb8fe8306ee6d2cfd6e14fa417a7a61fd7bfddc3fe5aedc2b577170873` |
@@ -64,7 +72,7 @@ SDD §8 states "Sprint granularity is refined at `/sprint-plan`; phases below ar
 | 7 | Genesis: non-griefable launch + adversarial rehearsal | Q-6 evidence; `GenesisDeployer.sol`; wiring proof suite; full-knowledge adversarial rehearsal; genesis evidence pack | 6 |
 | 8 | Launch readiness: hardening, traceability, E2E | Slither gate + triage; 37-INV/18-FB traceability matrix; §20.1 sweep; release compliance; deployment runbook (Q-3 input slot); Task 8.E2E goal validation | 7 |
 
-**Sequencing rationale:** provenance before any code (nothing exists to contaminate); monetary core before treasury (Rig routes the 12% leg treasury tests consume); treasury before POL (POL is a treasury sleeve); all contracts before truth surfaces (Lens/indexer read them); everything before genesis (GenesisDeployer deploys the full set, Lens included at nonce 5); genesis before readiness (the §20.1 sweep needs rehearsal evidence). The two genuinely-open technical risks land early-mid: provenance/toolchain fidelity (Sprint 1) and v3 integration (Sprints 4–5).
+**Sequencing rationale:** provenance before any code (nothing exists to contaminate); monetary core before treasury (Rig routes the Strategic residual leg treasury tests consume); treasury before POL (POL is a treasury sleeve); all contracts before truth surfaces (Lens/indexer read them); everything before genesis (GenesisDeployer deploys the full set, Lens included at nonce 5); genesis before readiness (the §20.1 sweep needs rehearsal evidence). The two genuinely-open technical risks land early-mid: provenance/toolchain fidelity (Sprint 1) and v3 integration (Sprints 4–5).
 
 ---
 
@@ -72,7 +80,7 @@ SDD §8 states "Sprint granularity is refined at `/sprint-plan`; phases below ar
 
 **In cycle-002 (P0, per prd.md:L828):** FR-1…FR-11 complete; FR-12 boundary (accounting + `allocateRevenue` bounds + negative tests — no policy *use*); FR-13 boundary + activation authority (slot, `activateLSG`/`deactivateLSG`, `ILSGModule` interface, `deployMarginalBySignal` **code**, treasury-side POL-non-voting rule, INV-32…34 negatives — LSG ships **inactive**); FR-14; FR-15; FR-16 boundaries; FB-1…18 per assigned method; NFRs; §13 disclosures; PROV-1…9 gates.
 
-**Excluded from cycle-002 (P1, per sdd.md:L909 and prd.md:L830-832):** `LSGSignals` module implementation (stake/signal + reward-program engine) and its boundary/reward test suite; production strategy adapters; first general-waterfall *use*; POL expansion tooling; ROOT/GIGA adapters (each additionally behind verification + provenance refreeze, F-53/PROV-6); signaler economics in operation; bribe experiments. P1 plugs into the P0 slots (`lsgModule`, admission registry, earmarks) with **zero P0 contract changes** — the P0 interfaces, activation slots, accounting surfaces, and negative tests that make this true are in Sprints 4–5.
+**Excluded from cycle-002 (P1, per sdd.md:L909 and prd.md:L830-832):** `LSGSignals` module implementation (stake/signal + reward-program engine) and its boundary/reward test suite; production strategy adapters; first general-waterfall *use*; the future Operator Reserve credit/accumulation/sweep/allocator-exclusion mechanics (design obligation before the founder-accepted `50/25/20/5/0` waterfall activates — 2026-08-12 remediation); POL expansion tooling; ROOT/GIGA adapters (each additionally behind verification + provenance refreeze, F-53/PROV-6); signaler economics in operation; bribe experiments. P1 plugs into the P0 slots (`lsgModule`, admission registry, `signalerBudget` earmark) with **zero P0 contract changes** — the P0 interfaces, activation slots, accounting surfaces, and negative tests that make this true are in Sprints 4–5.
 
 **Boundary tripwires (enforced every sprint):** any task that would implement P1 mechanism, resolve an operator-reserved value (R-1…R-14), or promote a §17 research value into code/parameters is out of scope for this cycle and must be rejected at review. The §17 quarantine grep runs in CI from Sprint 1.
 
@@ -110,6 +118,7 @@ Per sprint N (global = local for this cycle):
 | **Q-3 — operator Safe composition** | Sprint 8 (runbook input slot) | Signer set / threshold (deployment fact, R-14) | Blocks **production launch execution only** — never blocks any sprint's implementation (rehearsals use rehearsal values) |
 | **Q-4 — jurisdiction-specific legal review** | parallel to Sprints 6–8 | Launch-adjacent legal review of Strategic/governance characterization (NFR-COMP-3) | Blocks **public launch**, not code; tracked in the Sprint 8 runbook as a pre-launch condition |
 | **Per-sprint acceptance** | every sprint | Accept the audit-approved tree; authorize landing | Sprint N+1 does not start before sprint N acceptance |
+| **Pre-Sprint-3 binding conditions (2026-08-12)** | before `/implement sprint-3` | (a) Accept the consolidated adaptive-routing reconciliation package (authority deltas + MAP §10 + PRD v2.1.1 + SDD v1.7.1 + this plan v1.1.1, incl. the revenue-surface remediation); (b) close the independent M-1/L-3/L-4 provenance-tooling hardening node (Sprint-2 carry) | BOTH block `/implement sprint-3`; neither is waived, folded into another node, or performed by the reconciliation node |
 | **Deployment-time founder facts** (R-14) | post-cycle | Fee tier/tickSpacing, one-shot USD→WETH conversions, launch identity/secrets, Safe facts, schedule start | Recorded at deployment per the Sprint 8 runbook; never frozen in this plan |
 
 ---
@@ -230,10 +239,10 @@ Ship the two narrow-authority immutable primitives — the VUX token (mint=rig, 
 **Scope:** LARGE (7 tasks)
 
 ### Sprint Goal
-Complete the monetary core: the one-throne Dutch-priced KOTH engine with the 13-step atomic settlement, static `80/8/12` legs, measured-`D_R` VEM, and bootstrap semantics — proven by the property/fuzz and stateful-invariant suite that becomes the cycle's permanent monetary regression harness.
+Complete the monetary core: the one-throne Dutch-priced KOTH engine with the 13-step atomic settlement, the **adaptive 8%-floor routing law** (`king = floor(80%)`; `hardTarget = min(retained, max(hardFloor, D_need))` → Hard; `strategic = retained − hardTarget` → Strategic; PRD FR-4 v2.1.0, SDD Appendix F note F-1), measured-`D_R` VEM (rejection against `hardTarget`), and bootstrap semantics (confirm-only: the adaptive law degenerates exactly at `Qraw = 0`) — proven by the property/fuzz and stateful-invariant suite, including randomized `(P, Qraw, B_pre, S_pre)` regime testing, that becomes the cycle's permanent monetary regression harness.
 
 ### Deliverables
-- [ ] `Rig.sol` complete: Dutch pricing + successor opening, UPS halving schedule with epoch snapshot, `scheduleStart` at first public takeover, 13-step `take(maxPrice)` with exact legs / `D_R` measurement + rejection / `Qsafe`/`Qmint` / CEI + `nonReentrant`, bootstrap branch, `Settled` event, constants as `constant` (sdd.md:L101-L123, L196-L229)
+- [ ] `Rig.sol` complete: Dutch pricing + successor opening, UPS halving schedule with epoch snapshot, `scheduleStart` at first public takeover, 13-step `take(maxPrice)` with the exact adaptive legs (`hardTarget`/`strategic` residual; zero-valued Strategic transfer skipped) / `D_R` measurement + rejection against `hardTarget` / `Qsafe`/`Qmint` / CEI + `nonReentrant`, bootstrap branch, `Settled` event (variable-leg semantics; `D_need` derivable), constants as `constant` incl. the 1,200 bp Strategic **cap** (sdd.md:L101-L123, L196-L229; SDD Appendix F, F-1)
 - [ ] Property/fuzz suites for FR-2/3/4/5/6 acceptance formulas
 - [ ] Stateful invariant harness (introduced here, extended in Sprints 4–5) covering INV-1…22 over random `take`/`redeem` sequences
 - [ ] Automated FB scenario tests: FB-2, FB-3, FB-4, FB-13, FB-14, FB-15, FB-16; review-note documentation for FB-1
@@ -241,25 +250,25 @@ Complete the monetary core: the one-throne Dutch-priced KOTH engine with the 13-
 ### Acceptance Criteria
 - [ ] Price function matches `max(DECAY_FLOOR, opening × (1 − min(t,3000)/3000))` at boundary points t = 0 / 3000 / beyond, floor clip; successor opening `max(MINIMUM_OPENING, 2×P)` including the minimum branch (prd.md:L342-L344)
 - [ ] UPS at every schedule boundary equals 4 / 2 / 1 / 0.5 / 0.25 / 0.125 / 0.0625 / 0.03125 / 0.015625 VUX/s; an epoch straddling a halving settles at its opening snapshot; `Qraw` caps at exactly `3000 × epochUPS` (prd.md:L359-L361)
-- [ ] Randomized `P`: `king = floor(P×8000/10000)`, `strategic = floor(P×1200/10000)`, `reserve = P − king − strategic`; legs sum to `P`; dust lands in Hard (prd.md:L376)
-- [ ] Property test ∀ `(B_pre, S_pre, D_R, Qraw)`: minted amount = `min(Qraw, floor(D_R × S_pre / B_pre))` and preserves `(B_pre+D_R)/(S_pre+Qmint) ≥ B_pre/S_pre`; inconsistent `D_R` rejects atomically (`InconsistentReserveDelta`); no storage cell records unmet `Qraw − Qsafe` (prd.md:L393-L395)
-- [ ] Bootstrap: Reserve is genesis King, clock disabled, `Qraw = 0`, first takeover routes ≈88%+/12%/0-mint, payer's epoch opens at current schedule rate, no second bootstrap state reachable (prd.md:L407-L408)
+- [ ] Randomized `(P, Qraw, B_pre, S_pre)` regime testing (weak/cheap through strong/premium): `king = floor(P×8000/10000)`; `retained = P − king`; `strategicCap = floor(P×1200/10000)`; `hardFloor = retained − strategicCap`; `D_need = ceil(Qraw×B_pre/S_pre)`; `hardTarget = min(retained, max(hardFloor, D_need))`; `strategic = retained − hardTarget`; legs sum to `P`; `hardFloor ≤ hardTarget ≤ retained`; `0 ≤ strategic ≤ strategicCap`; dust lands in Hard; `D_need ≤ hardFloor ⇒` exact equality with the prior static split (prd.md:L376)
+- [ ] Property test ∀ `(B_pre, S_pre, D_R, Qraw)`: minted amount = `min(Qraw, floor(D_R × S_pre / B_pre))` and preserves `(B_pre+D_R)/(S_pre+Qmint) ≥ B_pre/S_pre`; a measured `D_R` inconsistent with the routed `hardTarget` rejects atomically (`InconsistentReserveDelta`); no storage cell records unmet `Qraw − Qsafe` (prd.md:L393-L395); VEM measured-delta invariant unchanged (`D_actual ≡ D_R`)
+- [ ] Bootstrap (confirm-only — behavior unchanged): Reserve is genesis King, clock disabled, `Qraw = 0` (so `hardTarget = hardFloor`, `strategic = strategicCap` by degeneracy), first takeover routes ≈88%+/12%/0-mint, payer's epoch opens at current schedule rate, no second bootstrap state reachable (prd.md:L407-L408)
 - [ ] Partial-failure injection: no state where some legs routed and others did not (prd.md:L378); settlement cannot rewrite a prior epoch or mint recipient (INV-21)
-- [ ] Code-inspection checklist: no branch of primary settlement reads time-phase, macro, NAV, ROOT/GIGA price, market price, oracle data, or operator preference (prd.md:L233, L377) — named checklist entry for review
-- [ ] Invariant suite green over random op sequences: `B/S` monotone under authorized issuance (INV-13), supply attribution complete, INV-1…22
+- [ ] Code-inspection checklist (narrowed prohibition): no branch of primary settlement reads time-phase, macro, NAV, ROOT/GIGA price, market price, oracle data, or operator preference — the adaptive computation consumes exactly `(P, Qraw, B_pre, S_pre)` plus own throne state (prd.md:L233, L377) — named checklist entry for review
+- [ ] Invariant suite green over random op sequences: `B/S` monotone under authorized issuance (INV-13), supply attribution complete, INV-1…22 with INV-18/INV-19 in their amended adaptive form (prd.md:L608-L609)
 
 ### Technical Tasks
 - [ ] Task 3.1: Rig pricing & schedule — Dutch decay, successor opening, `INITIAL_UPS >> min((t−scheduleStart)/30 days, 8)` snapshot, bootstrap decay anchor (`epochStart` = deployment), storage layout per sdd.md:L109-L122, routing constants as `constant`; FR-2/FR-3 boundary tests → **[G-1]** ⇐ none
-- [ ] Task 3.2: `take(maxPrice)` 13-step settlement — payment pull, exact legs, Hard-leg transfer + `D_R = balanceOf(reserve) − B_pre` equality rejection, `Math.mulDiv` VEM, effects-before-final-interactions ordering, mint to outgoing King, king-leg delivery, `Settled` emission (sdd.md:L196-L229) → **[G-1]** ⇐ Task 3.1
+- [ ] Task 3.2: `take(maxPrice)` 13-step settlement — payment pull; adaptive legs (`retained`, `strategicCap`, `hardFloor`, `D_need = ceil(Qraw×B_pre/S_pre)` via `Math.mulDiv`-family ceil, `hardTarget`, `strategic` residual with zero-transfer skip); Hard-leg transfer + `D_R = balanceOf(reserve) − B_pre` equality rejection against `hardTarget`; `Math.mulDiv` VEM; effects-before-final-interactions ordering; mint to outgoing King; king-leg delivery; `Settled` emission with variable-leg semantics (sdd.md:L196-L229; SDD Appendix F, F-1) → **[G-1]** ⇐ Task 3.1
 - [ ] Task 3.3: Bootstrap branch — reserve-as-King detection forcing `Qraw = 0`, king-leg redirection to Reserve, `scheduleStart` set at first public takeover; FR-6 tests incl. no-second-bootstrap → **[G-1]** ⇐ Task 3.2
-- [ ] Task 3.4: Property/fuzz suites — leg arithmetic ∀ P, VEM invariant ∀ tuples, expiry-no-carry, `maxPrice` slippage guard → **[G-1]** ⇐ Task 3.2
-- [ ] Task 3.5: Stateful invariant harness (INTRODUCES the cycle-wide suite) — INV-1…22 handlers over random `take`/`redeem` sequences with time warps across halvings → **[G-1]** ⇐ Task 3.2
+- [ ] Task 3.4: Property/fuzz suites — adaptive-leg arithmetic ∀ `(P, Qraw, B_pre, S_pre)` regimes (floor/cap/dust/degeneracy properties per the FR-4 acceptance list), VEM invariant ∀ tuples, expiry-no-carry, `maxPrice` slippage guard → **[G-1]** ⇐ Task 3.2
+- [ ] Task 3.5: Stateful invariant harness (INTRODUCES the cycle-wide suite) — INV-1…22 handlers (INV-18/INV-19 in amended adaptive form) over random `take`/`redeem` sequences with time warps across halvings and settlement regimes spanning `D_need ≤ hardFloor` through `D_need > retained` → **[G-1]** ⇐ Task 3.2
 - [ ] Task 3.6: FB scenario tests — FB-2 (no challenger), FB-3 (weak demand), FB-4 (high demand), FB-13 (mass redemption), FB-14 (below-backing trading), FB-15/16 (no rescue/recap path exists) → **[G-1, G-2]** ⇐ Task 3.5
 - [ ] Task 3.7: Review documentation — prohibited-signal inspection checklist (FR-4.3), FB-1 mining/redemption independence note, PROV-3 statement (routing/VEM/D_R written from PRD equations only; Rig skeleton from allowlisted file) → **[G-1, G-5]** ⇐ Task 3.2
 
 ### Dependencies
 - Sprint 2: `VUX.mint` (onlyRig), `HardReserve` physical-balance measurement target
-- Treasury leg target in tests is a plain address — the treasury contract is NOT required (the 12% leg is a plain WETH transfer, sdd.md:L138); `Rig.totalStrategicContributed` carries the P0 contributed-principal accounting until Sprint 4
+- Treasury leg target in tests is a plain address — the treasury contract is NOT required (the Strategic residual leg is a plain WETH transfer, skipped when zero, sdd.md:L138); `Rig.totalStrategicContributed` carries the P0 contributed-principal accounting (cumulative variable legs) until Sprint 4
 
 ### Security Considerations
 - **Trust boundaries:** `take` is permissionless; the only external calls are canonical-WETH transfers — SafeERC20 + `nonReentrant` + CEI per sdd.md:L227
@@ -290,7 +299,7 @@ Ship the role-gated Strategic Treasury custody and its arithmetic classification
 
 ### Deliverables
 - [ ] `VuxPoolDeployer.sol` (vendored-unit `=0.7.6`): canonical CREATE2 `deployCanonicalPool` (upstream deployer semantics), salted `msg.sender`-binding commitment gate, one-shot, Finding-4 parameter-domain checks, permanent `owner() == address(0)` (sdd.md:L190-L194)
-- [ ] `StrategicTreasury.sol` (part I): constructor immutables + wiring re-verification, AccessControl roles (creator-granted), receipt accounting, admission registry (`mode` immutable, `ADMISSION_DELAY = 24 h`, instant removal), `deployToStrategy`/`recallFromStrategy` caps, `returnFor`/`harvestYield`/`redeemUnits`/`closeStrategy`, `allocateRevenue` + earmarks + `burnVuxRevenue` + `setOpsRecipient`, classification events (sdd.md:L135-L148, L285-L321)
+- [ ] `StrategicTreasury.sol` (part I): constructor immutables + wiring re-verification, AccessControl roles (creator-granted), receipt accounting, admission registry (`mode` immutable, `ADMISSION_DELAY = 24 h`, instant removal), `deployToStrategy`/`recallFromStrategy` caps, `returnFor`/`harvestYield`/`redeemUnits`/`closeStrategy`, four-leg `allocateRevenue` + `signalerBudget` earmark + `burnVuxRevenue` + `setOpsRecipient` (corrected P0 revenue boundary per Task 4.5), classification events (sdd.md:L135-L148, L285-L321)
 - [ ] LSG P0 authority: `lsgModule` slot (launch `address(0)`), `activateLSG`/`deactivateLSG`, `ILSGModule` interface, `deployMarginalBySignal` (code P0, use P1), treasury-side `fundSignalerProgram` gating (sdd.md:L146, L322-L344)
 - [ ] Mode-aware accounting property suite + INV-23…34 boundary/invariant extensions + FB-5 scenario
 
@@ -298,8 +307,8 @@ Ship the role-gated Strategic Treasury custody and its arithmetic classification
 - [ ] Treasury constructor re-verifies `POOL.factory() == VUX_POOL_DEPLOYER`, `IUniswapV3Factory(VUX_POOL_DEPLOYER).owner() == address(0)`, token ordering/fee, and derives tick bounds from `pool.tickSpacing()`; roles granted to `msg.sender` (creator); no `setPool`/initializer exists (sdd.md:L140, L718-L725)
 - [ ] Admission: `mode` fixed at admission and immutable (change = remove + re-admit + re-delay); deployment blocked until `maturesAt` (`AdmissionNotMatured`); removal/recall always instant and unblockable (sdd.md:L147)
 - [ ] Accounting properties ∀ flow sequences ∀ modes (sdd.md:L856): Σ revenue distributions ≤ realized-revenue credits; returned principal never credits revenue; arbitrary-asset returns rejected (`UnknownReturnAsset`); NETTING revenue only beyond full return; CLAIM harvest with decreased `principalUnits` reverts; UNITIZED basis release conserves (Σ `basisReleased` = original basis over full unwind), gain→revenue / shortfall→loss never negative revenue; `closeStrategy` write-off only reduces principal
-- [ ] `allocateRevenue` negatives: `asset == VUX` rejected (`VuxRevenueMustBurn`); non-WETH Hard leg rejected (`HardLegMustBeWeth`); over-accumulator rejected (`RevenueExceedsRealized`) — FR-12 negative acceptance "no configuration of the policy surface can reach Reserve principal or mint" (prd.md:L505-L506)
-- [ ] Percentages are call-time arguments only — grep-verified no stored ratio constant exists (R-9 reserved; §17 quarantine)
+- [ ] `allocateRevenue` negatives: `asset == VUX` rejected (`VuxRevenueMustBurn`); non-WETH Hard leg rejected (`HardLegMustBeWeth`); over-accumulator rejected (`RevenueExceedsRealized`); ABI assertion: exactly four legs — no `toMarketInfra` parameter and no `marketInfraBudget` symbol exists (2026-08-12 remediation) — FR-12 negative acceptance "no configuration of the policy surface can reach Reserve principal or mint" (prd.md:L505-L506)
+- [ ] Percentages are call-time arguments only — grep-verified no stored ratio constant exists (R-9 execution-reserved; waterfall ratios are founder-accepted doctrine, never operator-set; §17 quarantine)
 - [ ] LSG P0: launch state inactive (`lsgModule == address(0)`); `activateLSG`/`deactivateLSG` operator-gated + evented; no numeric threshold or calendar in code (F-50); signal surfaces revert `LSGInactive` before activation; INV-32…34 negatives green (prd.md:L522-L524)
 - [ ] FB-5: simulated 50%/80%/100% Strategic loss leaves `B`, redemption, VEM, and mint authority **bit-identical** (prd.md:L444)
 - [ ] Role topology: operator roles exist on `StrategicTreasury` only; negative tests prove no treasury call path reaches Reserve principal, redemption math, mint authority, or routing constants (NFR-SEC-7; INV-33)
@@ -310,14 +319,14 @@ Ship the role-gated Strategic Treasury custody and its arithmetic classification
 - [ ] Task 4.2: Treasury skeleton — constructor immutables + re-verification, AccessControl (`DEFAULT_ADMIN_ROLE`/`OPERATOR_ROLE` to creator), storage cells per sdd.md:L140, receipt accounting + `StrategicInflow`/`StrategicOutflow` events → **[G-2]** ⇐ Task 4.1
 - [ ] Task 4.3: Admission registry — `admitStrategy`/`removeStrategy` (mode + cap + `maturesAt`; `StrategyAdmitted`/`StrategyRemoved`), `deployToStrategy`/`recallFromStrategy` (admitted+matured+cap) → **[G-2]** ⇐ Task 4.2
 - [ ] Task 4.4: Flow primitives — `returnFor` (principal-first netting, in-call classification), `harvestYield` (CLAIM: measured own-balance deltas + units-intact guard), `redeemUnits` (UNITIZED: ceil basis release, gain/shortfall booking), `closeStrategy` (loss-only write-off after removal) → **[G-2]** ⇐ Task 4.3
-- [ ] Task 4.5: Distribution surface — `allocateRevenue` (five legs, call-time amounts, accumulator bound, WETH-only Hard leg), `signalerBudget`/`marketInfraBudget` earmarks, `burnVuxRevenue`, `setOpsRecipient` + events → **[G-2]** ⇐ Task 4.4
+- [ ] Task 4.5: Distribution surface (corrected P0 revenue boundary, 2026-08-12 remediation; sdd.md §1.10 + Appendix F F-2) — `allocateRevenue` with **four** call-time legs (compound / Hard **WETH-only** / ops / signalers; accumulator bound Σ ≤ `realizedRevenue[asset]`); `toOps` = payment of an actual approved operating expense ONLY (never the future 25% Operator Reserve contribution — its credit/accumulation/sweep/allocator-exclusion mechanics are a P1/future design obligation, NOT built here); `signalerBudget` as the sole earmark (no `toMarketInfra` argument, no `marketInfraBudget` symbol — market infrastructure is funded via Strategic capital deployment policy, never a revenue leg); `burnVuxRevenue`, `setOpsRecipient` + events → **[G-2]** ⇐ Task 4.4
 - [ ] Task 4.6: LSG P0 authority — `lsgModule` slot, `activateLSG`/`deactivateLSG` + events, `ILSGModule` interface, `deployMarginalBySignal` (reads signal view, filters admitted+matured+cap-headroom, pro-rata floor split via §1.10 ledger, `SignalConsumed`), treasury-side `fundSignalerProgram` (requires active module, spends earmark) → **[G-4, G-2]** ⇐ Task 4.3, Task 4.5
 - [ ] Task 4.7: Mode-aware accounting property suite per sdd.md:L856 (all modes, all guards, mode immutability) → **[G-2]** ⇐ Task 4.4, Task 4.5
 - [ ] Task 4.8: Boundary negatives + invariant extension — INV-23/24/28/30/31 handlers added to the Sprint-3 harness; INV-32/33/34 LSG-boundary negatives; FB-5 bit-identical-core scenario; FB-15/16 no-path re-checks from treasury surfaces → **[G-2, G-4]** ⇐ Task 4.6, Task 4.7
 - [ ] Task 4.9: Review documentation — FB-6/9/10/12 scenario notes; R-1…R-14 reservation sweep (nothing frozen); adversarial-adapter argument (fraud ≤ theft, sdd.md:L302) → **[G-2, G-6]** ⇐ Task 4.5
 
 ### Dependencies
-- Sprint 3: `Rig.Settled` + `totalStrategicContributed` attribution for the 12% leg (sdd.md:L303 rule 5)
+- Sprint 3: `Rig.Settled` + `totalStrategicContributed` attribution for the Strategic residual leg — a variable amount in `[0, floor(12%·P)]` per settlement (sdd.md:L303 rule 5)
 - Sprint 1: vendored v3-core unit (pool + deployer pattern) for Task 4.1; vendored OZ AccessControl
 - Test fixtures deploy a real vendored pool via `VuxPoolDeployer` for constructor-verification tests — no mocks for identity checks
 
@@ -330,7 +339,7 @@ Ship the role-gated Strategic Treasury custody and its arithmetic classification
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
 | Classification guard gap lets principal book as revenue | Low | Critical | Property suite over all modes/sequences; no `declareProfit` symbol; audit focus item |
-| Accidentally freezing an operator-reserved value (R-9 ratios, thresholds) | Medium | High | Call-time-arguments-only design; §17 quarantine grep; Task 4.9 reservation sweep |
+| Accidentally freezing an operator-reserved execution parameter/threshold (R-9/R-10 execution scope — the waterfall ratios themselves are founder-accepted doctrine, not operator-reserved) | Medium | High | Call-time-arguments-only design; §17 quarantine grep; Task 4.9 reservation sweep |
 | Cross-compilation-unit interface mismatch (0.8.28 treasury ↔ 0.7.6 pool) | Medium | Medium | Interface-only coupling via vendored v3-core interfaces; fixture-deployed real pool in tests |
 | P1 scope creep (implementing LSGSignals mechanics) | Medium | Medium | P1 tripwire: only the slot/interface/execution-read ship; module implementation rejected at review |
 
@@ -559,7 +568,7 @@ Close the cycle: static-analysis hardening behind its provenance gate, the compl
 
 | Goal ID | Goal | Validation Action | Expected Result |
 |---------|------|-------------------|-----------------|
-| G-1 | Faithful monetary core | Fork scenario: rehearsal genesis → bootstrap takeover → ordinary takeovers across a halving → redemptions; assert frozen-parameter table (PRD Appendix A) against deployed constants verbatim | INV-1…22 hold; constants match verbatim; bootstrap ≈88%+/12%/0-mint |
+| G-1 | Faithful monetary core | Fork scenario: rehearsal genesis → bootstrap takeover → ordinary takeovers across a halving **and across adaptive regimes (`D_need ≤ hardFloor` through `D_need > retained`)** → redemptions; assert frozen-parameter table (PRD Appendix A, incl. the adaptive routing law) against deployed constants and observed leg behavior verbatim | INV-1…22 hold (INV-18/19 amended form); constants match verbatim; adaptive floor/cap/dust properties observed; bootstrap ≈88%+/12%/0-mint |
 | G-2 | Dual-treasury separation | Strategic loss 50/80/100% + POL failure scenarios on the assembled system | INV-23…31, INV-35 hold; core state bit-identical (FB-5); FB-7 |
 | G-3 | Truthful UX | Playwright suite + reconstruction test on the assembled stack | Three tiers distinct; zero prohibited phrases; indexer equality |
 | G-4 | LSG-ready boundary | Activation-slot lifecycle (activate mock module → deactivate) + INV-32…34 negatives | Inactive at launch; authority present; boundaries structurally unreachable |
@@ -650,11 +659,11 @@ Strictly sequential; no sprint requires authority or code produced by a later sp
 | FR-1 genesis state & supply | 2 (VUX ctor semantics), 7 (GenesisDeployer + rehearsal), 8 (conversion-evidence procedure in runbook) | Planned |
 | FR-2 throne & Dutch pricing | 3 | Planned |
 | FR-3 clock, UPS schedule, tail | 3 | Planned |
-| FR-4 settlement & static routing | 3 | Planned |
+| FR-4 settlement & adaptive 8%-floor routing (v2.1.0) | 3 | Planned |
 | FR-5 VEM issuance cap | 3 | Planned |
 | FR-6 bootstrap settlement | 3 | Planned |
 | FR-7 Hard Reserve & redemption | 2 (contract + math), 3 (settlement interplay) | Planned |
-| FR-8 Strategic receipt & custody separation | 4 (custody; 12% leg routed in 3) | Planned |
+| FR-8 Strategic receipt & custody separation | 4 (custody; Strategic residual leg routed in 3) | Planned |
 | FR-9 classification (P0 accounting) | 4 | Planned |
 | FR-10 POL (P0 classification/conduct) | 5 | Planned |
 | FR-11 VYRF (P0 outcome) | 5 | Planned |
@@ -697,7 +706,7 @@ Strictly sequential; no sprint requires authority or code produced by a later sp
 
 | Goal ID | Goal Description | Contributing Tasks | Validation Task |
 |---------|------------------|-------------------|-----------------|
-| G-1 | Faithful monetary core (genesis, KOTH, 80/8/12, VEM, redemption exactly as frozen) | 2.1–2.6, 3.1–3.7, 4.1, 5.3, 6.2, 7.1–7.6 | Sprint 8: Task 8.E2E |
+| G-1 | Faithful monetary core (genesis, KOTH, adaptive 8%-floor routing, VEM, redemption exactly as frozen) | 2.1–2.6, 3.1–3.7, 4.1, 5.3, 6.2, 7.1–7.6 | Sprint 8: Task 8.E2E |
 | G-2 | Dual-treasury separation, failure independence | 3.6, 4.1–4.9, 5.1–5.6, 6.3, 6.5, 7.4 | Sprint 8: Task 8.E2E |
 | G-3 | Truthful UX (three-tier truth never conflated) | 6.2–6.8, 8.7 | Sprint 8: Task 8.E2E |
 | G-4 | LSG-ready boundary (inactive, bounded, activation authority present) | 4.6, 4.8 | Sprint 8: Task 8.E2E |

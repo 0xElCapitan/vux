@@ -1,11 +1,11 @@
 # Software Design Document: VUX v1
 
-**Version:** 1.6.0 (cycle-002 "VUX v1 Strategic Treasury")
-**Date:** 2026-08-09
-**Author:** Architecture Designer Agent (Loa `/architect`, unattended operator-dispatched node)
-**Status:** `SDD_ACCEPTED` — architecture baseline for `/sprint-plan`
-**Operator acceptance:** 2026-08-10 — `OPERATOR_ACCEPTANCE`
-**PRD Reference:** `grimoires/loa/prd.md` v2.0.0 (`PRD_ACCEPTED`, operator acceptance 2026-08-10)
+**Version:** 1.7.1 (v1.6.0 + adaptive-routing reconciliation amendment + focused revenue-surface remediation, both 2026-08-12 — Appendix F; cycle-002 "VUX v1 Strategic Treasury")
+**Date:** 2026-08-09 (amended 2026-08-12)
+**Author:** Architecture Designer Agent (Loa `/architect`, unattended operator-dispatched node); v1.7.0 amendment by the authorized consolidated reconciliation node
+**Status:** `SDD_ACCEPTED` (v1.6.0, 2026-08-10) — v1.7.0 renders the 2026-08-12 founder acceptance; reconciliation-package operator acceptance pending (Appendix F)
+**Operator acceptance:** 2026-08-10 — `OPERATOR_ACCEPTANCE` (v1.6.0 baseline); the v1.7.0 amendment's controlling authority is the `FOUNDER_ACCEPTANCE_COMPLETE` record of 2026-08-12
+**PRD Reference:** `grimoires/loa/prd.md` v2.1.1 (`PRD_ACCEPTED` baseline + adaptive-routing amendment + revenue-surface remediation; all `prd.md:L…` citations herein remain position-valid — every in-body PRD edit was line-count-neutral, PRD Appendix C incl. §C.7)
 
 > **Authority discipline.** This SDD decides exactly the items the PRD reserves to `/architect` (prd.md:L854-L868) and nothing more. Every frozen parameter is carried verbatim from PRD Appendix A (prd.md:L1000-L1028). No operator-reserved decision (PRD §16, R-1…R-14) is resolved here; no research-guidance value (PRD §17) appears here as a parameter. Any conflict between this SDD and the PRD resolves for the PRD.
 
@@ -35,7 +35,7 @@
 
 VUX v1 is a set of Solidity smart contracts on Robinhood Chain (an Arbitrum-technology L2) implementing:
 
-> "(1) a permissionless WETH-paid King-of-the-Hill (KOTH) mining game that **is** the public TGE …; (2) an enforceable, ownerless, immutable raw-WETH **Hard Reserve** …; (3) a separately custodied, productive **Strategic Treasury** capitalized by a static 12% leg of every takeover payment; (4) bounded holder-directed Strategic allocation through **LSG** … inactive until operators affirmatively activate it; (5) protocol-owned VUX/WETH market infrastructure (**POL**) with a frozen special fee policy (**VYRF** …); and (6) realized economic activity …" (prd.md:L47)
+> "(1) a permissionless WETH-paid King-of-the-Hill (KOTH) mining game that **is** the public TGE …; (2) an enforceable, ownerless, immutable raw-WETH **Hard Reserve** …; (3) a separately custodied, productive **Strategic Treasury** capitalized by the adaptive Strategic residual of every takeover payment (up to the floor-rounded 12% cap — FR-4); (4) bounded holder-directed Strategic allocation through **LSG** … inactive until operators affirmatively activate it; (5) protocol-owned VUX/WETH market infrastructure (**POL**) with a frozen special fee policy (**VYRF** …); and (6) realized economic activity …" (prd.md:L47)
 
 The on-chain monetary core (KOTH settlement, VEM issuance, redemption) is fully autonomous — "must function without any off-chain actor" (prd.md:L690). Off-chain components (indexer, frontend) are strictly read-only truth surfaces; "Read-only estimates create no entitlement" (prd.md:L539).
 
@@ -53,7 +53,7 @@ The on-chain monetary core (KOTH settlement, VEM issuance, redemption) is fully 
 ```mermaid
 flowchart TD
     subgraph OnChain["Robinhood Chain (on-chain, immutable core)"]
-        RIG["Rig.sol<br/>KOTH throne, Dutch price,<br/>epoch clock, 80/8/12 split, VEM"]
+        RIG["Rig.sol<br/>KOTH throne, Dutch price,<br/>epoch clock, adaptive 8%-floor split, VEM"]
         VUX["VUX.sol<br/>ERC20, mint=Rig only,<br/>redemption burn=Reserve only"]
         HR["HardReserve.sol<br/>ownerless raw-WETH vault,<br/>fee-free redemption"]
         ST["StrategicTreasury.sol<br/>role-gated custody, POL sleeve,<br/>VYRF harvest, LSG activation slot"]
@@ -71,8 +71,8 @@ flowchart TD
     Contender((Contender)) -- "take(maxPrice) pays P in WETH" --> RIG
     RIG -- "mint Qmint to outgoing King" --> VUX
     RIG -- "80% king leg (WETH)" --> Contender
-    RIG -- "8% + dust reserve leg" --> HR
-    RIG -- "12% strategic leg" --> ST
+    RIG -- "hard leg = hardTarget: 8%+dust floor up to full retained 20%" --> HR
+    RIG -- "strategic residual: 0 up to 12% cap" --> ST
     Holder((Holder)) -- "redeem(q, to): one tx, no prior approval" --> HR
     HR -- "burnForRedemption(msg.sender, q)" --> VUX
     HR -- "WETH payout" --> Holder
@@ -99,8 +99,8 @@ flowchart TD
 - **Dependencies:** OpenZeppelin ERC20 base. **Deliberately excludes** ERC20Votes/hooks/permit-extensions beyond ERC20Permit — the token is immutable, so any future LSG weighting must be computed by an external module, never inside the token (see §1.4 StrategicTreasury / LSG).
 
 #### Rig.sol — KOTH throne, pricing, settlement, VEM
-- **Purpose:** "operate the one throne, Dutch price, epoch, payment, split, outgoing settlement" and never "mint outside VEM; deviate from static `80/8/12`" (prd.md:L740).
-- **Provenance:** generic auction/throne skeleton adapted from allowlisted Miner Manifold `Rig.sol` (blob `d362ef35…`) per PROV-2; the `80/8/12` routing, Reserve-favoring dust arithmetic, `D_R` measurement, and VEM math are `VUX_ORIGINAL_CLEAN_SOURCE_REQUIRED` (PROV-3, prd.md:L762) and written from the PRD equations only.
+- **Purpose:** "operate the one throne, Dutch price, epoch, payment, adaptive split, outgoing settlement" and never "mint outside VEM; deviate from the frozen adaptive routing law (FR-4)" (prd.md:L740).
+- **Provenance:** generic auction/throne skeleton adapted from allowlisted Miner Manifold `Rig.sol` (blob `d362ef35…`) per PROV-2; the adaptive routing law, Reserve-favoring dust arithmetic, `D_R` measurement, and VEM math are `VUX_ORIGINAL_CLEAN_SOURCE_REQUIRED` (PROV-3, prd.md:L762; carried over to the adaptive law per ACC §5.1) and written from the PRD equations only.
 - **Responsibilities:**
   - Dutch pricing: `price(t) = max(DECAY_FLOOR, opening × (1 − min(t, 3000)/3000))`; successor opening `max(MINIMUM_OPENING, 2 × P)` (FR-2.3, prd.md:L336).
   - Halving schedule: `epochUPS` snapshotted at epoch open from `INITIAL_UPS >> min((t − scheduleStart)/30 days, 8)` — eight halvings then permanent tail `4/256 = 0.015625` VUX/s (FR-3, prd.md:L351-L353). `scheduleStart` is set at the first public takeover ("Public clock begins at first public King's epoch", prd.md:L176).
@@ -116,10 +116,10 @@ flowchart TD
   uint256 public epochUPS;          // snapshotted UPS (VUX wei/second)
   uint64  public scheduleStart;     // set once at first public takeover
   uint64  public epochId;           // monotonic settlement counter
-  uint256 public totalStrategicContributed; // cumulative 12% legs (accounting truth)
+  uint256 public totalStrategicContributed; // cumulative Strategic legs — variable residual, ≤12% each (accounting truth)
   // immutables: vux, weth, reserve, treasury, BOOTSTRAP_OPENING, MINIMUM_OPENING, DECAY_FLOOR
   ```
-  All routing constants (`8_000`, `1_200`, `10_000` bp; `EPOCH_PERIOD = 3_000`; `PRICE_MULTIPLIER = 2`) are `constant` — not storage, not settable (INV-18; prd.md:L608).
+  All routing constants (`8_000` King bp, `1_200` **strategic-cap** bp, `10_000` denominator; `EPOCH_PERIOD = 3_000`; `PRICE_MULTIPLIER = 2`) are `constant` — not storage, not settable; since 2026-08-12 they parameterize the adaptive law (`king`, `strategicCap`, `hardFloor`), not a static three-way split (INV-18 as amended; prd.md:L608; Appendix F).
 - **Dependencies:** VUX (mint), WETH (SafeERC20), HardReserve (address only — plain WETH transfer + balance measurement), StrategicTreasury (address only — plain WETH transfer).
 
 #### HardReserve.sol — the exit right
@@ -133,11 +133,11 @@ flowchart TD
 - **Structural absences (the design):** no owner, no roles, no upgrade, no pause, no arbitrary call, no ERC20 approve of any token, no sweep, no receive-hook, no selfdestruct, no payable functions. The contract's entire external surface is `redeem` + views.
 
 #### StrategicTreasury.sol — first-class risk capital custody
-- **Purpose:** "receive/account the 12% leg and protocol-owned risk capital" and never "enter `B`" (prd.md:L741). Custody primitive (PRD §19 item 3) **decided**: a dedicated VUX-original contract using OpenZeppelin AccessControl, with `DEFAULT_ADMIN_ROLE` and `OPERATOR_ROLE` held by an operator Safe multisig (Safe itself is deployment-time infrastructure recorded per R-14).
+- **Purpose:** "receive/account the Strategic residual leg and protocol-owned risk capital" and never "enter `B`" (prd.md:L741). Custody primitive (PRD §19 item 3) **decided**: a dedicated VUX-original contract using OpenZeppelin AccessControl, with `DEFAULT_ADMIN_ROLE` and `OPERATOR_ROLE` held by an operator Safe multisig (Safe itself is deployment-time infrastructure recorded per R-14).
 - **Responsibilities:**
-  - Passive receipt of the 12% leg (plain WETH transfer from Rig inside settlement — no callback, minimizing settlement's external-call surface). Cumulative contributed principal is accounted in `Rig.totalStrategicContributed` + `Settled` events (classification: "Strategic contributed … principal", prd.md:L452).
+  - Passive receipt of the Strategic residual leg — variable, `0 ≤ strategic ≤ floor(12%·P)`, possibly zero (plain WETH transfer from Rig inside settlement, skipped when zero — no callback, minimizing settlement's external-call surface). Cumulative contributed principal is accounted in `Rig.totalStrategicContributed` + `Settled` events (classification: "Strategic contributed … principal", prd.md:L452).
   - POL sleeve: owns the canonical full-range V3-style LP position **directly on the pool** (no v3-periphery / no position NFT — §1.6). Operator-gated `mintPolPosition`, `increasePol` (existing/purchased VUX + Strategic WETH only — no mint path exists anywhere, INV-26), `decreasePol` (returned principal classified as principal, INV-28), and `buyVuxForPol(wethIn, minVuxOut, sqrtPriceLimit)` — the answer to "how is protocol-owned VUX sourced for later POL without minting": (a) VUX returned by `decreasePol`, or (b) an in-protocol, slippage-bounded swap of Strategic WETH on the canonical pool. The swap keeps custody inside the protocol at all times (no transfer-to-operator step exists), and purchased VUX books as POL inventory principal (F-36/F-37; R-13 tactics remain operator-reserved).
-  - **Storage/state ownership (decided):** the treasury owns exactly these accounting cells — `outstandingPrincipal[strategy][asset]` (deployed-asset cost basis), `unitsHeld[strategy]` (UNITIZED mode only), `realizedRevenue[asset]`, `polVuxPrincipal`, `polWethPrincipal`, earmarked `marketInfraBudget[asset]` and `signalerBudget[asset]`, `opsRecipient`, `lsgModule`, and the admission registry `(strategy → mode, per-asset {cap, maturesAt}, active)`. No mark/NAV cell exists on-chain (INV-30 is structural; `T_nav` is an indexer analytic). Single-writer: no other contract writes treasury state; the treasury writes no other contract's state. **Constructor immutables (complete):** `WETH`, `VUX`, `HARD_RESERVE` (VYRF WETH-fee destination), `VUX_POOL_DEPLOYER`, `POOL`, `TOKEN0`/`TOKEN1`, `FEE_TIER`, and the full-range tick bounds derived from the verified pool's `tickSpacing()` — all fixed at construction (the protocol-deployed pool exists and is verified *before* the treasury in the genesis order, §1.4/GenesisDeployer); the constructor re-verifies `POOL.factory() == VUX_POOL_DEPLOYER`, `IUniswapV3Factory(VUX_POOL_DEPLOYER).owner() == address(0)` (protocol-fee authority permanently dead), and token ordering/fee; no `setPool`, initializer, or wiring authority exists at any time. Both roles are granted in the constructor to **`msg.sender` — the creator, structurally `GenesisDeployer`** (no `genesisOperator` argument exists to misconfigure, and the external genesis caller receives nothing).
+  - **Storage/state ownership (decided):** the treasury owns exactly these accounting cells — `outstandingPrincipal[strategy][asset]` (deployed-asset cost basis), `unitsHeld[strategy]` (UNITIZED mode only), `realizedRevenue[asset]`, `polVuxPrincipal`, `polWethPrincipal`, the earmark `signalerBudget[asset]` (the sole revenue earmark — the former `marketInfraBudget` is deleted, 2026-08-12 remediation, Appendix F note F-2), `opsRecipient`, `lsgModule`, and the admission registry `(strategy → mode, per-asset {cap, maturesAt}, active)`. No mark/NAV cell exists on-chain (INV-30 is structural; `T_nav` is an indexer analytic). Single-writer: no other contract writes treasury state; the treasury writes no other contract's state. **Constructor immutables (complete):** `WETH`, `VUX`, `HARD_RESERVE` (VYRF WETH-fee destination), `VUX_POOL_DEPLOYER`, `POOL`, `TOKEN0`/`TOKEN1`, `FEE_TIER`, and the full-range tick bounds derived from the verified pool's `tickSpacing()` — all fixed at construction (the protocol-deployed pool exists and is verified *before* the treasury in the genesis order, §1.4/GenesisDeployer); the constructor re-verifies `POOL.factory() == VUX_POOL_DEPLOYER`, `IUniswapV3Factory(VUX_POOL_DEPLOYER).owner() == address(0)` (protocol-fee authority permanently dead), and token ordering/fee; no `setPool`, initializer, or wiring authority exists at any time. Both roles are granted in the constructor to **`msg.sender` — the creator, structurally `GenesisDeployer`** (no `genesisOperator` argument exists to misconfigure, and the external genesis caller receives nothing).
   - **VYRF harvest** — `harvestPol()`, deliberately **permissionless** so that "operational conveniences … may be assisted but their absence must not corrupt classification" (prd.md:L690, NFR-REL-2). Keepers are *useful, never necessary*; unharvested fees simply accrue inside the pool position and are counted nowhere until collected (FB-8: "No anticipated revenue counted"). Exact mechanics — in the v3 position model `collect` withdraws **everything** credited to `tokensOwed` (fees *and* any principal credited by a prior `burn`), so the fee/principal separation is realized by **ordering**, not by the `collect` call alone:
     - `harvestPol()`: `pool.burn(tickLower, tickUpper, 0)` (a zero-liquidity "poke" that credits accrued fees to `tokensOwed`) → `pool.collect(treasury, …, max, max)`. Because `decreasePol` always sweeps its own principal atomically (next bullet), **`tokensOwed` outside a `decreasePol` execution consists of fees only** — a tested invariant (§7). Collected VUX fees are burned and WETH fees transferred to `HardReserve` in the same call; neither can touch principal (FR-11, prd.md:L481-L486).
     - `decreasePol(liquidity)`: poke + collect fees first (classified VYRF exactly as above) → `pool.burn(…, liquidity)` (credits principal) → `pool.collect` for exactly that principal → booked as returned POL principal against the `polVuxPrincipal`/`polWethPrincipal` cost-basis cells (INV-28; returned VUX stays non-voting/non-redeeming POL inventory, returned WETH becomes Strategic dry powder). Fee-vs-principal classification is therefore mechanical and cannot be confused in either direction.
@@ -211,10 +211,10 @@ sequenceDiagram
     R->>H: 3. B_pre = W.balanceOf(H); S_pre = V.totalSupply()
     Note over R: 4. Qraw = bootstrap ? 0 : min(elapsed, 3000) × epochUPS
     R->>W: 5. transferFrom(C, Rig, P)  — collect payment
-    Note over R: 6. king=floor(P×8000/10000); strategic=floor(P×1200/10000); reserve=P−king−strategic
-    R->>W: 7. transfer(T, strategic) — Strategic principal delivered & classified
-    R->>W: 8a. transfer(H, reserve [+king if bootstrap])
-    R->>H: 8b. D_R = W.balanceOf(H) − B_pre; require D_R == routed Hard amount, else REVERT
+    Note over R: 6. king=floor(P×8000/10000); retained=P−king; strategicCap=floor(P×1200/10000); hardFloor=retained−strategicCap;<br/>D_need=ceil(Qraw×B_pre/S_pre); hardTarget=min(retained, max(hardFloor, D_need)); strategic=retained−hardTarget
+    R->>W: 7. transfer(T, strategic) — Strategic residual delivered & classified [skipped when zero]
+    R->>W: 8a. transfer(H, hardTarget [+king if bootstrap])
+    R->>H: 8b. D_R = W.balanceOf(H) − B_pre; require D_R == hardTarget (+king at bootstrap), else REVERT
     Note over R: 9. Qsafe = mulDiv(D_R, S_pre, B_pre) [floor]; Qmint = min(Qraw, Qsafe)
     Note over R: 12'. EFFECTS: king=C; epochStart=now; epochOpening=max(MIN_OPENING, 2P); snapshot epochUPS; epochId++
     R->>V: 10. mint(outgoingKing, Qmint)   [skipped when Qmint = 0]
@@ -225,7 +225,7 @@ sequenceDiagram
 Design notes:
 - **Atomicity** (INV-21) is the transaction boundary; any revert (including the step-8b `D_R` consistency rejection, FR-5 acceptance, prd.md:L394) unwinds everything.
 - **Effects before final interactions:** throne-state writes (step 12') commit before the mint and the outbound king-leg transfer. The payment pull and Hard-leg transfer necessarily precede `D_R` measurement — this is the measured-reality requirement (NFR-SEC-6), and is safe under `nonReentrant` + the YELLOW facts that canonical WETH has "no … transfer-hook" (prd.md:L721); the guard defends against a future adverse upgrade regardless.
-- **No prohibited signals:** the function reads only `block.timestamp`, its own storage, `WETH.balanceOf(reserve)`, and `VUX.totalSupply()` — structurally no "time-phase, macro, NAV, ROOT/GIGA price, market price, oracle data, or operator preference" branch (prd.md:L233).
+- **No prohibited signals (narrowed prohibition):** the function reads only `block.timestamp`, its own storage, `WETH.balanceOf(reserve)`, and `VUX.totalSupply()` — exactly the input set of the sanctioned settlement-local adaptive law, `(P, Qraw, B_pre, S_pre)` — and structurally no "time-phase, macro, NAV, ROOT/GIGA price, market price, oracle data, or operator preference" branch (prd.md:L233; FREEZE-Δ §3.2).
 - **Arithmetic:** `Math.mulDiv` (OpenZeppelin) for `Qsafe` and redemption payout — full-precision 512-bit intermediate, floor semantics (NFR-SEC-4). Basis-point legs use native `uint256` (`P ≤ 2^192` is unreachable for WETH amounts; overflow-checked Solidity ≥0.8 everywhere).
 
 ### 1.6 External Integrations
@@ -305,15 +305,15 @@ The three flow primitives compose (a mode is a permission set over them): `NETTI
 
 POL flows never touch this surface: VYRF fee legs bypass the waterfall by construction (§1.4), and POL principal nets against its own cost-basis cells. Every primitive emits a source-specific event carrying (strategy, mode, asset, principal/revenue/loss split) — observable, source-attributed classification (FR-9 acceptance).
 
-**The distribution surface.** `allocateRevenue(asset, toCompound, toHard, toOps, toSignalers, toMarketInfra)` (`OPERATOR_ROLE`) — the five permitted FR-12.2 uses, with percentages as **call-time arguments, never stored constants** (R-9 stays reserved; each call is the disclosed policy act, evented):
+**The distribution surface — the v1.6.0 five-leg design is SUPERSEDED IN PART 2026-08-12 (remediation; Appendix F note F-2):** `allocateRevenue(asset, toCompound, toHard, toOps, toSignalers)` (`OPERATOR_ROLE`) — a **four-leg** P0 revenue accounting/safety surface with amounts as **call-time arguments, never stored constants** (each call is the disclosed policy act, evented). `toOps` is ONLY payment of an ACTUAL APPROVED operating expense from realized revenue — it does **not** encode the founder-accepted future 25% Operator Reserve contribution, whose credit/accumulation/sweep/allocator-exclusion mechanics are a P1/future design obligation before the accepted `50/25/20/5/0` waterfall activates (no person holds a claim before an approved expense is incurred):
 
 | leg | realization | bound |
 |---|---|---|
-| Strategic compounding | book transfer revenue → dry-powder principal | Σ of all five legs ≤ `realizedRevenue[asset]` — principal and marks are arithmetically unreachable (FR-12 negative acceptance, prd.md:L505-L506) |
+| Strategic compounding | book transfer revenue → dry-powder principal | Σ of all four legs ≤ `realizedRevenue[asset]` — principal and marks are arithmetically unreachable (FR-12 negative acceptance, prd.md:L505-L506) |
 | Hard Reserve accretion | transfer to `HardReserve`, one-way | **WETH only** — any other asset reverts (`B` is raw WETH; nothing unredeemable can strand in Reserve custody) |
-| Operations/contributors | transfer to `opsRecipient` (operator-set, evented, disclosed) | revenue-bounded; never principal (FB-9/FB-12: zero revenue ⇒ every leg reverts) |
+| Operations/contributors | transfer to `opsRecipient` (operator-set, evented, disclosed) — payment of an actual approved operating expense only; never a same-period entitlement, never the future Operator Reserve credit | revenue-bounded; never principal (FB-9/FB-12: zero revenue ⇒ every leg reverts) |
 | LSG/signaler economics | book earmark `signalerBudget[asset]`, spendable only via `fundSignalerProgram(asset, amount, start, end)` → a PROTOCOL-provenance reward program on the active LSG module (§1.11) | revenue-bounded; requires active LSG; observable (FR-13.7, R-11). The operator's X / (total − X) split between marginal capital and signaler rewards is two call-time amounts (`toCompound` later consumed by `deployMarginalBySignal`, vs. this leg) — no ratio exists in code |
-| Market infrastructure | book earmark `marketInfraBudget[asset]`, spendable only through POL functions / admitted market-infra adapters | revenue-bounded; funds tactical experiments incl. bribes (F-52 default posture: own the liquidity; bribes are revenue-funded experiments, never Reserve principal, never the primary model) |
+| ~~Market infrastructure~~ — **DELETED as a revenue leg (2026-08-12)**: no `toMarketInfra` argument and no `marketInfraBudget` earmark exist | market infrastructure remains a permitted Strategic use, funded through Strategic capital deployment policy from Strategic capital (POL operations act on Strategic principal under R-2/R-13) — never a dedicated realized-revenue waterfall leg (FREEZE-Δ §5.1) | F-52 posture unchanged: own the liquidity; bribe experiments use realized protocol economics under disclosed policy (e.g., compounded revenue subsequently deployed), never Hard Reserve principal, never the primary model |
 
 **VUX-denominated non-POL revenue:** `allocateRevenue` rejects `asset == VUX`; the only path is `burnVuxRevenue()` (F-46 "normally burned" — a different treatment would require new founder authority and a new module, i.e. it is structurally outside v1).
 
@@ -321,19 +321,19 @@ POL flows never touch this surface: VYRF fee legs bypass the waterfall by constr
 
 ### 1.11 LSG Architecture (P0 boundary + activation authority; P1 module implementation)
 
-> The PRD reserves the exact LSG mechanism to `/architect` (prd.md:L860, §19 item 5) — decided here. Provenance: `VUX_ORIGINAL_CLEAN_SOURCE_REQUIRED` (DELTA §3/§4); designed from the PRD boundary only — the pinned external liquid-signal-governance repository remains prohibited source (PROV-4) and was not consulted. Implementation and its boundary-test suite are P1; the activation authority, POL-non-voting rule, and interface ship at P0.
+> The PRD reserves the exact LSG mechanism to `/architect` (prd.md:L860, §19 item 5) — decided here. **SUPERSEDED IN PART 2026-08-12, see Appendix F note F-3:** the founder-accepted epochal doctrine (7-day stake age / 14-day epochs / first-24h fresh signal / fixed frozen opening weight / no carry-forward / global pool / no delegation initially / custody-class one-status eligibility) supersedes this sketch's standing-signal, operator-paced-cadence, and time-integrated-streaming rows; the P1 module MUST be realigned to that doctrine before any P1 build. The P0 surface (activation slot, `ILSGModule`, POL non-voting, treasury-side boundaries, INV-32…34) is unaffected. Provenance: `VUX_ORIGINAL_CLEAN_SOURCE_REQUIRED` (DELTA §3/§4); designed from the PRD boundary only — the pinned external liquid-signal-governance repository remains prohibited source (PROV-4) and was not consulted. Implementation and its boundary-test suite are P1; the activation authority, POL-non-voting rule, and interface ship at P0.
 
 **The one job (F-47):** eligible holders express *relative preference for marginal Strategic deployment among operator-admitted strategies*. Nothing else.
 
 | Decision | Choice | Justification |
 |---|---|---|
-| Signal representation | Standing per-staker preference vector `(strategies[], weightsBp[])`, Σ ≤ 10,000 bp, ≤ 16 entries, admitted-targets only; aggregated per strategy | Continuous gauge-style *relative* preference matches the frozen role exactly; no proposals, ballots, quorums, or yes/no questions — LSG never becomes a DAO voting on things |
+| Signal representation — **SUPERSEDED IN PART 2026-08-12 (Appendix F, F-3)** | ~~Standing~~ per-staker preference vector `(strategies[], weightsBp[])`, Σ ≤ 10,000 bp, ≤ 16 entries, admitted-targets only; aggregated per strategy — under the accepted doctrine the signal is **epochal**: fresh complete signal in the first 24 hours of each 14-day epoch, opening eligible weight fixed, frozen through close, no carry-forward | Gauge-style *relative* preference retained; no proposals, ballots, quorums, or yes/no questions — LSG never becomes a DAO voting on things |
 | Stake vs. balance | **Stake-escrow**: weight = VUX escrowed in the `LSGSignals` module | The immutable token deliberately has no checkpoints/hooks (§1.4), so balance-snapshot voting is impossible without oracle/merkle trust; escrow is flash-swap-immune (stake→signal→unstake inside one tx nets to zero standing weight) and makes protocol-VUX exclusion structural |
 | Weight accounting | `aggregate[strategy] = Σ stakeᵢ × bpᵢ / 10⁴`, updated incrementally (O(entries) per staker action); 1 staked VUX-wei = 1 weight-wei | Exact, loop-free reads; no iteration over stakers; no supply-scaling factors |
-| Checkpointing / time semantics | None historical — the signal is standing state; every consumption snapshots exactly what it read via `SignalConsumed` | No retroactive reads exist, so checkpoint history is deleted machinery; accountability lives in the consumption event |
+| Checkpointing / time semantics — **SUPERSEDED IN PART 2026-08-12 (Appendix F, F-3)** | ~~None historical — the signal is standing state~~ — the accepted doctrine fixes epochal time semantics: 7-day minimum continuous stake age before epoch open, 14-day epoch, opening-weight snapshot frozen through close; every consumption still snapshots exactly what it read via `SignalConsumed` | Accountability lives in the epoch snapshot + consumption event; no retroactive reads |
 | Delegation | None in v1 | A delegation market is capture surface with no product need for one narrow signal; addable later by module swap without touching anything else |
 | Precision | bp (`uint16`) preferences; VUX-wei weights; `mulDiv` floor splits; undeployed remainder stays dry powder | The Reserve-favoring-dust philosophy applied to Strategic: rounding favors *not deploying* |
-| Allocation cadence | **Operator-paced** — no on-chain epoch or timer | R-3 reserves deployment timing to operators; a fixed cadence would freeze what the PRD reserves |
+| Allocation cadence — **SUPERSEDED IN PART 2026-08-12 (Appendix F, F-3)** | ~~No on-chain epoch or timer~~ — the accepted doctrine fixes a 14-day **signal epoch**; capital-deployment *execution* timing within/after epochs remains operator-paced (R-3 preserved: signal cadence is doctrine, deployment timing stays reserved) | The doctrine governs signal eligibility windows, not deployment compulsion |
 | Execution interface | `StrategicTreasury.deployMarginalBySignal(totalAmount)` (`OPERATOR_ROLE`): reads `lsgModule.currentAllocationSignal()`, filters to admitted + matured + cap-headroom strategies, splits `totalAmount` pro-rata by weight (floor), clamps at caps, deploys through the same §1.10 principal ledger as manual deployment, emits `SignalConsumed` | Holder-directed *split*; operator-held trigger, size, and safety — exactly UC-9's "bounded execution follows within admission caps" |
 | Anti-capture | **Topology first**: the menu is operator-admitted only; caps clamp; execution is operator-held; removal/recall is unblockable; deactivation is instant; **bribes grant no authority** — the bounded `fundBribe` programs (§1.11 rewards) can only target already-admitted strategies and can never cause admission, raise a cap, or touch any core/security surface; their entire effect is on relative signaling weight inside the existing bounded menu; escrow friction defeats flash weight; the treasury cannot stake | The bounded blast radius *is* the defense (FB-11): capture at worst skews marginal flow among already-diligenced, capped strategies. ve-locks and decay curves are disproportionate machinery for a signal that structurally cannot reach anything security-critical; incentive programs are admitted-target-bounded rather than an open votes-for-hire market |
 | Activation / deactivation | `lsgModule` slot on the treasury: `address(0)` at launch (inactive); `activateLSG(module)` / `deactivateLSG()` `OPERATOR_ROLE`; **no numeric threshold or calendar date appears in code** (F-50; R-6/R-7 readiness judgment stays off-chain and operator-internal); module swap = deactivate + activate | The affirmative activation authority ships at P0 (FR-13 launch acceptance) with zero mechanism risk at launch |
@@ -343,7 +343,7 @@ POL flows never touch this surface: VYRF fee legs bypass the waterfall by constr
 
 **POL non-voting (F-38, INV-27):** weight derives only from escrowed stake; the pool contract never stakes its POL VUX; the treasury is explicitly rejected as a staker (`staker != strategicTreasury`); therefore protocol-owned voting power ≡ 0 at all times, under any future module, because the treasury-side rule travels with the activation slot's usage, not the module.
 
-**Signaler rewards & bribes (FR-13.7, R-11, F-52) — decided.** The v1.1.0 `rewardsDistributor` placeholder is replaced by a **reward-program engine folded into the `LSGSignals` module itself** (one P1 contract, not two — a separate distributor would need weight-change hooks from the module, and a reverting hook could block `unstake`, which must be ungateable; internal accounting cannot be blocked by an external call). Design:
+**Signaler rewards & bribes (FR-13.7, R-11, F-52) — decided; accrual model SUPERSEDED IN PART 2026-08-12 (Appendix F, F-3).** The folded-engine topology stands (one P1 contract, not two — a separate distributor would need weight-change hooks from the module, and a reverting hook could block `unstake`, which must be ungateable; internal accounting cannot be blocked by an external call), but the continuous time-integrated streaming below must be realigned to the accepted **per-epoch global-pool** attribution (14-day epochs; fresh-signal eligibility; no correctness/profit multipliers; no reward-bearing delegation initially) before any P1 build. Design (pre-realignment record):
 
 - **Program primitive:** a program = `{funding token, amount, window [start, end], target, provenance}` that **streams linearly over its window to time-integrated *applied* signal weight** — a staker's applied weight is `stake × Σbp/10⁴` (global programs) or `stake × bp(strategy)/10⁴` (strategy-targeted programs), maintained by the module's own accumulator (`rewardPerWeight` updated lazily at stake/unstake/setPreference/claim; O(1) per interaction; streaming remainder and zero-weight intervals accrue to a funder-refundable residual).
 - **Two provenance classes, one engine, distinguishable end-to-end:** `PROTOCOL` programs are fundable **only by the treasury** via `fundSignalerProgram` (which spends the revenue-bounded `signalerBudget` earmark — §1.10); `EXTERNAL` programs (bribes) are fundable **permissionlessly** by anyone via `fundBribe(token, amount, start, end, strategy)`, which requires the target strategy to be currently admitted. `ProgramFunded` events carry the provenance class and funder — protocol rewards and external bribes are never commingled in accounting (distinct program ids, distinct provenance field).
@@ -483,9 +483,9 @@ event Settled(
     address indexed newKing,
     bool    bootstrap,
     uint256 price,          // exact P
-    uint256 kingLeg,        // floor(P×8000/10000)
-    uint256 strategicLeg,   // floor(P×1200/10000)
-    uint256 reserveLeg,     // P − kingLeg − strategicLeg (incl. dust)
+    uint256 kingLeg,        // floor(P×8000/10000) — fixed 80%
+    uint256 strategicLeg,   // adaptive residual: retained − hardTarget, in [0, floor(P×1200/10000)]
+    uint256 reserveLeg,     // ≡ hardTarget = min(retained, max(hardFloor, D_need)), in [8%+dust, retained]; D_need = ceil(qRaw×bPre/sPre) exactly derivable from emitted fields (observability)
     uint256 bPre, uint256 sPre,
     uint256 dR,             // measured Hard delta
     uint256 qRaw, uint256 qSafe, uint256 qMint,
@@ -517,7 +517,7 @@ event UnitsRedeemed(address indexed strategy, uint256 units, uint256 amountOut,
                     uint256 basisReleased, uint256 revenuePart, uint256 lossPart); // UNITIZED cost-basis realization
 event StrategyLossRealized(address indexed strategy, address indexed asset, uint256 amount); // write-off/shortfall — never negative revenue
 event RevenueAllocated(address indexed asset, uint256 toCompound, uint256 toHard,
-                       uint256 toOps, uint256 toSignalers, uint256 toMarketInfra); // call-time policy disclosure (R-9 unfrozen)
+                       uint256 toOps, uint256 toSignalers); // four legs (2026-08-12); toOps = approved-expense payment only; call-time policy disclosure
 event SignalerProgramFunded(address indexed asset, uint256 amount, uint64 start, uint64 end); // spends signalerBudget → module PROTOCOL program
 event VuxRevenueBurned(uint256 amount);                                   // F-46 path
 event VuxPurchasedForPol(uint256 wethIn, uint256 vuxOut);                 // existing-supply POL sourcing (INV-26)
@@ -566,7 +566,7 @@ CREATE TABLE settlement (
     q_mint          NUMERIC(78,0) NOT NULL,
     next_opening    NUMERIC(78,0) NOT NULL,
     epoch_ups       NUMERIC(78,0) NOT NULL,
-    CONSTRAINT legs_sum CHECK (king_leg + strategic_leg + reserve_leg = price)
+    CONSTRAINT legs_sum CHECK (king_leg + strategic_leg + reserve_leg = price) -- adaptive legs (2026-08-12): strategic_leg = residual ≤ floor(12%·price); reserve_leg = hardTarget ≥ nominal 8%+dust; d_need = ceil(q_raw·b_pre/s_pre) derivable; sum law unchanged
 );
 
 CREATE TABLE supply_change (
@@ -600,7 +600,7 @@ CREATE INDEX idx_strategic_class  ON strategic_flow(class);
 ```mermaid
 erDiagram
     SETTLEMENT ||--o{ SUPPLY_CHANGE : causes
-    SETTLEMENT ||--|| STRATEGIC_FLOW : "12% leg (ContributedPrincipal)"
+    SETTLEMENT ||--o| STRATEGIC_FLOW : "Strategic residual leg (ContributedPrincipal; absent when zero)"
     REDEMPTION ||--|| SUPPLY_CHANGE : "redemption_burn"
     VYRF_HARVEST ||--o{ SUPPLY_CHANGE : "vyrf_burn"
     VYRF_HARVEST ||--o| HARD_ACCRETION : "WETH one-way"
@@ -688,9 +688,9 @@ function currentPrice() external view returns (uint256); // Dutch price at block
 function currentUPS() external view returns (uint256);   // schedule rate now (for next epoch open)
 function epochState() external view returns
     (address king, uint64 epochStart, uint256 epochOpening, uint256 epochUPS, bool bootstrap);
-// constants: SPLIT_KING_BP()=8000, SPLIT_STRATEGIC_BP()=1200, BP_DENOM()=10000,
-//            EPOCH_PERIOD()=3000, PRICE_MULTIPLIER()=2, INITIAL_UPS()=4e18,
-//            BOOTSTRAP_OPENING(), MINIMUM_OPENING(), DECAY_FLOOR()   // WETH-wei immutables
+// constants: SPLIT_KING_BP()=8000, STRATEGIC_CAP_BP()=1200 (adaptive-law cap, not a fixed leg — 2026-08-12),
+//            BP_DENOM()=10000, EPOCH_PERIOD()=3000, PRICE_MULTIPLIER()=2, INITIAL_UPS()=4e18,
+//            BOOTSTRAP_OPENING(), MINIMUM_OPENING(), DECAY_FLOOR()   // WETH-wei immutables; legs derive per FR-4
 ```
 
 #### 5.2.3 HardReserve.sol
@@ -708,9 +708,9 @@ function previewRedeem(uint256 q) external view returns (uint256); // floor(B×q
 ```solidity
 function rawClockLimit() external view returns (uint256);          // tier 1
 function estimateIfDisplacedNow() external view returns
-    (uint256 estimateQmint, uint256 price, uint256 qRaw, uint256 qSafeEst); // tier 2, variable, non-claimable
+    (uint256 estimateQmint, uint256 price, uint256 qRaw, uint256 qSafeEst); // tier 2, variable, non-claimable — MUST mirror the adaptive law: D = hardTarget(price, qRaw, B, S), qSafeEst = floor(D×S/B) (parity, 2026-08-12)
 function hardStats() external view returns (uint256 B, uint256 S, uint256 bPerSRay);
-function wethNeededForFullQraw() external view returns (uint256); // required-contribution estimate — rounds UP (F-16); creates no entitlement
+function wethNeededForFullQraw() external view returns (uint256); // ≡ the adaptive law's D_need at current Qraw — rounds UP (F-16); settlement now self-routes toward it via hardTarget = min(retained, max(hardFloor, D_need)); creates no entitlement
 function strategicContributed() external view returns (uint256);
 ```
 
@@ -743,8 +743,8 @@ function redeemUnits(address strategy, uint256 units, uint256 minOut) external;
 function closeStrategy(address strategy) external;      // only after removal; loss write-off ONLY — cannot create revenue
 function deployMarginalBySignal(uint256 totalWeth) external;  // §1.11 execution interface (P1 use)
 function allocateRevenue(address asset, uint256 toCompound, uint256 toHard, uint256 toOps,
-                         uint256 toSignalers, uint256 toMarketInfra) external;
-                                                 // Σ ≤ realizedRevenue[asset]; asset != VUX (§1.10)
+                         uint256 toSignalers) external;   // FOUR legs (2026-08-12, Appendix F F-2); toOps = actual
+                                                 // approved operating expense only; Σ ≤ realizedRevenue[asset]; asset != VUX (§1.10)
 function fundSignalerProgram(address asset, uint256 amount, uint64 start, uint64 end) external;
                                                  // spends signalerBudget earmark → PROTOCOL program on active module (§1.11)
 function burnVuxRevenue() external;              // the only VUX-revenue treatment (F-46)
@@ -852,7 +852,7 @@ Off-chain services: structured JSON logs (level, ts, component, request id). On-
 | Level | Scope | Tool | Gate |
 |-------|-------|------|------|
 | Unit | Every formula at boundary points (price at t=0/3000/beyond; leg arithmetic; VEM edge cases; redemption rounding) | forge test | 100% of FR acceptance checkboxes with an automatable method |
-| Property/fuzz | Randomized `P`, `(B_pre, S_pre, D_R, Qraw)`, `(B, S, q)` per FR-4/5/7 acceptance (prd.md:L376, L393, L426) | forge fuzz (≥10,000 runs CI) | Leg-sum, VEM inequality, Reserve-favoring rounding |
+| Property/fuzz | Randomized `(P, Qraw, B_pre, S_pre)` regime testing (weak/cheap → strong/premium), `(B_pre, S_pre, D_R, Qraw)`, `(B, S, q)` per FR-4/5/7 acceptance (prd.md:L376, L393, L426) | forge fuzz (≥10,000 runs CI) | Leg-sum; `hardFloor ≤ hardTarget ≤ retained`; `0 ≤ strategic ≤ strategicCap`; dust-to-Hard; static-split degeneracy at `D_need ≤ hardFloor`; VEM inequality; Reserve-favoring rounding |
 | Stateful invariant | INV-1…INV-37 as forge invariant handlers over random op sequences (take/redeem/harvest/treasury ops) | forge invariant | `B/S` monotone under authorized issuance (INV-13); supply attribution; boundary unreachability |
 | Scenario | FB-2…FB-5, FB-7, FB-13…FB-16 automated (prd.md:L669); bootstrap one-shot; Strategic 50/80/100% loss with bit-identical core state (prd.md:L444); VYRF ordering invariant (`tokensOwed` outside `decreasePol` = fees only, §1.4) | forge test | All automated FB rows green |
 | Treasury accounting (modes) | §1.10 properties ∀ flow sequences and ∀ modes: revenue distributions ≤ realized-revenue credits; returned principal never credits revenue; unattributed/arbitrary-asset inflows never credit revenue; `NETTING`: revenue only beyond full return; `CLAIM`: harvest with decreased `principalUnits` reverts; same-asset yield credits only under intact units; `UNITIZED`: cost-basis release conservation (Σ basisReleased = original basis over full unwind), gain→revenue / shortfall→loss (never negative revenue), long-lived-principal yield recognized while principal stays deployed; `closeStrategy` write-off can only reduce principal; `allocateRevenue` negative tests (asset=VUX rejected; non-WETH Hard leg rejected; over-accumulator rejected); mode immutability (change requires remove+readmit+delay) | forge fuzz/invariant | FR-9/FR-12 acceptance incl. negative test (prd.md:L505-L506) |
@@ -872,7 +872,7 @@ Every test file header maps to its carried requirements (`// carries: INV-13, FR
 
 - forge build + test + coverage (line ≥90% on core contracts; invariant suite green).
 - Provenance: fail if any upstream URL is mutable, any SHA ≠ 40 chars, any non-allowlisted upstream file appears, any required notice absent, any dependency lacks an immutable pin (prd.md:L768).
-- Research-guidance quarantine grep: none of the §17 values (50/10/25/10/5 waterfall, 25%, 2.5%, 60-day/5M/50/10/35%/$250K LSG gates, 10/25/35% ROOT caps, 30/40-60/10% dry powder, bribe thresholds) appears outside labeled guidance context (prd.md:L818).
+- Research-guidance quarantine grep (PRD §17 as re-expressed 2026-08-12, prd.md:L818): superseded values (five-way 50/10/25/10/5 waterfall; old 60-day/5M/50-holder/$250K LSG gates) appear nowhere active; founder-accepted doctrine values (50/25/20/5/0 waterfall, 7/14/24h LSG timing, 18-month runway) never appear as code constants/stored ratios/v1 parameters; research values (2.5% monitoring ratio, §16 evidence-gate set, 10/25/35% ROOT caps, 30/40-60/10% dry powder, bribe thresholds) only in labeled guidance context; `40%` LLTV never active (research-reopening ceiling only).
 - SPDX lint per PROV-8; slither with triaged baseline.
 
 ---
@@ -888,7 +888,7 @@ Every test file header maps to its carried requirements (`// carries: INV-13, FR
 - [ ] `Rig.sol` pricing + schedule (Dutch formula, halvings, snapshot) + boundary tests (FR-2/FR-3 acceptance).
 
 ### Phase 2: Settlement, VEM, Hard Reserve (Sprint 2)
-- [ ] `Rig.take` 13-step settlement incl. bootstrap branch, `D_R` measurement/rejection, static legs (FR-4/FR-5/FR-6).
+- [ ] `Rig.take` 13-step settlement incl. bootstrap branch, `D_R` measurement/rejection, adaptive legs (FR-4/FR-5/FR-6).
 - [ ] `HardReserve.sol` one-tx approval-free redemption (`burnForRedemption` path) + structural-absence review + redemption-burn negative suite (FR-7).
 - [ ] Property/fuzz + stateful invariant suites for INV-6…22; FB-2/3/4/13/14/15/16 scenario tests.
 
@@ -908,7 +908,7 @@ Every test file header maps to its carried requirements (`// carries: INV-13, FR
 - [ ] Full §20.1 launch-criteria sweep; security review prep; slither triage; docs; `LICENSE`/`THIRD_PARTY_NOTICES.md` release check (NFR-COMP).
 - [ ] Deployment runbook: founder USD→WETH one-shot conversion procedure; private same-block {fund → launch} bundle procedure (§1.7 — required for production confidentiality); launch-secret handling per §1.7 (no production EOA/nonce/salt/manifest/broadcast artifacts in the public repo or CI pre-launch); R-14 fact-recording template.
 
-**P1 (mature, operator-paced, separate future cycle):** `LSGSignals` module implementation to the §1.11 design — stake/signal **and** the folded-in reward-program engine (no separate distributor contract exists) — plus its boundary/reward test suite; strategy adapters (`deposit`/`recall`/`harvest`/`principalUnits`/`redeemUnits` per their admission mode + `returnFor` convention); first general-waterfall use (FR-12); POL expansion tooling; ROOT/GIGA adapters (each behind verification + provenance refreeze, F-53/PROV-6) — all plug into slots defined here; no P0 contract changes, so P0 launches without painting P1 into a corner.
+**P1 (mature, operator-paced, separate future cycle):** `LSGSignals` module implementation to the §1.11 design **as realigned to the founder-accepted 7/14 epochal doctrine (Appendix F, F-3)** — stake/signal **and** the folded-in reward-program engine (no separate distributor contract exists) — plus its boundary/reward test suite; strategy adapters (`deposit`/`recall`/`harvest`/`principalUnits`/`redeemUnits` per their admission mode + `returnFor` convention); first general-waterfall use (FR-12); POL expansion tooling; ROOT/GIGA adapters (each behind verification + provenance refreeze, F-53/PROV-6) — all plug into slots defined here; no P0 contract changes, so P0 launches without painting P1 into a corner.
 
 ---
 
@@ -927,7 +927,7 @@ Every test file header maps to its carried requirements (`// carries: INV-13, FR
 | Reentrancy via future WETH upgrade adding hooks | Low | High | `nonReentrant` on all state-changing core functions + CEI ordering (§1.5) despite current no-hook YELLOW facts |
 | Rounding/precision drift between spec math and implementation | Medium | High | `Math.mulDiv` floor semantics only; property tests assert the exact PRD formulas (prd.md:L376, L393, L426); no assembly |
 | Provenance contamination while adapting Miner files | Low | High | PROV-2 blob pins; similarity review before merge (PROV-5); non-allowlisted Miner files never opened during implementation |
-| Later artifact freezes an operator-reserved value | Medium | High | §17 quarantine grep in CI; sprint reviews check R-1…R-14 remain reserved (prd.md:L945) |
+| Later artifact freezes an operator-reserved value, or treats founder-accepted doctrine (R-9/R-10 ratios) as still operator-adjustable | Medium | High | §17 quarantine grep in CI; sprint reviews check R-1…R-14 execution scope stays reserved and no doctrine value is re-opened (prd.md:L945) |
 | Operator Safe key compromise | Low | Medium (bounded by design) | Blast radius is Strategic-only by structure — no role exists on Rig/Reserve/VUX (§1.9); Strategic loss cannot reach `B` (FR-8.5, FB-5) |
 | Indexer bug misreports accounting truth | Medium | Medium | Store is derived + rebuildable; independent-reconstruction test (Phase 4); on-chain events remain the canonical record |
 | Concentrated POL tactics (if later chosen) create inventory/range/IL exposure; out-of-range positions stop earning and go one-sided | Medium (tactic-dependent) | Medium (Strategic only) | §1.6 explicit risk treatment: concentration is never required; range tactics stay operator-reserved (R-2/R-13); all such losses are Strategic-borne and cannot touch `B`, redemption, VEM, or minting (FB-7); no range oracle/automation enters the monetary core |
@@ -989,7 +989,7 @@ Posture: attack surface is reduced by **topology first** — most rows are mitig
 
 ### A. Frozen Parameter Carry-Through (verbatim from PRD Appendix A)
 
-All constants in §1.4/§5.2 carry prd.md:L1004-L1028 unchanged: genesis `150,000 × 10^18 + 1` raw; routing `king=floor(P×8000/10000)`, `strategic=floor(P×1200/10000)`, `reserve=remainder`; VEM `Qsafe=floor(D_R×S_pre/B_pre)`, `Qmint=min(Qraw,Qsafe)`; redemption `floor(B×q/S)`, fee 0, `S_MIN=1` raw; `EPOCH_PERIOD=3000 s`; multiplier 2×; openings/floor ≈$50/≈$10/≈$1 one-shot converted; `INITIAL_UPS=4 VUX/s`; eight 30-day halvings; tail `0.015625 VUX/s`; bootstrap ≈88%+/12%/0-mint; genesis WETH ≈$1,000 POL + `B0=P0×S0/1.10`; VYRF legs; canonical WETH `0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73`; licence GPL-3.0-or-later.
+All constants in §1.4/§5.2 carry prd.md:L1004-L1028 unchanged (as amended 2026-08-12): genesis `150,000 × 10^18 + 1` raw; adaptive routing `king=floor(P×8000/10000)`, `retained=P−king`, `strategicCap=floor(P×1200/10000)`, `hardFloor=retained−strategicCap` (dust to Hard), `D_need=ceil(Qraw×B_pre/S_pre)`, `hardTarget=min(retained, max(hardFloor, D_need))`, `strategic=retained−hardTarget`; VEM `Qsafe=floor(D_R×S_pre/B_pre)`, `Qmint=min(Qraw,Qsafe)` (`D_actual ≡ D_R`); redemption `floor(B×q/S)`, fee 0, `S_MIN=1` raw; `EPOCH_PERIOD=3000 s`; multiplier 2×; openings/floor ≈$50/≈$10/≈$1 one-shot converted; `INITIAL_UPS=4 VUX/s`; eight 30-day halvings; tail `0.015625 VUX/s`; bootstrap ≈88%+/12%/0-mint (adaptive-law degeneracy at `Qraw=0`); genesis WETH ≈$1,000 POL + `B0=P0×S0/1.10`; VYRF legs; canonical WETH `0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73`; licence GPL-3.0-or-later.
 
 ### B. Throne Lifecycle
 
@@ -1023,8 +1023,8 @@ stateDiagram-v2
 
 ### D. References
 
-- PRD: `grimoires/loa/prd.md` (v2.0.0, PRD_ACCEPTED)
-- Authority set: `docs/authority/` per prd.md:L27-L33 (SHA-256 pinned)
+- PRD: `grimoires/loa/prd.md` (v2.1.0 — v2.0.0 PRD_ACCEPTED + adaptive-routing amendment, PRD Appendix C)
+- Authority set: `docs/authority/` per prd.md:L27-L33 (SHA-256 pinned) + the 2026-08-12 adaptive-routing acceptance set (PRD Appendix C §C.1; MAP §10)
 - OpenZeppelin Contracts: https://docs.openzeppelin.com/contracts/5.x/
 - Uniswap v3 core: https://docs.uniswap.org/contracts/v3/reference/overview
 - Foundry: https://getfoundry.sh/
@@ -1042,6 +1042,25 @@ stateDiagram-v2
 | 1.5.0 | 2026-08-10 | Genesis non-griefability closure: **(F1)** contamination-resistant genesis — unsolicited pre-genesis WETH to any predicted address can no longer grief or distort launch: intended flows delta-verified; genesis-start snapshots; per-address defense table (Reserve → evented lawful Hard accretion, never mint credit; Treasury → rule-5 inventory, never revenue; deployer → in-tx sanitizing sweep then exact-zero; VUX/Rig/Lens/pool/pool-deployer → provably stuck; forced ETH read by nothing); every closing check stays EXACT (no `≥` weakening); Reserve runtime untouched, no surviving cleanup authority. **(F2)** pool address derivation corrected to the exact pinned CREATE2 semantics (`new UniswapV3Pool{salt: keccak256(abi.encode(token0,token1,fee))}` from `UniswapV3PoolDeployer`) — `create2(vuxPoolDeployer, canonicalSalt, POOL_INIT_CODE_HASH)` used in verification + tests; nonce-based pool statements withdrawn; exclusivity preserved; `POOL_INIT_CODE_HASH` added as recorded refreeze artifact. **(F3)** launch collapsed to two transactions: tx1 = inert commitment-gated `VuxPoolDeployer` (salted commitment publishes nothing derivable); tx2 = `GenesisDeployer` creation whose **constructor executes genesis**, funded by in-tx `WETH.deposit()` of native value (no approval/transfer to predicted addresses ever published; `genesis()`/`onlyFounder` deleted); VUX address underivable before the launch tx; private submission elevated to recommended standing ops control (still not load-bearing). **(F4)** factory-removed parameter-domain checks re-imposed in `VuxPoolDeployer` (token sort/nonzero/distinct; `fee < 1_000_000`; `0 < tickSpacing < 16384`; `sqrtP0X96` TickMath bounds) — domain-checked, no economic value frozen. Adversarial rehearsal extended (prefunding of every address, salt extraction, spam/racing, exact-economics assertions); threat row 23, §1.12/§1.13, errors, tests, Q-6 native-token fact updated. No new source files (census unchanged) | Architecture Designer Agent |
 | 1.6.0 | 2026-08-10 | Acceptance closure: **(F1)** pre-funded-Reserve genesis distortion closed — v1.5.0's accept-as-accretion treatment rejected; `HardReserve` constructor now **sanitizes** any pre-existing WETH to its creator before the immutable runtime exists (init-code-only capability, discarded at deployment; runtime keeps zero sweep/recovery/admin paths), emits `PreGenesisWethSanitized`, requires born-empty; genesis deposits exactly `B0`; closing sweep restored to the exact frozen invariant `WETH.balanceOf(HardReserve) == B0`, making physical `N0 = B0/S0`, `P0/N0 = 1.10`, and first-settlement `B_pre = B0` hold in actual state; sanitized donations → deployer step-9 sweep → unattributed Strategic inventory (never revenue, never mint credit, evented distinctly from founder `W_POL + B0`); adversarial rehearsal now prefunds the Reserve with a very large amount and must still end at exactly `B0`. **(F2)** funding-trail confidentiality closed — public gas-funding of the launch EOA would reveal it pre-launch; production posture now REQUIRES a private same-block {fund → tx2} bundle (VUX address first publicly derivable in the launch block itself); explicit split retained: private routing REQUIRED for confidentiality, NON-LOAD-BEARING for security; launch-secret repo/CI hygiene enumerated (EOA/keys/nonces, salt, predicted addresses, genesis manifest, sensitive conversion inputs, routing config, production broadcast artifacts — never public pre-launch; templates may remain tracked). **(F3)** LSG anti-capture wording fixed: "no native bribe machinery" replaced with the accurate property (bribes grant no admission/cap/core authority; they only influence relative signaling among already-admitted bounded strategies). Threat row 23, prefunding table, rehearsal, §9.1, Phase-5 runbook, §10 settled list updated. No architecture reopened; census unchanged | Architecture Designer Agent |
 
+| 1.7.0 | 2026-08-12 | Adaptive-routing reconciliation amendment (consolidated reconciliation node; controlling record `vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md`): §1.1 PRD quote, §1.3 diagram legs, §1.4 Rig purpose/provenance/`totalStrategicContributed`/routing-constants note, §1.4 Treasury receipt wording, §1.5 step 6 + 8a/8b (adaptive formulas; `D_R == hardTarget` rejection) + narrowed-prohibition note, §1.10 distribution-surface doctrine marker, §1.11 SUPERSEDED-IN-PART markers (epochal 7/14 doctrine), §3.2 `Settled` leg semantics + `D_need` observability, §3.3 SQL leg-comment, §5.2.2 constants semantics, §5.2.4 Lens parity notes, §7.1 adaptive regime-test gates, §7.3 three-class quarantine grep, §8 Phase-2 wording, §11.A adaptive carry, §11.D references, header/PRD reference — all in-body edits line-count-neutral (sprint-plan `sdd.md:L…` citations undisturbed beyond the pre-existing +2 toolchain-note drift); full record in Appendix F | Consolidated Reconciliation Node |
+| 1.7.1 | 2026-08-12 | Focused reconciliation remediation (operator finding: v1.7.0 claimed doctrine compatibility while preserving executable five-leg waterfall semantics): §1.10 distribution surface corrected to four legs (`toMarketInfra` argument + `marketInfraBudget` earmark deleted; market infrastructure funded via Strategic capital deployment policy, never a revenue leg); `toOps` redefined as actual-approved-expense payment only (never the future 25% Operator Reserve contribution); future Operator Reserve credit/accumulation/sweep/allocator-exclusion mechanics marked P1/future design obligation; §1.4 storage cells, §3.2 `RevenueAllocated`, §5.2.5 ABI, Appendix F note F-2 revised coherently; all in-body edits line-count-neutral; safety bounds (accumulator, principal/mark exclusion, WETH-only Hard leg, F-46 burn) unchanged; adaptive routing and Sprint-3 scope untouched | Consolidated Reconciliation Node |
+
 ---
 
-*Generated by Architecture Designer Agent (Loa `/architect`), cycle-002.*
+### F. Adaptive-Routing Supersession Notes (2026-08-12)
+
+> Controlling authority: `docs/authority/vux-founder-acceptance-adaptive-routing-lsg-holder-liquidity-2026-08.md` (ACC, SHA-256 `a0d5d38bf9b631a12d6f22cbe66007f9c64cdb0f43a2d9de080b5f48c8f4dac3`) rendered by `vux-founder-parameter-freeze-adaptive-routing-supersession-2026-08.md` (FREEZE-Δ, `89687ecc9b5ff849b2341d4684ee8e089675a776c7a5a69fc92d7dddc8892b51`) and `vux-v1-canonical-specification-adaptive-routing-supersession-2026-08.md` (SPEC-Δ, `04512412b416cad395e99bdb16e00b9082e3436e24369ef5b875b4f8e368c1aa`); PRD v2.1.0 Appendix C is the requirements-side record.
+
+**F-1 — Adaptive routing law (binding, Sprint-3-relevant).** Ordinary settlement replaces the static `80/8/12` legs with: `king = floor(P×8000/10000)`; `retained = P − king`; `strategicCap = floor(P×1200/10000)`; `hardFloor = retained − strategicCap` (carries all dust); `D_need = ceil(Qraw × B_pre / S_pre)`; `hardTarget = min(retained, max(hardFloor, D_need))` → Hard; `strategic = retained − hardTarget` → Strategic (zero-valued transfers skipped). The step-8b rejection compares measured `D_R` against `hardTarget` (plus the King leg at bootstrap). VEM is byte-identical (`D_actual ≡ D_R`); bootstrap degenerates exactly (`Qraw = 0 ⇒ hardTarget = hardFloor, strategic = strategicCap`); the no-prohibited-signal property is unchanged — `take()` reads exactly the pre-existing input set, which is the sanctioned `(P, Qraw, B_pre, S_pre)`. Routing constants remain `constant` (the 1,200 bp value is now the Strategic **cap**). `Lens.estimateIfDisplacedNow` and `Lens.wethNeededForFullQraw` must hold parity with this law (`wethNeededForFullQraw ≡ D_need` at current `Qraw`). Implementation reaches Sprint 3 only through the reconciled Sprint Plan v1.1.0.
+
+**F-2 — Revenue distribution surface (five-leg design SUPERSEDED IN PART; corrected P0 boundary; revised at the 2026-08-12 focused remediation).** The founder accepted the future waterfall `50/25/20/5/0` (Strategic compounding–Dry Powder / Operator Reserve / qualified active LSG / Hard one-way / speculative-zero) plus Operator Reserve semantics (protocol-owned; purpose-limited; ≈18-month operating-policy runway target; quarterly reforecast; excess sweep; no same-period entitlement; no automatic Hard or Strategic-principal fallback; separately accounted within Strategic custody; earmarked reserve assets excluded from LSG-deployable capital). The v1.6.0 **five-leg** `allocateRevenue` design is **superseded in part**: the P0 surface is the **four-leg** `allocateRevenue(asset, toCompound, toHard, toOps, toSignalers)` of §1.10, retaining every safety property (Σ ≤ `realizedRevenue[asset]` accumulator bound; returned-principal and unrealized-mark exclusion; WETH-only Hard accretion; `VuxRevenueMustBurn` F-46 posture; call-time amounts, **no stored ratio constants, no Operator Reserve contract or automation, no waterfall or 18-month values in code**). `toOps` is defined ONLY as payment of an actual approved operating expense from realized revenue — it does **not** implement the future 25% Operator Reserve contribution, and no person holds a claim before an approved expense is incurred; the reserve's credit/accumulation/sweep/allocator-exclusion mechanics are a **P1/future design obligation** that must be designed before the accepted waterfall activates (deliberately not architected here). The dedicated market-infrastructure revenue leg is **deleted** (`toMarketInfra` argument and `marketInfraBudget` earmark removed): market infrastructure remains a permitted Strategic use funded through Strategic capital deployment policy from Strategic capital (R-2/R-13; F-52 posture unchanged) — never a realized-revenue waterfall leg. VUX-revenue burn (F-46) and POL VYRF are untouched. Nothing here adds cycle-002 scope.
+
+**F-3 — P1 LSG realignment obligation (future work; P0 unaffected).** The founder-accepted epochal doctrine supersedes, in part, the §1.11 P1 mechanism sketch: **7-day minimum continuous stake age** before epoch open; **14-day epochs**; **fresh complete signal in the first 24 hours**; opening eligible weight fixed and frozen through close; no carry-forward signal, no auto-vote, no same-transaction stake/signal/reward/exit; **global reward pool** with no correctness/profit multipliers and **no reward-bearing delegation initially**; custody-class one-status eligibility (zero weight/rewards for protocol-owned, POL, lending-collateral, external-LP, inactive, and liquid wallet VUX); first-paid-activation warm-up preference with the narrowly-bounded one-time snapshot fallback; evidence-gated activation per the LSG research §16 set (guidance — F-50 preserved). Consequently the "standing preference vector", "no historical checkpointing", "operator-paced cadence (no on-chain epoch)", and "time-integrated applied-weight streaming" rows of §1.11 are marked SUPERSEDED IN PART and the `LSGSignals` module MUST be redesigned to the epochal doctrine **before any P1 build**. Unchanged and still binding: the Sprint-4 P0 boundary (activation slot `lsgModule` launching `address(0)`, `activateLSG`/`deactivateLSG`, `ILSGModule` signal-only interface, `deployMarginalBySignal` reading a module view, treasury-stake rejection and POL zero-weight, INV-32…34 negatives), the folded-engine topology argument, ungateable `unstake`/`claim`, the anti-capture topology, and the PROV-4 no-consultation rule. No LSG mechanism work enters Sprint 3.
+
+**F-4 — Explicitly out of scope for this amendment (ACC §7).** No lending machinery of any kind (no hook, registry, wrapper/receipt interface, oracle surface, collateral-status storage, transfer restriction, special redemption path, or lender approval from Hard — the existing `VUX.totalSupply()` / `HardReserve.backing()` / `HardReserve.previewRedeem(q)` surfaces already preserve future integration optionality); no Dry Powder token/contract; no leaderboard/scoring implementation (the Allocator Record reservation is satisfied by the existing event/indexer surfaces); no stablecoin or WETH/USD oracle architecture reservation; no `40%` LLTV artifact anywhere (future research-reopening ceiling only). Future-lending LLTV posture (≤25% pilot / ≤1/3 mature candidate) is doctrine for a future cycle, never a v1 constant.
+
+**F-5 — Sprint-3 gating.** `/implement sprint-3` remains blocked until both (a) this reconciliation package is operator-accepted and (b) the independent M-1/L-3/L-4 provenance-tooling hardening condition is closed (Sprint-2 carry, untouched here).
+
+---
+
+*Generated by Architecture Designer Agent (Loa `/architect`), cycle-002. v1.7.0 amendment by the consolidated reconciliation node, 2026-08-12.*
