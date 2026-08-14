@@ -28,11 +28,13 @@ contract TreasurySurfaceTest is BaseTest {
         return vm.parseJsonKeys(vm.readFile(ARTIFACT), ".methodIdentifiers");
     }
 
-    /// @dev The complete accepted external surface (sdd.md:L717-L764 minus the
-    ///      Sprint-5 POL sleeve, plus the pinned OZ `AccessControl` members the
-    ///      SDD explicitly keeps for Safe-held role rotation, sdd.md:L726-L727).
+    /// @dev The complete accepted external surface (sdd.md:L717-L764, plus the
+    ///      pinned OZ `AccessControl` members the SDD explicitly keeps for
+    ///      Safe-held role rotation, sdd.md:L726-L727). Sprint 5 adds the POL
+    ///      sleeve — four operator operations, the permissionless harvest, the
+    ///      two pool callbacks, and the two cost-basis cells — and nothing else.
     function _acceptedSurface() private pure returns (string[] memory abi_) {
-        abi_ = new string[](44);
+        abi_ = new string[](53);
         // AccessControl (pinned OZ v5.2.0)
         abi_[0] = "DEFAULT_ADMIN_ROLE()";
         abi_[1] = "getRoleAdmin(bytes32)";
@@ -85,6 +87,16 @@ contract TreasurySurfaceTest is BaseTest {
         abi_[41] = "admissionOf(address)";
         abi_[42] = "limitOf(address,address)";
         abi_[43] = "strategyAssets(address)";
+        // POL sleeve — Sprint 5 (sdd.md:L737-L745)
+        abi_[44] = "polVuxPrincipal()";
+        abi_[45] = "polWethPrincipal()";
+        abi_[46] = "mintPolPosition(uint256,uint256)";
+        abi_[47] = "increasePol(uint256,uint256)";
+        abi_[48] = "decreasePol(uint128)";
+        abi_[49] = "buyVuxForPol(uint256,uint256,uint160)";
+        abi_[50] = "harvestPol()";
+        abi_[51] = "uniswapV3MintCallback(uint256,uint256,bytes)";
+        abi_[52] = "uniswapV3SwapCallback(int256,int256,bytes)";
     }
 
     /// @dev Closed-world: every accepted entry is present AND every present entry

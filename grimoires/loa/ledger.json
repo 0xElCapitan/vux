@@ -53,9 +53,9 @@
         {
           "global_id": 5,
           "local_label": "sprint-5",
-          "status": "planned",
+          "status": "completed",
           "created": "2026-08-10T20:34:36Z",
-          "completed": null
+          "completed": "2026-08-14T00:00:00Z"
         },
         {
           "global_id": 6,

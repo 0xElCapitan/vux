@@ -6,6 +6,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 import {IUniswapV3Factory} from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
 import {IUniswapV3Pool} from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
@@ -41,13 +42,24 @@ import {IVUXBurnable} from "./interfaces/IVUXBurnable.sol";
 ///      leaves `B`, redemption, VEM, and mint authority bit-identical, because
 ///      no code path connects them (FB-5, prd.md:L444).
 ///
-/// @dev **Sprint boundary.** The POL sleeve (`mintPolPosition`, `increasePol`,
-///      `decreasePol`, `buyVuxForPol`, `harvestPol`, the pool callbacks, and the
-///      `polVuxPrincipal`/`polWethPrincipal` cost-basis cells) is Sprint 5
-///      (sprint.md Sprint 5). The pool identity is verified and its full-range
-///      tick bounds are derived **here**, at construction, because they are
+/// @dev **The POL sleeve** (`mintPolPosition`, `increasePol`, `decreasePol`,
+///      `buyVuxForPol`, `harvestPol`, the two pool callbacks, and the
+///      `polVuxPrincipal`/`polWethPrincipal` cost-basis cells) is Sprint 5. It
+///      owns the canonical full-range position **directly on the pool** — no
+///      v3-periphery, no position NFT, and no standing approval of any token at
+///      any time (sdd.md:L139, L239). The pool identity is verified and its
+///      full-range tick bounds are derived at construction, because they are
 ///      immutable and the verification must happen once, at the only moment
 ///      there is no wiring authority to misuse (sdd.md:L140).
+///
+///      **Fee/principal separation is realized by ordering, not by `collect`.**
+///      Under the pinned v3 semantics `collect` withdraws everything credited to
+///      `tokensOwed` and cannot distinguish fees from principal once both are
+///      there. So `harvestPol` pokes-then-collects (fees only), and
+///      `decreasePol` collects fees *before* burning liquidity and sweeps the
+///      resulting principal atomically in the same call — which is what makes
+///      "outside a `decreasePol` execution, `tokensOwed` is fees only" a tested
+///      fact rather than an accounting assumption (sdd.md:L141-L143, L260).
 ///
 /// @dev **Provenance — PROV-5 / `VUX_ORIGINAL_CLEAN_SOURCE_REQUIRED`** (DELTA §3
 ///      "general realized-revenue classification/policy surface"). Implemented
@@ -62,6 +74,7 @@ import {IVUXBurnable} from "./interfaces/IVUXBurnable.sol";
 ///      the repository's own prohibited-source detector.
 contract StrategicTreasury is AccessControl, ReentrancyGuard {
     using SafeERC20 for IERC20;
+    using SafeCast for uint256;
 
     // -------------------------------------------------------------------------
     // Accounting modes (§1.10)
@@ -103,10 +116,11 @@ contract StrategicTreasury is AccessControl, ReentrancyGuard {
     // treasury is never invoked and cannot observe it. Its attribution lives in
     // `Rig.Settled` + `Rig.totalStrategicContributed` (sdd.md:L138), and the
     // untracked receipt defaults to principal-side inventory — never revenue
-    // (sdd.md:L303 rule 5). Class 3 (PolFeeYield) is Sprint 5. Class 0 is never
-    // a treasury inflow; class 5 (UnrealizedMark) is never an event at all,
-    // because a mark is not a transfer and has no cell here (INV-30).
+    // (sdd.md:L303 rule 5). Class 0 is never a treasury inflow; class 5
+    // (UnrealizedMark) is never an event at all, because a mark is not a
+    // transfer and has no cell here (INV-30).
     uint8 private constant CLASS_RETURNED_PRINCIPAL = 2;
+    uint8 private constant CLASS_POL_FEE_YIELD = 3;
     uint8 private constant CLASS_OTHER_REVENUE = 4;
 
     // `StrategicOutflow.kind`. The accepted schema fixes the field, not the
@@ -124,6 +138,25 @@ contract StrategicTreasury is AccessControl, ReentrancyGuard {
     // (foundry.toml).
     int24 private constant MIN_TICK = -887272;
     int24 private constant MAX_TICK = 887272;
+
+    // The endpoints of the same tick domain expressed as sqrt prices, read the
+    // same way and for the same reason: they are *facts of the price space the
+    // verified pool operates in* — `slot0.sqrtPriceX96` always lies within
+    // `[MIN_SQRT_RATIO, MAX_SQRT_RATIO)` — used here only as the conservative
+    // outer bounds of the full-range position (`_affordableLiquidity`). Not
+    // reused implementation: no v3 library is imported, and none could be, since
+    // the vendored `TickMath` that also declares these compiles in the other
+    // (=0.7.6) unit on wrapping arithmetic that is never ported to 0.8.x.
+    uint160 private constant MIN_SQRT_RATIO = 4295128739;
+    uint160 private constant MAX_SQRT_RATIO = 1461446703485210103287273052203988822378723970342;
+    uint256 private constant Q96 = 1 << 96;
+
+    // Operation-context types (§1.6, sdd.md:L255). `CTX_NONE` is *both* the
+    // never-armed and the already-consumed state, which is why one check rejects
+    // out-of-operation, wrong-type, and duplicate callbacks alike.
+    uint8 private constant CTX_NONE = 0;
+    uint8 private constant CTX_MINT = 1;
+    uint8 private constant CTX_SWAP = 2;
 
     // -------------------------------------------------------------------------
     // Immutable identities (sdd.md:L140 — "Constructor immutables (complete)")
@@ -192,6 +225,51 @@ contract StrategicTreasury is AccessControl, ReentrancyGuard {
     ///         `marketInfraBudget` is deleted, 2026-08-12 remediation, F-2).
     mapping(address asset => uint256) public signalerBudget;
 
+    /// @notice Cost basis of the VUX held **inside the canonical POL position**.
+    /// @dev These two cells are the position's basis, not the POL sleeve's whole
+    ///      inventory: they rise by exactly what a mint/increase paid the pool
+    ///      and fall by what a decrease got back (sdd.md:L143). Two consequences
+    ///      are deliberate rather than incidental:
+    ///
+    ///      * **Quantization dust is not in them.** A liquidity unit is an
+    ///        integer, so a mint consumes slightly less than the committed
+    ///        amounts; the remainder never entered the position and stays bare
+    ///        treasury inventory — principal-side by §1.10 rule 5, never revenue
+    ///        (sdd.md:L168).
+    ///      * **`buyVuxForPol` does not touch them.** Purchased VUX is POL
+    ///        inventory awaiting deployment, not position basis; it enters
+    ///        `polVuxPrincipal` when `increasePol` actually pays it to the pool.
+    ///        Booking it at purchase *and* at deployment would double-count it,
+    ///        and the accepted cell set is exactly the one listed at sdd.md:L140
+    ///        — there is no third cell to hold an undeployed-inventory basis.
+    ///        Its classification is carried by `VuxPurchasedForPol` plus the
+    ///        arithmetic fact that no purchase path credits `realizedRevenue`.
+    ///
+    ///      Impermanent loss/gain shows up here as an asymmetry between basis and
+    ///      what came back — and is never revenue in either direction (INV-28,
+    ///      FR-11.3): a token that returns more than its basis leaves the excess
+    ///      as principal-side inventory, and one that returns less simply
+    ///      retires the basis it can.
+    uint256 public polVuxPrincipal;
+    /// @notice Cost basis of the WETH held inside the canonical POL position.
+    uint256 public polWethPrincipal;
+
+    /// @dev The single-use authorization a pool callback consumes (§1.6,
+    ///      sdd.md:L255). Ordinary storage rather than transient storage on
+    ///      purpose: transient storage would make this contract require a
+    ///      Cancun-or-later chain, and `evm_version` is deliberately left unset
+    ///      as an R-14 deployment-time fact (foundry.toml). Nothing is lost —
+    ///      the context is armed and consumed inside one call, and the outer
+    ///      operation reverts if it survives, so it can never persist across
+    ///      transactions.
+    struct OpContext {
+        uint8 ctxType;
+        uint256 maxVuxIn;
+        uint256 maxWethIn;
+    }
+
+    OpContext private _ctx;
+
     /// @notice Recipient of actual approved operating expenses. Disclosed by event.
     address public opsRecipient;
 
@@ -235,6 +313,18 @@ contract StrategicTreasury is AccessControl, ReentrancyGuard {
     error LSGInactive();
     error MalformedSignal();
 
+    error PolPositionExists();
+    error PolPositionMissing();
+    error ZeroAmount();
+    error PoolPriceOutOfRange(uint160 sqrtPriceX96);
+
+    error CallbackUnauthorizedCaller(address caller);
+    error CallbackContextMismatch(uint8 expected, uint8 active);
+    error CallbackDirectionMismatch(int256 vuxDelta, int256 wethDelta);
+    error CallbackAmountExceedsCommitment(address token, uint256 owed, uint256 committed);
+    error CallbackDataNotEmpty(uint256 length);
+    error CallbackNotConsumed();
+
     // -------------------------------------------------------------------------
     // Events (sdd.md §3.2 — accepted schema, reproduced exactly)
     // -------------------------------------------------------------------------
@@ -265,6 +355,9 @@ contract StrategicTreasury is AccessControl, ReentrancyGuard {
     );
     event SignalerProgramFunded(address indexed asset, uint256 amount, uint64 start, uint64 end);
     event VuxRevenueBurned(uint256 amount);
+    event PolPositionChanged(int8 direction, uint256 vuxDelta, uint256 wethDelta, uint128 liquidityDelta);
+    event VyrfHarvest(uint256 vuxFeesBurned, uint256 wethFeesToHard);
+    event VuxPurchasedForPol(uint256 wethIn, uint256 vuxOut);
     event OpsRecipientSet(address indexed recipient);
     event LSGActivated(address indexed module);
     event LSGDeactivated(address indexed module);
@@ -801,6 +894,190 @@ contract StrategicTreasury is AccessControl, ReentrancyGuard {
     }
 
     // -------------------------------------------------------------------------
+    // POL position operations (§1.4 sdd.md:L139; §1.6 sdd.md:L252-L258)
+    // -------------------------------------------------------------------------
+
+    /// @notice Create the canonical full-range POL position.
+    ///
+    /// @dev Genesis calls this once with the 150,000 VUX and the recorded POL
+    ///      WETH already transferred in (sdd.md:L168). It is the same pool
+    ///      operation as `increasePol`; the two differ only in which side of the
+    ///      "does the position exist yet" question they accept, so each name
+    ///      means what it says and neither can be used for the other's job by
+    ///      accident.
+    ///
+    ///      `vuxAmt`/`wethAmt` are the **committed callback maxima** (§1.6): the
+    ///      pool is paid exactly what it demands, and it can never demand more
+    ///      than these. The VUX must already be here — existing or purchased
+    ///      supply, never minted, because no mint path exists to call (INV-26).
+    function mintPolPosition(uint256 vuxAmt, uint256 wethAmt) external onlyRole(OPERATOR_ROLE) nonReentrant {
+        if (_positionLiquidity() != 0) revert PolPositionExists();
+        _addLiquidity(vuxAmt, wethAmt);
+    }
+
+    /// @notice Add liquidity to the existing canonical POL position.
+    /// @param vuxAmt  Maximum VUX the operation authorizes the pool to take.
+    /// @param wethAmt Maximum WETH the operation authorizes the pool to take.
+    function increasePol(uint256 vuxAmt, uint256 wethAmt) external onlyRole(OPERATOR_ROLE) nonReentrant {
+        if (_positionLiquidity() == 0) revert PolPositionMissing();
+        _addLiquidity(vuxAmt, wethAmt);
+    }
+
+    /// @notice Withdraw `liquidity` from the POL position — fees first, then
+    ///         principal, atomically.
+    ///
+    /// @dev The ordering **is** the classification (sdd.md:L143), and it is a
+    ///      security property rather than a stylistic one: `collect` withdraws
+    ///      whatever is credited to `tokensOwed` and cannot tell fees from
+    ///      principal once both are there. So:
+    ///
+    ///        1. poke + collect + classify the accrued fees as VYRF, exactly as
+    ///           `harvestPol` would have — this is the only moment they can
+    ///           still be told apart;
+    ///        2. `burn(liquidity)` credits principal to a now-empty `tokensOwed`;
+    ///        3. `collect` sweeps exactly that principal;
+    ///        4. it books against the cost-basis cells, never as revenue.
+    ///
+    ///      No swap can interleave inside one transaction, so step 2 accrues
+    ///      zero new fees and step 3's receipt is principal to the wei
+    ///      (sdd.md:L260). `burn`/`collect` have no callbacks, so no context is
+    ///      armed here and none can be.
+    function decreasePol(uint128 liquidity) external onlyRole(OPERATOR_ROLE) nonReentrant {
+        if (liquidity == 0) revert ZeroAmount();
+
+        _pokeCollectAndClassifyFees();
+
+        IUniswapV3Pool(pool).burn(tickLower, tickUpper, liquidity);
+        (uint128 collected0, uint128 collected1) =
+            IUniswapV3Pool(pool).collect(address(this), tickLower, tickUpper, type(uint128).max, type(uint128).max);
+        (uint256 vuxBack, uint256 wethBack) = _pairVuxWeth(collected0, collected1);
+
+        uint256 vuxBasis = polVuxPrincipal;
+        polVuxPrincipal = vuxBasis > vuxBack ? vuxBasis - vuxBack : 0;
+        uint256 wethBasis = polWethPrincipal;
+        polWethPrincipal = wethBasis > wethBack ? wethBasis - wethBack : 0;
+
+        emit PolPositionChanged(-1, vuxBack, wethBack, liquidity);
+        if (vuxBack != 0) emit StrategicInflow(CLASS_RETURNED_PRINCIPAL, address(vux), vuxBack);
+        if (wethBack != 0) emit StrategicInflow(CLASS_RETURNED_PRINCIPAL, address(weth), wethBack);
+    }
+
+    /// @notice Buy VUX for POL with Strategic WETH on the canonical pool.
+    ///
+    /// @dev The answer to "how is protocol-owned VUX sourced for later POL
+    ///      without minting" (sdd.md:L139): existing supply, bought in-protocol.
+    ///      Custody never leaves this contract — there is no transfer-to-operator
+    ///      step anywhere in the path — and the output is verified as **this
+    ///      contract's own measured VUX balance delta**, not as a number the pool
+    ///      returned (sdd.md:L258). Both bounds bind: `sqrtPriceLimitX96` inside
+    ///      the swap, `minVuxOut` on the measured receipt after it.
+    function buyVuxForPol(uint256 wethIn, uint256 minVuxOut, uint160 sqrtPriceLimitX96)
+        external
+        onlyRole(OPERATOR_ROLE)
+        nonReentrant
+    {
+        if (wethIn == 0) revert ZeroAmount();
+
+        uint256 vuxBefore = vux.balanceOf(address(this));
+
+        _arm(CTX_SWAP, 0, wethIn);
+        IUniswapV3Pool(pool).swap(address(this), token0 == address(weth), wethIn.toInt256(), sqrtPriceLimitX96, "");
+        _requireConsumed();
+
+        uint256 vuxOut = vux.balanceOf(address(this)) - vuxBefore;
+        if (vuxOut < minVuxOut) revert SlippageExceeded(vuxOut, minVuxOut);
+
+        emit VuxPurchasedForPol(wethIn, vuxOut);
+    }
+
+    /// @notice Harvest POL fee yield: VUX fees burn, WETH fees enter the Hard
+    ///         Reserve. Permissionless, parameter-free, swap-free.
+    ///
+    /// @dev The frozen VYRF outcome (FR-11), realized in one call so that no
+    ///      intermediate state exists in which collected fees are merely
+    ///      *intended* for their destination. It is **deliberately
+    ///      permissionless** because "operational conveniences … may be assisted
+    ///      but their absence must not corrupt classification" (prd.md:L690,
+    ///      NFR-REL-2): a keeper is useful, never necessary, and unharvested fees
+    ///      sit inside the pool position counted nowhere until collected (FB-8).
+    ///      Being parameter-free is what makes that safe — a caller chooses
+    ///      *when*, never *where* or *how much*.
+    ///
+    ///      It touches `realizedRevenue` nowhere, which is the whole of INV-29's
+    ///      "bypasses the general waterfall": `allocateRevenue` can spend only
+    ///      that accumulator, so POL fee yield is arithmetically unreachable from
+    ///      the distribution surface rather than merely un-routed to it.
+    function harvestPol() external nonReentrant {
+        if (_positionLiquidity() == 0) revert PolPositionMissing();
+        _pokeCollectAndClassifyFees();
+    }
+
+    // -------------------------------------------------------------------------
+    // Pool callbacks — context-authenticated, one-shot (§1.6 sdd.md:L252-L257)
+    // -------------------------------------------------------------------------
+
+    /// @notice Pay for liquidity the pool just credited to the POL position.
+    ///
+    /// @dev **Not `nonReentrant`, and that is the design** (sdd.md:L257): this
+    ///      arrives while the outer operation still holds the guard, so taking it
+    ///      here would deadlock every legitimate mint. The authentication is the
+    ///      one-shot context instead — checked in the accepted order, consumed
+    ///      before any payment, and required to have been consumed once the pool
+    ///      call returns.
+    ///
+    ///      Payment is a direct `transfer`. No allowance is granted here or
+    ///      anywhere else in this contract, so there is no standing approval for
+    ///      a later caller to drain.
+    function uniswapV3MintCallback(uint256 amount0Owed, uint256 amount1Owed, bytes calldata data) external {
+        // (1) forged caller — only the constructor-verified canonical pool.
+        if (msg.sender != pool) revert CallbackUnauthorizedCaller(msg.sender);
+        // (2) armed context type. A never-armed or already-consumed context reads
+        //     `CTX_NONE`, so out-of-operation, wrong-type, and duplicate
+        //     callbacks are all rejected right here.
+        OpContext memory ctx = _ctx;
+        if (ctx.ctxType != CTX_MINT) revert CallbackContextMismatch(CTX_MINT, ctx.ctxType);
+        // (3) token direction, resolved against the immutable pool ordering.
+        (uint256 vuxOwed, uint256 wethOwed) = _pairVuxWeth(amount0Owed, amount1Owed);
+        // (4) neither side may exceed what the operation committed. This is also
+        //     where a misdirected demand dies: a token the operation committed
+        //     nothing to has a maximum of zero, so any amount owed on it fails.
+        if (vuxOwed > ctx.maxVuxIn) revert CallbackAmountExceedsCommitment(address(vux), vuxOwed, ctx.maxVuxIn);
+        if (wethOwed > ctx.maxWethIn) revert CallbackAmountExceedsCommitment(address(weth), wethOwed, ctx.maxWethIn);
+        // (5) this contract passes no callback data, so any is malformed.
+        if (data.length != 0) revert CallbackDataNotEmpty(data.length);
+
+        delete _ctx; // consume BEFORE paying
+
+        if (vuxOwed != 0) vux.safeTransfer(pool, vuxOwed);
+        if (wethOwed != 0) weth.safeTransfer(pool, wethOwed);
+    }
+
+    /// @notice Pay the WETH input of a `buyVuxForPol` swap.
+    /// @dev Same five checks, same consume-before-pay, same absence of approvals.
+    ///      The direction check is load-bearing here in a way it is not for a
+    ///      mint: exactly one delta may be positive, it must be the WETH side
+    ///      (what the operation committed to spend), and the VUX side must be
+    ///      strictly negative (what it is buying).
+    function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
+        if (msg.sender != pool) revert CallbackUnauthorizedCaller(msg.sender);
+        OpContext memory ctx = _ctx;
+        if (ctx.ctxType != CTX_SWAP) revert CallbackContextMismatch(CTX_SWAP, ctx.ctxType);
+
+        (int256 vuxDelta, int256 wethDelta) = token0 == address(vux)
+            ? (amount0Delta, amount1Delta)
+            : (amount1Delta, amount0Delta);
+        if (wethDelta <= 0 || vuxDelta >= 0) revert CallbackDirectionMismatch(vuxDelta, wethDelta);
+
+        uint256 wethOwed = uint256(wethDelta);
+        if (wethOwed > ctx.maxWethIn) revert CallbackAmountExceedsCommitment(address(weth), wethOwed, ctx.maxWethIn);
+        if (data.length != 0) revert CallbackDataNotEmpty(data.length);
+
+        delete _ctx; // consume BEFORE paying
+
+        weth.safeTransfer(pool, wethOwed);
+    }
+
+    // -------------------------------------------------------------------------
     // Views
     // -------------------------------------------------------------------------
 
@@ -869,6 +1146,121 @@ contract StrategicTreasury is AccessControl, ReentrancyGuard {
         emit ReturnedFromStrategy(strategy, asset, principalPart, revenuePart);
         if (principalPart != 0) emit StrategicInflow(CLASS_RETURNED_PRINCIPAL, asset, principalPart);
         if (revenuePart != 0) emit StrategicInflow(CLASS_OTHER_REVENUE, asset, revenuePart);
+    }
+
+    /// @dev The one liquidity-add path, shared so a "mint" and an "increase"
+    ///      cannot drift into different rules. Books the **measured** amounts the
+    ///      pool took, never the committed maxima: the difference between them is
+    ///      the quantization dust, which never entered the position and must not
+    ///      be booked as if it had.
+    function _addLiquidity(uint256 vuxAmt, uint256 wethAmt) private {
+        uint128 liquidity = _affordableLiquidity(vuxAmt, wethAmt);
+
+        _arm(CTX_MINT, vuxAmt, wethAmt);
+        (uint256 amount0, uint256 amount1) =
+            IUniswapV3Pool(pool).mint(address(this), tickLower, tickUpper, liquidity, "");
+        _requireConsumed();
+
+        (uint256 vuxPaid, uint256 wethPaid) = _pairVuxWeth(amount0, amount1);
+        polVuxPrincipal += vuxPaid;
+        polWethPrincipal += wethPaid;
+
+        emit PolPositionChanged(1, vuxPaid, wethPaid, liquidity);
+    }
+
+    /// @dev The largest liquidity the committed amounts can certainly afford.
+    ///
+    ///      v3 charges, for a position `[A, B]` at price `P`:
+    ///        `amount0 = ceil(L·Q96·(sqrtB − sqrtP) / (sqrtB·sqrtP))`
+    ///        `amount1 = ceil(L·(sqrtP − sqrtA) / Q96)`
+    ///      Inverting needs `sqrtA`/`sqrtB`, i.e. `sqrtRatioAtTick` — which this
+    ///      unit cannot have: the vendored `TickMath` compiles in the =0.7.6
+    ///      unit, and porting or re-deriving it would be exactly the copied
+    ///      third-party helper the provenance boundary forbids.
+    ///
+    ///      It does not need them. Substituting the *domain* endpoints for the
+    ///      position's own bounds — `sqrtA → MIN_SQRT_RATIO`,
+    ///      `sqrtB → MAX_SQRT_RATIO` — moves both estimates in the safe
+    ///      direction, because `x/(x − p)` decreases in `x` and `1/(p − a)`
+    ///      decreases as `a` falls. So each side is an **underestimate of the
+    ///      true affordable liquidity**, hence so is their minimum, hence the
+    ///      pool can never demand more than the committed maxima. (The same
+    ///      conclusion holds if the price ever sat outside the full range: there
+    ///      the true charge is one-sided and smaller still.)
+    ///
+    ///      What it costs is precision, bounded by `sqrtA/sqrtP + sqrtP/sqrtB`
+    ///      — of order `1e-18` at any realistic price, i.e. dust. That dust stays
+    ///      as principal-side inventory and is never revenue, which is the only
+    ///      property anything downstream depends on.
+    function _affordableLiquidity(uint256 vuxAmt, uint256 wethAmt) private view returns (uint128) {
+        (uint160 sqrtPriceX96,,,,,,) = IUniswapV3Pool(pool).slot0();
+        if (sqrtPriceX96 <= MIN_SQRT_RATIO || sqrtPriceX96 >= MAX_SQRT_RATIO) {
+            revert PoolPriceOutOfRange(sqrtPriceX96);
+        }
+
+        (uint256 amount0, uint256 amount1) = _pairVuxWeth(vuxAmt, wethAmt);
+        uint256 from0 =
+            Math.mulDiv(amount0, Math.mulDiv(sqrtPriceX96, MAX_SQRT_RATIO, MAX_SQRT_RATIO - sqrtPriceX96), Q96);
+        uint256 from1 = Math.mulDiv(amount1, Q96, sqrtPriceX96 - MIN_SQRT_RATIO);
+
+        uint256 liquidity = from0 < from1 ? from0 : from1;
+        if (liquidity == 0) revert ZeroAmount();
+        return liquidity.toUint128();
+    }
+
+    /// @dev Poke the position so accrued fees land in `tokensOwed`, collect them,
+    ///      and classify both legs in the same call — the complete VYRF outcome
+    ///      (FR-11.1/11.2). Shared by `harvestPol` and `decreasePol` so the
+    ///      classification cannot differ between them.
+    ///
+    ///      Neither leg is ever credited to `realizedRevenue`: VUX fee yield is
+    ///      burned outright (never held, re-LP'd, redeemed, or recycled — FR-11.1)
+    ///      and WETH fee yield goes one-way to the Hard Reserve (FR-11.2).
+    function _pokeCollectAndClassifyFees() private {
+        IUniswapV3Pool(pool).burn(tickLower, tickUpper, 0);
+        (uint128 collected0, uint128 collected1) =
+            IUniswapV3Pool(pool).collect(address(this), tickLower, tickUpper, type(uint128).max, type(uint128).max);
+        (uint256 vuxFees, uint256 wethFees) = _pairVuxWeth(collected0, collected1);
+
+        if (vuxFees != 0) {
+            emit StrategicInflow(CLASS_POL_FEE_YIELD, address(vux), vuxFees);
+            IVUXBurnable(address(vux)).burn(vuxFees);
+        }
+        if (wethFees != 0) {
+            emit StrategicInflow(CLASS_POL_FEE_YIELD, address(weth), wethFees);
+            weth.safeTransfer(hardReserve, wethFees);
+            emit StrategicOutflow(OUT_HARD_ACCRETION, hardReserve, address(weth), wethFees);
+        }
+
+        emit VyrfHarvest(vuxFees, wethFees);
+    }
+
+    /// @dev Arm the single-use callback authorization, immediately before the one
+    ///      pool call that may consume it.
+    function _arm(uint8 ctxType, uint256 maxVuxIn, uint256 maxWethIn) private {
+        _ctx = OpContext({ctxType: ctxType, maxVuxIn: maxVuxIn, maxWethIn: maxWethIn});
+    }
+
+    /// @dev An authorization may neither survive its operation nor go unused: the
+    ///      first would leave a live grant behind, the second means the pool
+    ///      never called back and the operation's payment assumptions are void.
+    function _requireConsumed() private view {
+        if (_ctx.ctxType != CTX_NONE) revert CallbackNotConsumed();
+    }
+
+    /// @dev The POL position's key — owner + the immutable full-range bounds.
+    function _positionLiquidity() private view returns (uint128 liquidity) {
+        (liquidity,,,,) = IUniswapV3Pool(pool).positions(keccak256(abi.encodePacked(address(this), tickLower, tickUpper)));
+    }
+
+    /// @dev Convert between the pool's `(token0, token1)` ordering and this
+    ///      contract's `(VUX, WETH)` accounting. The permutation is either the
+    ///      identity or a single swap, so it is its own inverse and one helper
+    ///      serves both directions. The ordering itself is a constructor-verified
+    ///      immutable, which is what makes this the entirety of the callbacks'
+    ///      token-direction resolution.
+    function _pairVuxWeth(uint256 a, uint256 b) private view returns (uint256, uint256) {
+        return token0 == address(vux) ? (a, b) : (b, a);
     }
 
     /// @dev Admitted + matured + cap headroom, and — for a `UNITIZED` target —
