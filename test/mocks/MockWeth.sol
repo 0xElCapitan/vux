@@ -93,6 +93,18 @@ contract MockWeth is ERC20 {
         reentryCallData = data;
     }
 
+    /// @dev Sprint 4: `transferFeeBp` applied to the PULL direction too. The
+    ///      treasury's `returnFor` pulls with `transferFrom` and books what it
+    ///      measured, not what it asked for — a distinction that only exists
+    ///      when the pull can under-deliver. Inert unless `transferFeeBp` is set,
+    ///      so no earlier suite changes behaviour.
+    function transferFrom(address from, address to, uint256 value) public override returns (bool) {
+        if (transferFeeBp == 0) return super.transferFrom(from, to, value);
+        _spendAllowance(from, _msgSender(), value);
+        _transfer(from, to, value - (value * transferFeeBp) / 10_000);
+        return true;
+    }
+
     function transfer(address to, uint256 value) public override returns (bool) {
         if (failTransfers) return false;
         if (failTransfersTo != address(0) && to == failTransfersTo) return false;

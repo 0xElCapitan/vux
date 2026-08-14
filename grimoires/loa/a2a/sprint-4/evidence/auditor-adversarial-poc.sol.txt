@@ -1,0 +1,376 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity =0.8.28;
+
+import {StrategicTreasury} from "../../src/StrategicTreasury.sol";
+import {MockLsgModule} from "../mocks/MockLsgModule.sol";
+import {MockStrategy} from "../mocks/MockStrategy.sol";
+import {TreasuryFixture} from "../treasury/TreasuryFixture.sol";
+
+/// @title AuditAdversarial — AUDIT-NODE ONLY, transient.
+/// @notice Independent adversarial probes written by the /audit-sprint node.
+///         Not part of the Sprint-4 subject; deleted after execution.
+contract AuditAdversarialTest is TreasuryFixture {
+    address internal constant ATTACKER = address(0xA77ACC);
+
+    function setUp() public {
+        _deploySystem();
+        treasury.setOpsRecipient(OPS_RECIPIENT);
+    }
+
+    // ---------------------------------------------------------------------
+    // A. Permissionless `returnFor` misattribution — economic grading
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_A_MisattributedReturnCreditsPrincipalAsRevenue() public {
+        MockStrategy s1 = _newStrategy();
+        MockStrategy s2 = _newStrategy();
+        uint256 P = 100 ether;
+
+        _admitMatured(address(s1), address(weth), P, 0); // NETTING
+        _admitMatured(address(s2), address(weth), P, 0); // NETTING
+
+        _fundTreasury(address(weth), P);
+        treasury.deployToStrategy(address(s1), address(weth), P);
+
+        assertEq(treasury.outstandingPrincipal(address(s1), address(weth)), P, "s1 owes P");
+        assertEq(treasury.outstandingPrincipal(address(s2), address(weth)), 0, "s2 owes nothing");
+        assertEq(treasury.realizedRevenue(address(weth)), 0, "no revenue exists yet");
+
+        CoreState memory core = _snapshotCore();
+
+        // NO OPERATOR INVOLVEMENT: returnFor is permissionless and the caller
+        // chooses the attribution target.
+        vm.startPrank(address(s1));
+        weth.approve(address(treasury), P);
+        treasury.returnFor(address(s2), address(weth), P);
+        vm.stopPrank();
+
+        // Principal that came back is booked as revenue; s1's debt still stands.
+        assertEq(treasury.realizedRevenue(address(weth)), P, "principal credited as revenue");
+        assertEq(treasury.outstandingPrincipal(address(s1), address(weth)), P, "s1's principal survives the return");
+        assertEq(treasury.outstandingPrincipal(address(s2), address(weth)), 0, "s2 netted nothing");
+
+        // The attacker is strictly WORSE off than simply stealing: it surrendered P.
+        assertEq(weth.balanceOf(address(s1)), 0, "attacker surrendered the whole position");
+
+        // The manufactured credit is spendable by the operator.
+        uint256 opsBefore = weth.balanceOf(OPS_RECIPIENT);
+        treasury.allocateRevenue(address(weth), 0, 0, P, 0);
+        assertEq(weth.balanceOf(OPS_RECIPIENT) - opsBefore, P, "principal leaves as an 'operating expense'");
+
+        // Monetary core is untouched throughout.
+        _assertCoreUnchanged(core, "misattributed return");
+    }
+
+    /// @dev The disclosure control: the event names the credited strategy, so an
+    ///      indexer can see revenue attributed to a strategy that never held
+    ///      principal. Detectability is what bounds the operator's exposure.
+    function test_AUDIT_A2_MisattributionIsDisclosedByTheEvent() public {
+        MockStrategy s1 = _newStrategy();
+        MockStrategy s2 = _newStrategy();
+        uint256 P = 10 ether;
+        _admitMatured(address(s1), address(weth), P, 0);
+        _admitMatured(address(s2), address(weth), P, 0);
+        _fundTreasury(address(weth), P);
+        treasury.deployToStrategy(address(s1), address(weth), P);
+
+        vm.startPrank(address(s1));
+        weth.approve(address(treasury), P);
+        vm.expectEmit(true, true, false, true);
+        emit StrategicTreasury.ReturnedFromStrategy(address(s2), address(weth), 0, P);
+        treasury.returnFor(address(s2), address(weth), P);
+        vm.stopPrank();
+    }
+
+    // ---------------------------------------------------------------------
+    // B. `recallFromStrategy` lacks the `UnknownReturnAsset` guard
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_B_RecallCreditsAnAssetReturnForWouldReject() public {
+        MockStrategy s = _newStrategy();
+        _admitMatured(address(s), address(weth), 100 ether, 0);
+
+        // `otherAsset` was NEVER admitted for s and s holds no principal in it.
+        _fund(address(s), address(otherAsset), 50 ether);
+
+        // returnFor rejects it — AC-3's stated guard.
+        _fund(ATTACKER, address(otherAsset), 1 ether);
+        vm.startPrank(ATTACKER);
+        otherAsset.approve(address(treasury), 1 ether);
+        vm.expectPartialRevert(StrategicTreasury.UnknownReturnAsset.selector);
+        treasury.returnFor(address(s), address(otherAsset), 1 ether);
+        vm.stopPrank();
+
+        // recallFromStrategy routes to the same classifier with NO asset guard.
+        assertEq(treasury.realizedRevenue(address(otherAsset)), 0, "no credit before");
+        treasury.recallFromStrategy(address(s), address(otherAsset), 50 ether);
+        assertEq(
+            treasury.realizedRevenue(address(otherAsset)), 50 ether, "unadmitted asset credited as revenue via recall"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // C. Accumulator cannot be bypassed
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_C_AccumulatorHoldsUnderPartialsAndOverflow() public {
+        MockStrategy s = _newStrategy();
+        _admitMatured(address(s), address(weth), 100 ether, 0);
+        _fundTreasury(address(weth), 100 ether);
+        treasury.deployToStrategy(address(s), address(weth), 100 ether);
+
+        // Genuine NETTING excess: return 130 against 100 deployed => 30 revenue.
+        _fund(ATTACKER, address(weth), 30 ether);
+        vm.startPrank(ATTACKER);
+        weth.approve(address(treasury), 30 ether);
+        treasury.returnFor(address(s), address(weth), 30 ether);
+        vm.stopPrank();
+        treasury.recallFromStrategy(address(s), address(weth), 100 ether);
+        assertEq(treasury.realizedRevenue(address(weth)), 30 ether, "only the excess is revenue");
+
+        // Repeated partial allocations sum exactly to the credit, never past it.
+        treasury.allocateRevenue(address(weth), 10 ether, 0, 0, 0);
+        treasury.allocateRevenue(address(weth), 0, 0, 10 ether, 0);
+        treasury.allocateRevenue(address(weth), 0, 0, 0, 10 ether);
+        assertEq(treasury.realizedRevenue(address(weth)), 0, "credit exactly exhausted");
+
+        vm.expectPartialRevert(StrategicTreasury.RevenueExceedsRealized.selector);
+        treasury.allocateRevenue(address(weth), 1, 0, 0, 0);
+
+        // Overflow-shaped arguments revert on checked arithmetic, not wrap.
+        vm.expectRevert();
+        treasury.allocateRevenue(address(weth), type(uint256).max, 0, 1, 0);
+    }
+
+    // ---------------------------------------------------------------------
+    // D. Hostile LSG module is topologically bounded
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_D_HostileModuleCannotEscapeAdmissionOrCaps() public {
+        MockStrategy admitted = _newStrategy();
+        MockStrategy notAdmitted = _newStrategy();
+        uint256 cap = 10 ether;
+        _admitMatured(address(admitted), address(weth), cap, 0);
+        _fundTreasury(address(weth), 1000 ether);
+
+        MockLsgModule module = _activateLsg();
+        address[] memory strats = new address[](3);
+        uint256[] memory w = new uint256[](3);
+        strats[0] = address(notAdmitted);
+        w[0] = 1e18;
+        strats[1] = address(admitted);
+        w[1] = 1e18;
+        strats[2] = address(reserve); // aim the signal straight at the Hard Reserve
+        w[2] = 1e18;
+        module.setSignal(strats, w);
+
+        CoreState memory core = _snapshotCore();
+        treasury.deployMarginalBySignal(1000 ether);
+
+        assertEq(weth.balanceOf(address(notAdmitted)), 0, "unadmitted target received nothing");
+        assertEq(
+            treasury.outstandingPrincipal(address(admitted), address(weth)), cap, "clamped at cap, never above"
+        );
+        _assertCoreUnchanged(core, "hostile signal naming the Reserve");
+
+        // Removal and recall stay unblockable while a module is active.
+        treasury.removeStrategy(address(admitted), true);
+        (bool active,,) = treasury.admissionOf(address(admitted));
+        assertFalse(active, "removal is instant with an active module");
+    }
+
+    // ---------------------------------------------------------------------
+    // E. No credit without delivery, even with a lying adapter
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_E_HarvestCannotCreditWithoutDelivery() public {
+        MockStrategy s = _newStrategy();
+        _admitMatured(address(s), address(weth), 100 ether, 1); // CLAIM
+        _fundTreasury(address(weth), 100 ether);
+        treasury.deployToStrategy(address(s), address(weth), 100 ether);
+
+        address[] memory ra = new address[](2);
+        ra[0] = address(weth);
+        ra[1] = address(weth); // duplicate — the free adapter lie
+        s.setRewardAssets(ra);
+        s.lieUnits(1e30); // manufacture units out of nothing
+        s.setHarvestAmount(address(weth), 0); // deliver NOTHING
+
+        uint256 before = treasury.realizedRevenue(address(weth));
+        treasury.harvestYield(address(s)); // permissionless
+        assertEq(treasury.realizedRevenue(address(weth)), before, "lying units alone credit nothing");
+
+        // Deliver exactly 1 ether once, with the duplicate still present.
+        _fund(address(s), address(weth), 1 ether);
+        s.setHarvestAmount(address(weth), 1 ether);
+        treasury.harvestYield(address(s));
+        assertEq(treasury.realizedRevenue(address(weth)) - before, 1 ether, "duplicate credited exactly once");
+    }
+
+    // ---------------------------------------------------------------------
+    // F. Bare inflow is never revenue (rule 5)
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_F_BareInflowIsNeverRevenue() public {
+        _fundTreasury(address(weth), 500 ether);
+        assertEq(treasury.realizedRevenue(address(weth)), 0, "bare inflow credits nothing");
+        vm.expectPartialRevert(StrategicTreasury.RevenueExceedsRealized.selector);
+        treasury.allocateRevenue(address(weth), 0, 1, 0, 0);
+    }
+
+    // ---------------------------------------------------------------------
+    // G. closeStrategy can never manufacture revenue
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_G_CloseStrategyOnlyReducesPrincipal() public {
+        MockStrategy s = _newStrategy();
+        _admitMatured(address(s), address(weth), 100 ether, 0);
+        treasury.admitStrategy(address(s), address(otherAsset), 100 ether, 0);
+        vm.warp(vm.getBlockTimestamp() + treasury.ADMISSION_DELAY());
+
+        _fundTreasury(address(weth), 100 ether);
+        _fundTreasury(address(otherAsset), 100 ether);
+        treasury.deployToStrategy(address(s), address(weth), 100 ether);
+        treasury.deployToStrategy(address(s), address(otherAsset), 100 ether);
+
+        treasury.removeStrategy(address(s), true);
+        treasury.closeStrategy(address(s));
+
+        assertEq(treasury.realizedRevenue(address(weth)), 0, "write-off created no WETH revenue");
+        assertEq(treasury.realizedRevenue(address(otherAsset)), 0, "write-off created no other revenue");
+        assertEq(treasury.outstandingPrincipal(address(s), address(weth)), 0, "principal reduced to zero");
+        assertEq(treasury.outstandingPrincipal(address(s), address(otherAsset)), 0, "principal reduced to zero");
+    }
+
+    // ---------------------------------------------------------------------
+    // H. Full Strategic role escalation still cannot reach the core
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_H_RoleEscalationStaysInsideStrategicAuthority() public {
+        CoreState memory core = _snapshotCore();
+
+        treasury.grantRole(treasury.DEFAULT_ADMIN_ROLE(), ATTACKER);
+        vm.startPrank(ATTACKER);
+        treasury.grantRole(treasury.OPERATOR_ROLE(), ATTACKER);
+        treasury.setOpsRecipient(ATTACKER);
+        treasury.activateLSG(address(0xBEEF));
+        treasury.deactivateLSG();
+        // Strip the original admin — a hostile takeover of the whole surface.
+        treasury.revokeRole(treasury.OPERATOR_ROLE(), address(this));
+        treasury.revokeRole(treasury.DEFAULT_ADMIN_ROLE(), address(this));
+        vm.stopPrank();
+
+        assertTrue(treasury.hasRole(treasury.OPERATOR_ROLE(), ATTACKER), "attacker owns Strategic authority");
+        assertFalse(treasury.hasRole(treasury.OPERATOR_ROLE(), address(this)), "original operator evicted");
+        _assertCoreUnchanged(core, "total Strategic takeover");
+    }
+
+    // ---------------------------------------------------------------------
+    // I. VUX revenue is burn-only
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_I_VuxCanNeverEnterOrdinaryAllocation() public {
+        vm.expectPartialRevert(StrategicTreasury.VuxRevenueMustBurn.selector);
+        treasury.allocateRevenue(address(vux), 0, 0, 0, 0);
+        assertEq(treasury.signalerBudget(address(vux)), 0, "no VUX earmark can ever be created");
+    }
+
+    // ---------------------------------------------------------------------
+    // J. signalerBudget is revenue-bounded and cannot be over-spent
+    // ---------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------
+    // K. The recall gap cannot LAUNDER principal already held by the treasury
+    // ---------------------------------------------------------------------
+
+    /// @dev The bound on Finding B: `recallFromStrategy` can only classify an
+    ///      inflow that arrives during the call. Principal-side inventory the
+    ///      treasury already holds has no un-booked outbound path, so it cannot
+    ///      be pushed to a strategy and pulled back as revenue.
+    function test_AUDIT_K_ExistingPrincipalInventoryCannotBeLaunderedIntoRevenue() public {
+        MockStrategy s = _newStrategy();
+        _admitMatured(address(s), address(otherAsset), 100 ether, 0);
+
+        // 100 of `otherAsset` sits in the treasury as bare principal inventory.
+        _fundTreasury(address(otherAsset), 100 ether);
+        assertEq(treasury.realizedRevenue(address(otherAsset)), 0, "inventory is not revenue");
+
+        // Route 1: deploy then recall — books principal, nets back to principal.
+        treasury.deployToStrategy(address(s), address(otherAsset), 100 ether);
+        assertEq(treasury.outstandingPrincipal(address(s), address(otherAsset)), 100 ether, "booked as principal");
+        treasury.recallFromStrategy(address(s), address(otherAsset), 100 ether);
+        assertEq(treasury.realizedRevenue(address(otherAsset)), 0, "round trip creates no revenue");
+        assertEq(treasury.outstandingPrincipal(address(s), address(otherAsset)), 0, "principal retired, not converted");
+
+        // Route 2: there is no un-booked outbound path for inventory. The only
+        // other outbound legs are revenue-bounded and revert at zero credit.
+        vm.expectPartialRevert(StrategicTreasury.RevenueExceedsRealized.selector);
+        treasury.allocateRevenue(address(otherAsset), 0, 0, 1, 0);
+    }
+
+    // ---------------------------------------------------------------------
+    // L. Reentrancy from a hostile asset during a distributing transfer
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_L_ReentryIntoReturnForDuringAllocationIsBlocked() public {
+        MockStrategy s = _newStrategy();
+        // Admitted with nothing outstanding: the whole return is excess => revenue.
+        _admitMatured(address(s), address(weth), 100 ether, 0);
+
+        _fund(ATTACKER, address(weth), 10 ether);
+        vm.startPrank(ATTACKER);
+        weth.approve(address(treasury), 10 ether);
+        treasury.returnFor(address(s), address(weth), 10 ether);
+        vm.stopPrank();
+        assertEq(treasury.realizedRevenue(address(weth)), 10 ether, "genuine revenue credited");
+
+        // Arm a one-shot re-entry into `returnFor` from inside the ops transfer.
+        weth.setReentryCall(
+            address(treasury),
+            abi.encodeCall(StrategicTreasury.returnFor, (address(s), address(weth), 1))
+        );
+        vm.expectRevert(); // ReentrancyGuardReentrantCall bubbles out
+        treasury.allocateRevenue(address(weth), 0, 0, 10 ether, 0);
+
+        // State is intact: the whole allocation reverted.
+        assertEq(treasury.realizedRevenue(address(weth)), 10 ether, "credit untouched by the failed reentry");
+    }
+
+    // ---------------------------------------------------------------------
+    // M. activateLSG replaces a live module in place (doc says swap only)
+    // ---------------------------------------------------------------------
+
+    function test_AUDIT_M_ActivateLsgReplacesInPlaceWithoutDeactivationEvent() public {
+        MockLsgModule first = _activateLsg();
+        MockLsgModule second = new MockLsgModule();
+        treasury.activateLSG(address(second));
+        assertEq(treasury.lsgModule(), address(second), "second module is live");
+        assertNotEq(treasury.lsgModule(), address(first), "first module silently displaced");
+    }
+
+    function test_AUDIT_J_SignalerBudgetCannotExceedItsEarmark() public {
+        MockStrategy s = _newStrategy();
+        _admitMatured(address(s), address(weth), 100 ether, 0);
+        _fundTreasury(address(weth), 100 ether);
+        treasury.deployToStrategy(address(s), address(weth), 100 ether);
+
+        _fund(ATTACKER, address(weth), 5 ether);
+        vm.startPrank(ATTACKER);
+        weth.approve(address(treasury), 5 ether);
+        treasury.returnFor(address(s), address(weth), 5 ether);
+        vm.stopPrank();
+        treasury.recallFromStrategy(address(s), address(weth), 100 ether);
+        assertEq(treasury.realizedRevenue(address(weth)), 5 ether, "5 ether of genuine revenue");
+
+        treasury.allocateRevenue(address(weth), 0, 0, 0, 5 ether);
+        assertEq(treasury.signalerBudget(address(weth)), 5 ether, "earmarked");
+
+        MockLsgModule module = _activateLsg();
+        vm.expectPartialRevert(StrategicTreasury.RevenueExceedsRealized.selector);
+        treasury.fundSignalerProgram(address(weth), 5 ether + 1, 0, 0);
+
+        treasury.fundSignalerProgram(address(weth), 5 ether, 0, 0);
+        assertEq(treasury.signalerBudget(address(weth)), 0, "earmark exhausted, never negative");
+        assertEq(weth.balanceOf(address(module)), 5 ether, "module holds exactly the funded amount");
+    }
+}

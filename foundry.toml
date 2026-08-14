@@ -30,6 +30,15 @@ script = "script"
 out = "out"
 libs = []
 solc = "0.8.28"
+# SPRINT 4 — `src/v3core/` is VUX-owned source that belongs to the OTHER
+# compilation unit (`=0.7.6`, [profile.v3core] below). It lives under `src/` so
+# the provenance gates classify it as VUX-owned from the declared source roots
+# (tools/provenance/census.sh) rather than needing a new root declared for one
+# file; this line is what keeps this unit's `src = "src"` from trying to compile
+# it under `=0.8.28` and failing on the pragma. The two units stay disjoint:
+# nothing in `src/v3core/` is imported from `=0.8.28` source, and the treasury
+# couples to the pool through the vendored `>=0.5.0` interfaces only.
+skip = ["src/v3core/**"]
 # Bytecode-affecting settings for the VUX unit were deliberately unset through
 # Sprint 2, which recorded that as a decision rather than an omission:
 #
@@ -106,12 +115,42 @@ depth = 64
 fail_on_revert = true
 
 [profile.v3core]
-# Vendored upstream tree only. Nothing VUX-owned compiles in this profile in
-# Sprint 1; VuxPoolDeployer.sol (Sprint 4) is VUX-owned derivative source and
-# lives outside the immutable upstream census even though it shares this unit.
+# The vendored upstream tree plus the one VUX-owned file that must compile in
+# the same =0.7.6 domain.
+#
+# SPRINT 4 AMENDMENT — `script` now points at `src/v3core`, which holds
+# `VuxPoolDeployer.sol`. Foundry admits exactly one directory per compile role
+# (src / test / script), and all three previously pointed at the vendored tree.
+# `src` and `test` are left on that tree so the complete 32-file census still
+# compiles and `out-v3core/UniswapV3Pool.sol/UniswapV3Pool.json` is still
+# produced for the POOL_INIT_CODE_HASH gate; `script` was the free role, so it
+# carries the VUX-owned half.
+#
+# The split is the point, not an accident of Foundry's layout: `src` here means
+# "the immutable upstream census", and VuxPoolDeployer.sol is VUX-owned
+# derivative source that must stay visibly outside it (sprint.md:L19) while
+# still being compiled by the pinned 0.7.6 solc. It therefore lives under
+# `src/v3core/` — inside the declared VUX source root that every provenance gate
+# classifies from (tools/provenance/census.sh `VUX_SOURCE_ROOTS`) — and is
+# reached from here, rather than being dropped into `vendor/`.
+#
+# Nothing bytecode-affecting changes: the settings below are unchanged, so the
+# pool's creation bytecode and the accepted POOL_INIT_CODE_HASH are unaffected
+# (verified by tools/provenance/verify-init-code-hash.sh, which fails closed).
 src = "vendor/uniswap-v3-core-v1.0.0/contracts"
 test = "vendor/uniswap-v3-core-v1.0.0/contracts"
-script = "vendor/uniswap-v3-core-v1.0.0/contracts"
+script = "src/v3core"
+# Explicitly emptied, and this line is load-bearing for the same reason
+# `via_ir = false` below is. Profiles inherit from [profile.default], so the
+# `skip = ["src/v3core/**"]` added there — which exists to keep the =0.8.28 unit
+# off this unit's source — silently propagated here and made this profile skip
+# the very file it is here to compile. The failure was quiet: the build stayed
+# green and merely stopped emitting `out-v3core/VuxPoolDeployer.sol/`, which
+# surfaced only when the Sprint-4 tests could not read the artifact. This is the
+# residual inheritance hazard recorded in the Sprint-3 decision log, hit a second
+# time; the structural fix (a guard comparing this profile's *effective* settings
+# against the accepted refreeze set) remains outside this sprint's scope.
+skip = []
 out = "out-v3core"
 cache_path = "cache-v3core"
 libs = []
