@@ -17,7 +17,7 @@ description: |
 loa-agent: implementing-tasks
 extracted-from: cycle-002 sprint-2 /implement (A-1 remediation, audit-subject re-fingerprinting)
 extraction-date: 2026-08-11
-version: 1.0.0
+version: 1.1.0
 tags:
   - integrity
   - fingerprinting
@@ -142,6 +142,34 @@ The convention is now **recovered, not assumed**: `<sha256>` + two spaces +
 `<path>`, `LC_ALL=C` sorted by path, LF, trailing newline. Record it in the report
 — the next node should not have to repeat this.
 
+### Step 3b: If the artifact publishes more than one independently fingerprinted group, use the smallest as the search and every other as cross-validation
+
+A manifest that partitions its subject into several separately fingerprinted
+groups (e.g. an implementation group and a much smaller authority/metadata
+group) hands you a cheaper search and a free confirmation for the price of one
+extra digest:
+
+```bash
+# solve the encoding against the SMALLEST group first — fewer entries means a
+# wrong candidate is both faster to compute and less likely to coincidentally
+# match by chance
+echo "Group B candidate: $(sha256sum < /tmp/group-b-manifest.txt | cut -d' ' -f1)"
+echo "Group B target   : 1e6515cc1c79f553c68d8172e16c78c183133ad0bc6057bf07cfb400ea267a2c"
+```
+
+Once a candidate matches the smallest group, re-apply the *same* rule to every
+other published group before trusting it for the group that actually matters:
+
+```bash
+echo "Group A candidate: $(sha256sum < /tmp/group-a-manifest.txt | cut -d' ' -f1)"
+echo "Group A target   : 20289436748666cab658c9a4e6777476e2f9aa854ec217dff39cca6b05029e4b"
+```
+
+Agreement across two independently fingerprinted groups rules out a
+coincidental match on the first (small search spaces make coincidence
+plausible) and confirms the recovered convention generalises rather than
+having been curve-fit to one sample.
+
 ### Step 4: Reconstruct the subject set independently, then apply the recovered rule
 
 Rebuild the file list from the stated subject *definition* rather than copying the
@@ -212,6 +240,9 @@ a6313a4d5a8a75f0edf0a68b13adaf4c51f5d510b888973337620fb4f2b772cf   # successor, 
 - [ ] Unchanged files verified byte-identical to the published table, individually
 - [ ] `sha256sum`'s platform `*` marker normalised, not trusted
 - [ ] Successor digest recomputed after state-zone edits and unchanged
+- [ ] If the artifact publishes multiple independently fingerprinted groups, the
+      recovered rule was validated against more than one before being trusted
+      for the group that matters
 
 ---
 
@@ -259,7 +290,6 @@ can act on, and you already have it.
 
 - `## Session Continuity`: 2026-08-11 `/implement sprint-2` A-1 remediation entry —
   records the reproduction of `78c8881204…2ac45a` and the recovered convention
-- `## Learnings`: adjacent entries on gate-matcher asymmetry and reachability proof
 
 ### Related Skills
 
@@ -278,6 +308,7 @@ can act on, and you already have it.
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1.0 | 2026-08-16 | Merged in the smallest-group-first / multi-group cross-validation refinement (Step 3b) from the pending candidate `reverse-engineer-an-undocumented-fingerprint-scheme` (sprint-6 review, 2026-08-14), which independently rediscovered this skill's core technique against a manifest with three separately fingerprinted groups. Disposition: MERGE at `/skill-audit --pending` sprint-6 skill reconciliation (2026-08-16) — folded rather than promoted as a separate artifact; see `grimoires/loa/skills-archived/reverse-engineer-an-undocumented-fingerprint-scheme/` for the original. |
 | 1.0.0 | 2026-08-11 | Initial extraction |
 
 ---
