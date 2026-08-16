@@ -28,6 +28,19 @@ coverage/
 broadcast/
 broadcast/**
 
+# Off-chain roots (Sprint 6). Dependencies are reproduced from the COMMITTED
+# lockfiles under the accepted provenance refreeze — never vendored into the
+# repository. `indexer/package-lock.json` and `web/package-lock.json` are tracked
+# on purpose: they carry the integrity digests the accepted census pins, and
+# `tools/offchain/verify-accepted-pins.mjs` fails closed if either is missing.
+node_modules/
+web/.next/
+web/test-results/
+web/playwright-report/
+indexer/.ponder/
+indexer/generated/
+indexer/ponder-env.d.ts
+
 # Loa disabled skills (feature-gated)
 .claude/.skills-disabled/
 

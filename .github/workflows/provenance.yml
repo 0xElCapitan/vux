@@ -139,3 +139,127 @@ jobs:
         run: |
           git diff --exit-code
           test -z "$(git status --porcelain)" || { git status --porcelain; exit 1; }
+
+  # ---------------------------------------------------------------------------
+  # Sprint-6 off-chain surface (audit M-3).
+  #
+  # Before this job, CI executed ZERO off-chain code: the accepted-pin gate
+  # existed only as an npm script nobody ran, while the Sprint-6 success metric
+  # requires "CI: lockfile-drift gate active". The dependency path guarded here
+  # is the one that signs user transactions (viem/wagmi), so a drift that no
+  # gate observes is the whole risk.
+  #
+  # No new action and no new dependency: Node comes from the runner image and
+  # every command is one the repository already defines.
+  # ---------------------------------------------------------------------------
+  offchain:
+    name: off-chain gates (indexer + web)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Assert checkout preserved bytes
+        run: git config core.autocrlf false && git diff --exit-code
+
+      # Asserted rather than assumed: a runner image rollback must not silently
+      # change what these gates mean. No setup-node action is added for this.
+      - name: Assert a usable Node
+        run: |
+          node --version
+          npm --version
+          major="$(node -p 'process.versions.node.split(".")[0]')"
+          if [ "$major" -lt 20 ]; then
+            echo "::error::Node >= 20 required, got $(node --version)"; exit 1
+          fi
+
+      # `npm ci` installs EXACTLY the lockfile and fails closed on any
+      # manifest/lockfile disagreement. `--ignore-scripts` restates the accepted
+      # posture from .npmrc (audit M-5) so CI can never be softer than a
+      # developer machine, even if the file is edited.
+      - name: Install indexer — exact, no lifecycle scripts
+        run: npm ci --ignore-scripts
+        working-directory: indexer
+
+      - name: Install web — exact, no lifecycle scripts
+        run: npm ci --ignore-scripts
+        working-directory: web
+
+      # The drift assertion proper: installing must not have rewritten a
+      # manifest or a lockfile. `npm ci` refuses to update them, so any diff here
+      # means the committed pair disagreed with what was resolved.
+      - name: Assert no manifest or lockfile drift
+        run: |
+          git diff --exit-code -- \
+            indexer/package.json indexer/package-lock.json \
+            web/package.json web/package-lock.json
+
+      - name: Accepted-pin gate
+        run: node tools/offchain/verify-accepted-pins.mjs
+
+      - name: Indexer unit suite
+        run: npm test
+        working-directory: indexer
+
+      - name: Ponder codegen gate
+        run: npm run verify:codegen
+        working-directory: indexer
+
+      - name: Web unit suite
+        run: npm run test:units
+        working-directory: web
+
+      # A PRODUCTION build, never the test-env build. The two gates below read
+      # `out/`, so this also guarantees CI never inspects a leftover artifact.
+      - name: Production static export
+        run: npm run build
+        working-directory: web
+
+      - name: Static-export / no-server gate
+        run: npm run verify:static
+        working-directory: web
+
+      - name: Bundled-RSC gate
+        run: npm run verify:rsc
+        working-directory: web
+
+      - name: Assert the gates left the tree unchanged
+        run: git diff --exit-code
+
+  # The pin gate is only evidence if it discriminates. This mutates one accepted
+  # pin, asserts the gate FAILS, restores the exact bytes, and asserts it passes
+  # again — the same shape as drift-negative-demonstration above.
+  offchain-pin-negative-demonstration:
+    name: accepted-pin gate fails closed on a mutated pin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Prove the accepted-pin gate closes
+        run: |
+          set -eu
+          cp web/package.json /tmp/package.json.bak
+          # A single version digit — the smallest possible disagreement with the
+          # accepted census.
+          node -e "
+            const fs = require('fs');
+            const p = JSON.parse(fs.readFileSync('web/package.json', 'utf8'));
+            if (p.dependencies.next !== '15.1.12') {
+              console.error('fixture drifted: expected next 15.1.12, saw ' + p.dependencies.next);
+              process.exit(9);
+            }
+            p.dependencies.next = '15.1.11';
+            fs.writeFileSync('web/package.json', JSON.stringify(p, null, 2) + '\n');
+          "
+          if node tools/offchain/verify-accepted-pins.mjs; then
+            echo "::error::the accepted-pin gate PASSED a mutated pin"
+            cp /tmp/package.json.bak web/package.json
+            exit 1
+          fi
+          echo "gate failed closed on the mutated pin, as required"
+          cp /tmp/package.json.bak web/package.json
+          node tools/offchain/verify-accepted-pins.mjs
+
+      - name: Assert the working tree was restored exactly
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain)" || { git status --porcelain; exit 1; }

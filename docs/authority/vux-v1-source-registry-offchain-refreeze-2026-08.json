@@ -1,0 +1,553 @@
+{
+  "schema_version": 1,
+  "delta_date": "2026-08-14",
+  "pass": 3,
+  "pass_note": "pass 2 HITL reconciliation; pass 3 operator acceptance activation — substantive pin/provenance content unchanged, mutation confined to acceptance state",
+  "status": "OFFCHAIN_PROVENANCE_REFREEZE_CURRENT_ACCEPTED",
+  "activation": "ACTIVE",
+  "operator_acceptance": {
+    "date": "2026-08-14",
+    "scope": "exactly the ten packages and versions in pins_final, plus the disclosed exact transitive @tanstack/query-core@5.71.1 where the accepted dependency graph requires it",
+    "wildcard_family_authorization_granted": false,
+    "unrelated_dependency_expansion_authorized": false,
+    "applies_only_to": [
+      "exact identities",
+      "licences",
+      "integrity evidence",
+      "source/release pins",
+      "package-root assignments",
+      "dependency roles"
+    ],
+    "pre_acceptance_digests_reverified": {
+      "vux-v1-offchain-provenance-refreeze-2026-08.md": "f39dcf424abdc319be38fe4a888144470de8b31de4d929e6c5f15e178d2ee0d6",
+      "vux-v1-source-registry-offchain-refreeze-2026-08.json": "8449ebb367b5650c20018384810349d78ebaf402f781d9c8d1af103098fe7699"
+    },
+    "equivalence_check": "accepted table compared entry-by-entry against pins_final + disclosed_exact_transitives: 11/11 exact match, no broadening",
+    "new_dependency_rule": "if installation reveals a new required direct/peer dependency not covered here, STOP with a new bounded HITL rather than adding it"
+  },
+  "companion_markdown": "docs/authority/vux-v1-offchain-provenance-refreeze-2026-08.md",
+  "discharges_obligation": {
+    "source": "docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md",
+    "section": "9",
+    "rule": "identical fail-closed provenance rule — exact immutable pins recorded in an operator-accepted refreeze BEFORE first import/use in the applicable later sprint",
+    "scope_discharged": "ponder, Next.js + React (+ React DOM), viem/wagmi, Playwright, PostgreSQL, plus the two required peers admitted under D-2",
+    "scope_still_deferred": "slither 0.10.x and any additional CI/static-analysis toolchain (Sprint 8, Task 8.1)"
+  },
+  "produced_by": {
+    "node": "/implement sprint-6",
+    "task": "6.1",
+    "branch": "sprint-6",
+    "baseline_commit": "92f8762111cd89c4cbdd4bcb11d06bf368f29377"
+  },
+  "project_license": "GPL-3.0-or-later",
+  "project_license_changed": false,
+  "default_deny_preserved": true,
+  "smart_contract_surface_changed": false,
+  "pin_verification": {
+    "date": "2026-08-14",
+    "method": "registry packument enumeration of stable releases only (pre-release identifiers excluded); immutable identity from git ls-remote refs/tags/<tag> with ^{} peel against the repository named in the package's own repository field, enumerating the FULL tag namespace (never a truncated filter — see correction_pass_1); cross-checked against the registry gitHead where the packument carries one; security qualification from vendor advisories read as primary sources; every parent peerDependencies range checked against the proposed child pin",
+    "mutable_refs_are_authority": false,
+    "dist_tags_consulted_as_authority": false,
+    "tarballs_downloaded": false,
+    "tarball_download_rationale": "downloading a gated package's tarball would sit on the wrong side of the gate's 'or otherwise using' clause; the registry-published SRI digest is exactly what a package manager enforces at install time and what a lockfile records. One consequence of holding that line is recorded honestly as the bundled-RSC residual (see d1_security_qualification.bundled_surface)"
+  },
+  "nothing_imported_or_installed": true,
+  "install_state_evidence": {
+    "package_json": "absent",
+    "lockfile": "absent",
+    "node_modules": "absent",
+    "npmrc": "absent"
+  },
+  "pins_final": [
+    {
+      "package": "ponder",
+      "gate_set": "named",
+      "role": "direct",
+      "root": "indexer/",
+      "family_authority": "0.8.x (exact pin at refreeze)",
+      "version": "0.8.33",
+      "published": "2025-01-27T18:55:21.509Z",
+      "license": "MIT",
+      "deprecated": false,
+      "repository": "https://github.com/ponder-sh/ponder",
+      "tag": "ponder@0.8.33",
+      "tag_kind": "annotated",
+      "tag_object": "99d7340a0ccebe1d8afaeec1ec9b33c9895f3f26",
+      "commit": "134e576494a59feea9b311e6270d8c403dae99f7",
+      "githead_crosscheck": "packument carries no gitHead",
+      "integrity_sha512": "sha512-YyugehvRl0SxhEOQ/v3UZgNIvNIdXoxAlyKXBficmf0jN9Zz/fUJ4tKPdEyFwOB5ZfcMUWlxr6ldjb4N4Jk62A==",
+      "shasum_sha1": "91ab16b05b08d250a700585e30a6a5e0daa27c4f",
+      "engines": {
+        "node": ">=18.14"
+      },
+      "qualification": "declares react ^18.2.0 as a DIRECT dependency — see disclosure D-3; confined to indexer/ by the two-root topology"
+    },
+    {
+      "package": "next",
+      "gate_set": "named",
+      "role": "direct",
+      "root": "web/",
+      "family_authority": "15.1.x — sdd.md:L449 names 15.1.4; oz-v3 refreeze §9 names the '15.1.4 family'",
+      "version": "15.1.12",
+      "published": "2026-01-26T18:45:09.385Z",
+      "license": "MIT",
+      "deprecated": false,
+      "repository": "https://github.com/vercel/next.js",
+      "tag": "v15.1.12",
+      "tag_kind": "annotated",
+      "tag_object": "bb35f88d47d3f42abd2c4d3266d4afa358f52153",
+      "commit": "b3aab81a4d8274e669139b74f1c3aa3956865abd",
+      "githead_crosscheck": "matches",
+      "integrity_sha512": "sha512-fClyhVCGTATGYBnETgKAi7YU5+bSwzM5rqNsY3Dg5wBoBMwE0NSvWA3fzwYj0ijl+LMeiV8P2QAnUFpeqDfTgw==",
+      "engines": {
+        "node": "^18.18.0 || ^19.8.0 || >= 20.0.0"
+      },
+      "qualification": "D-1 operator selection. Security patch inside the accepted 15.1.x family, replacing the authority-named 15.1.4 which is registry-deprecated for CVE-2025-66478 (CVSS 10.0 RCE). Highest clean release in the line; strictly more conservative than the advisory's own stated 15.1.x remedy (15.1.9), which the registry still marks deprecated. See d1_security_qualification"
+    },
+    {
+      "package": "react",
+      "gate_set": "named",
+      "role": "direct (peer of next)",
+      "root": "web/",
+      "family_authority": "19.0.0",
+      "version": "19.0.0",
+      "published": "2024-12-05T18:10:21.804Z",
+      "license": "MIT",
+      "deprecated": false,
+      "repository": "https://github.com/facebook/react",
+      "tag": "v19.0.0",
+      "tag_kind": "lightweight",
+      "commit": "7aa5dda3b3e4c2baa905a59b922ae7ec14734b24",
+      "githead_crosscheck": "DIVERGENT — packument gitHead 63cde684f5340b1ca73f6244501aac1c3d2c92a8; see disclosure D-4",
+      "integrity_sha512": "sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==",
+      "shasum_sha1": "6e1969251b9f108870aa4bff37a0ce9ddfaaabdd",
+      "qualification": "PRESERVED at 19.0.0 per operator direction. Not a vulnerable package under CVE-2025-55182 (the vulnerable packages are react-server-dom-webpack/parcel/turbopack); not deprecated at 19.0.0 nor anywhere in the 19.0.x line; satisfies next@15.1.12's declared react peer range"
+    },
+    {
+      "package": "react-dom",
+      "gate_set": "named",
+      "role": "direct (peer of next)",
+      "root": "web/",
+      "family_authority": "19.0.0",
+      "version": "19.0.0",
+      "published": "2024-12-05T18:10:30.516Z",
+      "license": "MIT",
+      "deprecated": false,
+      "repository": "https://github.com/facebook/react",
+      "tag": "v19.0.0",
+      "tag_kind": "lightweight",
+      "commit": "7aa5dda3b3e4c2baa905a59b922ae7ec14734b24",
+      "githead_crosscheck": "DIVERGENT — same as react; see disclosure D-4",
+      "integrity_sha512": "sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==",
+      "shasum_sha1": "43446f1f01c65a4cd7f7588083e686a6726cfb57",
+      "peer_dependencies": {
+        "react": "^19.0.0"
+      },
+      "qualification": "PRESERVED at 19.0.0 per operator direction; separate npm package from react, not a scope expansion — next is unbuildable without it"
+    },
+    {
+      "package": "viem",
+      "gate_set": "named",
+      "role": "direct (peer of ponder and wagmi)",
+      "root": "indexer/ and web/",
+      "family_authority": "2.21.x (exact pin at refreeze)",
+      "version": "2.21.60",
+      "published": "2024-12-30T20:59:18.166Z",
+      "license": "MIT",
+      "deprecated": false,
+      "repository": "https://github.com/wevm/viem",
+      "tag": "viem@2.21.60",
+      "tag_kind": "annotated",
+      "tag_object": "15030c5cd4e8ae9ec613fcd05fe0f19dae16d4cd",
+      "commit": "f90e2b8b4aaef2307c22b8f7dd95152ba7eab5bb",
+      "githead_crosscheck": "packument carries no gitHead",
+      "integrity_sha512": "sha512-fzelL587wOtgNNKphbFCa/Ac9AgFGYKNdEZ04s5OO9Ua6Wu/3qIwjRmq3Z2rmiixr8HSqOHXjWLua6NiuUoRDg==",
+      "shasum_sha1": "ee2e075f0d38d7f1d8eafb197fcd7ed5a6ae65cf",
+      "qualification": "same exact version in both roots — the two lockfiles must agree on it"
+    },
+    {
+      "package": "wagmi",
+      "gate_set": "named",
+      "role": "direct",
+      "root": "web/",
+      "family_authority": "2.14.x (exact pin at refreeze)",
+      "version": "2.14.16",
+      "published": "2025-03-31T19:00:19.100Z",
+      "license": "MIT",
+      "deprecated": false,
+      "repository": "https://github.com/wevm/wagmi",
+      "tag": "wagmi@2.14.16",
+      "tag_kind": "annotated",
+      "tag_object": "66edb3a7bb86a8d81215d467146d2bea607b08ea",
+      "commit": "12682359f1274d61d4553bc5dab4f09ba49531a5",
+      "githead_crosscheck": "packument carries no gitHead",
+      "integrity_sha512": "sha512-njOPvB8L0+jt3m1FTJiVF44T1u+kcjLtVWKvwI0mZnIesZTQZ/xDF0M/NHj3Uljyn3qJw3pyHjJe31NC+VVHMA==",
+      "shasum_sha1": "ecbce1a7836ab2472894e57d1661d054568cd676",
+      "qualification": "requires the @tanstack/react-query peer admitted under D-2"
+    },
+    {
+      "package": "@tanstack/react-query",
+      "gate_set": "D-2 required peer",
+      "role": "required peer of wagmi",
+      "root": "web/",
+      "constraint": "wagmi@2.14.16 peerDependencies '>=5.0.0' (NOT optional)",
+      "version": "5.71.1",
+      "published": "2025-03-31T08:35:41.064Z",
+      "license": "MIT",
+      "deprecated": false,
+      "repository": "https://github.com/TanStack/query",
+      "tag": "v5.71.1",
+      "tag_kind": "annotated",
+      "tag_object": "828249fd05e76d1fe66d110f8c1a80691711d2d0",
+      "commit": "6c105d6ddfc797ab5fe106d6020978f711e3af43",
+      "githead_crosscheck": "packument carries no gitHead",
+      "integrity_sha512": "sha512-6BTkaSIGT58MroI4kIGXNdx/NhirXPU+75AJObLq+WBa39WmoxhzSk0YX+hqWJ/bvqZJFxslbEU4qIHaRZq+8Q==",
+      "shasum_sha1": "24608526f69295c3e708dc5f4ede6b7e319525b2",
+      "peer_dependencies": {
+        "react": "^18 || ^19"
+      },
+      "verification": "PASS",
+      "qualification": "era-consistent: published 2025-03-31 08:35 UTC, the same day as and ~10h before its parent wagmi@2.14.16 (19:00 UTC) — the newest in-major release existing when the parent shipped. Declares exactly one dependency, @tanstack/query-core@5.71.1, as an EXACT pin (no resolution freedom)"
+    },
+    {
+      "package": "hono",
+      "gate_set": "D-2 required peer",
+      "role": "required peer of ponder",
+      "root": "indexer/",
+      "constraint": "ponder@0.8.33 peerDependencies '>=4.5' (NOT optional)",
+      "version": "4.6.19",
+      "published": "2025-01-26T09:32:38.688Z",
+      "license": "MIT",
+      "deprecated": false,
+      "repository": "https://github.com/honojs/hono",
+      "tag": "v4.6.19",
+      "tag_kind": "annotated",
+      "tag_object": "5c13cdaa72d73a23e1efe05c5c19ce957b310e38",
+      "commit": "d40fffbec624bae50f8fc3b619125dda9a8c50e2",
+      "githead_crosscheck": "packument carries no gitHead",
+      "integrity_sha512": "sha512-Xw5DwU2cewEsQ1DkDCdy6aBJkEBARl5loovoL1gL3/gw81RdaPbXrNJYp3LoQpzpJ7ECC/1OFi/vn3UZTLHFEw==",
+      "shasum_sha1": "2b9daa01282061acd907c64a73fbd43f1a58e541",
+      "engines": {
+        "node": ">=16.9.0"
+      },
+      "dependencies": {},
+      "peer_dependencies": {},
+      "verification": "PASS",
+      "qualification": "era-consistent: published 2025-01-26, one day before its parent ponder@0.8.33 (2025-01-27) — the newest in-major release existing when the parent shipped. ZERO dependencies and ZERO peer dependencies: the minimal possible transitive surface"
+    },
+    {
+      "package": "@playwright/test",
+      "gate_set": "named",
+      "role": "direct, dev/test only (never distributed)",
+      "root": "web/",
+      "family_authority": "1.49.x (exact pin at refreeze)",
+      "version": "1.49.1",
+      "published": "2024-12-10T02:18:06.049Z",
+      "license": "Apache-2.0",
+      "deprecated": false,
+      "repository": "https://github.com/microsoft/playwright",
+      "tag": "v1.49.1",
+      "tag_kind": "lightweight",
+      "commit": "88bc8afc78ea6ff13d2bbb312b99eb924962766c",
+      "githead_crosscheck": "matches",
+      "integrity_sha512": "sha512-Ky+BVzPz8pL6PQxHqNRW1k3mIyv933LML7HktS8uik0bUXNCdPhoS/kLihiO1tMf/egaJb4IutXd7UywvXEW+g==",
+      "shasum_sha1": "55fa360658b3187bfb6371e2f8a64f50ef80c827",
+      "qualification": "Apache-2.0 patent clause is compatible with GPLv3 but not GPLv2; the project's or-later selection of GPLv3 is what makes it admissible, recorded explicitly rather than assumed"
+    },
+    {
+      "package": "postgresql",
+      "gate_set": "named",
+      "role": "deployment-time fact — a service the indexer connects to, not a repository dependency",
+      "root": null,
+      "family_authority": "16.4",
+      "version": "16.4",
+      "license": "PostgreSQL License",
+      "artifact": "postgresql-16.4.tar.bz2",
+      "artifact_url": "https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2",
+      "checksum_source": "https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2.sha256",
+      "sha256": "971766d645aa73e93b9ef4e3be44201b4f45b5477095b049125403f9f3386d6f",
+      "linked_by_repository": false,
+      "qualification": "nothing in the tree links it; recorded under the same discipline per refreeze §9"
+    }
+  ],
+  "disclosed_exact_transitives": [
+    {
+      "package": "@tanstack/query-core",
+      "version": "5.71.1",
+      "pinned_exactly_by": "@tanstack/react-query@5.71.1",
+      "root": "web/",
+      "published": "2025-03-31T08:35:36.624Z",
+      "license": "MIT",
+      "deprecated": false,
+      "integrity_sha512": "sha512-4+ZswCHOfJX+ikhXNoocamTUmJcHtB+Ljjz/oJkC7/eKB5IrzEwR4vEwZUENiPi+wISucJHR5TUbuuJ26w3kdQ==",
+      "dependencies": {},
+      "peer_dependencies": {},
+      "note": "declared as an EXACT version by its parent, so it introduces no resolution freedom; disclosed rather than left to the lockfile"
+    }
+  ],
+  "d1_security_qualification": {
+    "operator_disposition": "RESOLVED — next = 15.1.12; do not use 15.1.4; preserve react/react-dom = 19.0.0 unless primary-source evidence forbids it; explicitly verify the react-server-dom-* surface and do not infer from the version number",
+    "primary_sources": [
+      "https://nextjs.org/blog/CVE-2025-66478",
+      "https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components"
+    ],
+    "vulnerability": {
+      "downstream_cve": "CVE-2025-66478 (Next.js, GHSA-9qr9-h5gf-34mp)",
+      "upstream_cve": "CVE-2025-55182 (React)",
+      "severity": "CVSS 10.0 — remote code execution",
+      "mechanism": "the React Server Components protocol allowed untrusted input to influence server-side execution",
+      "affected_next": "15.x, 16.x, and 14.3.0-canary.77+",
+      "not_affected": "Next.js 13.x, 14.x stable, Pages Router applications, and the Edge Runtime",
+      "vulnerable_packages": [
+        "react-server-dom-webpack",
+        "react-server-dom-parcel",
+        "react-server-dom-turbopack"
+      ],
+      "vulnerable_versions": [
+        "19.0",
+        "19.1.0",
+        "19.1.1",
+        "19.2.0"
+      ],
+      "fixed_rsc_versions": [
+        "19.0.1",
+        "19.1.2",
+        "19.2.1"
+      ],
+      "react_and_react_dom_directly_vulnerable": false
+    },
+    "declared_surface_verified": {
+      "method": "complete manifest diff of next@15.1.4 vs next@15.1.12 — dependencies, peerDependencies and optionalDependencies",
+      "result": "IDENTICAL except @next/env, which tracks the next version. Seven direct dependencies at both versions: busboy@1.6.0, postcss@8.4.31, @next/env, styled-jsx@5.1.6, @swc/counter@0.1.3, @swc/helpers@0.5.15, caniuse-lite@^1.0.30001579",
+      "react_server_dom_declared_anywhere": false,
+      "conclusion": "no dependency edge exists through which a vulnerable react-server-dom-* could be reintroduced — the graph cannot resolve one because it does not reference one. This is a statement about the manifest, not about the version number"
+    },
+    "bundled_surface": {
+      "fact": "Next.js vendors its RSC runtime inside its own tarball (next/dist/compiled/...)",
+      "consequence": "that copy's version is not expressible as a lockfile entry and cannot be pinned or verified independently of next itself — the next pin IS the control and its sha512 is the integrity evidence",
+      "residual": "byte-level confirmation of the bundled RSC version requires unpacking the next@15.1.12 tarball, which is a gated package this node may not use",
+      "obligation": "POST-ACCEPTANCE, PRE-IMPORT — confirm the bundled react-server-dom-* is a fixed release (19.0.1 / 19.1.2 / 19.2.1 or later)"
+    },
+    "version_selection_evidence": {
+      "advisory_stated_15_1_x_fix": "15.1.9",
+      "registry_deprecation_observed": "15.1.0 through 15.1.10 ALL deprecated with the security notice; only 15.1.11 (2025-12-11) and 15.1.12 (2026-01-26) are clean",
+      "interpretation": "consistent with 15.1.9 having been an incomplete fix completed by 15.1.11; the registry is the more recent signal",
+      "conclusion": "the operator's selection of 15.1.12 is strictly MORE conservative than the advisory's own stated remedy, and is the highest clean release in the accepted 15.1.x family"
+    },
+    "react_pin_determination": {
+      "decision": "PRESERVE react = 19.0.0 and react-dom = 19.0.0",
+      "grounds": [
+        "react and react-dom are not among the vulnerable packages",
+        "neither is deprecated at 19.0.0 nor anywhere across the 19.0.x line (19.0.0 through 19.0.8 all clean)",
+        "next@15.1.12 declares react/react-dom peer '^18.2.0 || ^19.0.0' — 19.0.0 is in range"
+      ],
+      "disclosure_not_a_recommendation": "React published 19.0.1 on 2025-12-03 (the advisory date) and 19.0.2/19.0.3 on 2025-12-11, mirroring the Next.js remediation timeline; the advisory says updates to react/react-dom are 'recommended' though they are not the vulnerable packages. The 19.0.x line currently runs to 19.0.8. Recorded so the operator's choice is visible rather than silent"
+    },
+    "architectural_safety_argument": {
+      "advisory_scope_condition": "\"If your app's React code does not use a server, your app is not affected by this vulnerability.\"",
+      "accepted_architecture": "sdd.md:L449 selects Next.js for a 'Static-exportable read-only UI; no server-side custody of anything'; sdd.md:L453 'read-only truth surfaces plus transaction builders; none holds keys or custody'; sprint.md:L450 'Sensitive data: none; no server-side session state'",
+      "consequence": "a statically exported Next.js app has no server, hence no RSC or Server-Function endpoint, hence nothing for this vulnerability class to reach",
+      "caveat": "this is an INTENDED property of the accepted architecture, and intent is not a build setting",
+      "binding_task_6_6_obligation": "build web/ as a static export with no server-side RSC or Server-Function endpoint, asserted mechanically rather than assumed"
+    }
+  },
+  "d2_verification": {
+    "operator_disposition": "candidate expansion AUTHORIZED; final pins NOT YET accepted; verify independently; if a candidate fails, select the nearest compatible exact patch by the same bounded reasoning and report the deviation",
+    "result": "BOTH CANDIDATES PASS — no deviation or substitution required",
+    "checks_performed": [
+      "exact package/version confirmed published",
+      "immutable upstream source identity resolved",
+      "full 40-character commit obtained for both (annotated tags, peeled)",
+      "licence confirmed MIT for both, neither deprecated",
+      "registry integrity SRI recorded",
+      "tag-to-commit relationship recorded incl. tag object and peeled commit",
+      "compatibility with the already-proposed parent verified against the parent's declared peer range",
+      "era appropriateness established against the parent's own publish date"
+    ],
+    "no_unrelated_expansion": "typescript is an OPTIONAL peer of wagmi, ponder and viem and was deliberately NOT admitted; no dependency outside the two authorized peers was introduced"
+  },
+  "peer_range_satisfaction": [
+    {
+      "parent": "wagmi@2.14.16",
+      "peer": "viem",
+      "range": "2.x",
+      "pin": "2.21.60",
+      "satisfied": true
+    },
+    {
+      "parent": "wagmi@2.14.16",
+      "peer": "react",
+      "range": ">=18",
+      "pin": "19.0.0",
+      "satisfied": true
+    },
+    {
+      "parent": "wagmi@2.14.16",
+      "peer": "@tanstack/react-query",
+      "range": ">=5.0.0",
+      "pin": "5.71.1",
+      "satisfied": true
+    },
+    {
+      "parent": "ponder@0.8.33",
+      "peer": "viem",
+      "range": ">=2",
+      "pin": "2.21.60",
+      "satisfied": true
+    },
+    {
+      "parent": "ponder@0.8.33",
+      "peer": "hono",
+      "range": ">=4.5",
+      "pin": "4.6.19",
+      "satisfied": true
+    },
+    {
+      "parent": "next@15.1.12",
+      "peer": "react",
+      "range": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
+      "pin": "19.0.0",
+      "satisfied": true
+    },
+    {
+      "parent": "next@15.1.12",
+      "peer": "react-dom",
+      "range": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
+      "pin": "19.0.0",
+      "satisfied": true
+    },
+    {
+      "parent": "react-dom@19.0.0",
+      "peer": "react",
+      "range": "^19.0.0",
+      "pin": "19.0.0",
+      "satisfied": true
+    },
+    {
+      "parent": "@tanstack/react-query@5.71.1",
+      "peer": "react",
+      "range": "^18 || ^19",
+      "pin": "19.0.0",
+      "satisfied": true
+    }
+  ],
+  "disclosures": [
+    {
+      "id": "D-3",
+      "severity": "disclosure",
+      "subject": "transitive surface",
+      "finding": "ponder@0.8.33 declares react ^18.2.0 as a DIRECT dependency, so a React 18 tree enters wherever ponder is installed; ponder carries 32 direct dependencies and next@15.1.12 seven",
+      "mitigation": "the two-root topology confines it to indexer/ — separate node_modules and separate lockfiles make the split structural, not resolver-dependent; it cannot reach web/'s React 19 tree",
+      "determinism": "the resulting topology is deterministic (every version string exact) and internally compatible (see peer_range_satisfaction)",
+      "post_acceptance_obligation": "generate the lockfiles, produce the transitive licence census from them, and record it BEFORE any code imports a gated package"
+    },
+    {
+      "id": "D-4",
+      "severity": "disclosure",
+      "subject": "react / react-dom",
+      "finding": "registry gitHead 63cde684f5340b1ca73f6244501aac1c3d2c92a8 differs from the v19.0.0 tag commit 7aa5dda3b3e4c2baa905a59b922ae7ec14734b24",
+      "assessment": "not a provenance failure — a normal consequence of React's release pipeline publishing from a build commit and tagging separately; both are immutable 40-char commits; no other pin in this set shows it; the authoritative identity of the installed artifact is the sha512 digest the lockfile records"
+    }
+  ],
+  "correction_pass_1": {
+    "subject": "@tanstack/react-query@5.71.1 upstream tag",
+    "pass_1_claim": "upstream tags for this version are not currently resolvable via git ls-remote (TanStack tags every workspace package per release; older tags appear pruned)",
+    "status": "WRONG — retracted",
+    "cause": "the search was truncated by a `head` filter over a 4,424-tag namespace, and TanStack changed tag schemes across eras: older releases use a repo-wide v<version> tag, newer ones a per-package @tanstack/<pkg>@<version> tag",
+    "corrected_finding": "tag v5.71.1 exists — tag object 828249fd05e76d1fe66d110f8c1a80691711d2d0, peeled commit 6c105d6ddfc797ab5fe106d6020978f711e3af43",
+    "method_hardened": "pin_verification.method now specifies FULL tag-namespace enumeration so the same truncation cannot recur"
+  },
+  "license_determination": {
+    "licenses_entering": [
+      "MIT",
+      "Apache-2.0",
+      "PostgreSQL License"
+    ],
+    "gpl3_or_later_compatible": true,
+    "project_posture_unchanged": true,
+    "smart_contract_surface_acquires_no_dependency": true,
+    "apache_2_0_note": "@playwright/test is Apache-2.0 and dev/test only, never distributed; its patent clause is compatible with GPLv3 (not GPLv2), which is why the project's or-later selection of GPLv3 is recorded explicitly",
+    "third_party_notices_updated": false,
+    "third_party_notices_rationale": "notices for uninstalled packages would assert a distribution that has not happened; the TPN section is a post-acceptance action"
+  },
+  "node_engine_coherence": {
+    "ponder@0.8.33": ">=18.14",
+    "next@15.1.12": "^18.18.0 || ^19.8.0 || >= 20.0.0",
+    "hono@4.6.19": ">=16.9.0",
+    "binding_constraint": "next",
+    "conclusion": "both roots run on Node >= 20 without conflict"
+  },
+  "dependency_and_lockfile_surface": {
+    "layout": "two roots, not one workspace",
+    "roots": {
+      "indexer/": {
+        "ponder": "0.8.33",
+        "viem": "2.21.60",
+        "hono": "4.6.19"
+      },
+      "web/": {
+        "next": "15.1.12",
+        "react": "19.0.0",
+        "react-dom": "19.0.0",
+        "viem": "2.21.60",
+        "wagmi": "2.14.16",
+        "@tanstack/react-query": "5.71.1",
+        "@playwright/test": "1.49.1 (devDependency)"
+      }
+    },
+    "rationale": "keeps ponder's react@^18 direct dependency (D-3) out of the frontend tree structurally rather than relying on resolver nesting; matches the SDD component boundary (sdd.md §2.2, §5.3) where indexer and frontend are separate deployables that do not import each other",
+    "version_strings": "exact only — no ^, no ~, no ranges",
+    "npmrc": "save-exact=true",
+    "lockfiles_committed": true,
+    "lockfiles_created_yet": false,
+    "ci_gate": [
+      "npm ci in both roots (fails closed on manifest/lockfile disagreement; never rewrites the lockfile)",
+      "assert each manifest's pinned version equals the accepted pin in this registry (catches accepted-pin drift, not merely manifest/lockfile disagreement)",
+      "npm ci verifies each package's recorded integrity digest on extraction; the integrity_sha512 values above are what must appear in the committed lockfiles"
+    ],
+    "trust_boundary": "both roots are read-only with respect to protocol authority — the indexer derives a disposable replica from chain events and never writes on-chain; the frontend reads and builds transactions the user signs; neither holds keys or custody (sdd.md:L451, L453)"
+  },
+  "exclusions_reaffirmed": [
+    "any other version of any listed package, including a later patch — a newer revision requires its own refreeze",
+    "typescript — an OPTIONAL peer everywhere it appears in this set",
+    "slither 0.10.x and any additional CI/static-analysis toolchain (Sprint 8, Task 8.1 gate — untouched)",
+    "Tailwind CSS — named as a design choice at sdd.md:L623 but absent from the refreeze §9 obligation list and NOT requested by this document; a further operator gate if Task 6.6 needs it",
+    "any UI component library, styling framework, state library, ORM, or test utility not enumerated here",
+    "all smart-contract source — OZ / v3-core / Miner allowlists unchanged, POOL_INIT_CODE_HASH untouched, Foundry toolchain refreeze unaffected"
+  ],
+  "preserved_unchanged": [
+    "default deny",
+    "full-SHA-only pin policy",
+    "Miner Manifold three-file direct-reuse allowlist",
+    "Heesho/liquid-signal-governance DEFERRED_NOT_V1",
+    "every operator-reserved value (Q-3, Q-4, Q-6, R-1 through R-14)"
+  ],
+  "authorized_next_actions_on_acceptance": [
+    "write indexer/package.json and web/package.json with the exact pins, plus .npmrc (save-exact=true)",
+    "generate and commit both lockfiles; verify every recorded integrity digest equals this registry",
+    "produce the transitive licence census from the lockfiles (D-3) AND confirm the bundled react-server-dom-* inside next@15.1.12 is a fixed release (19.0.1 / 19.1.2 / 19.2.1 or later); update THIRD_PARTY_NOTICES.md",
+    "add the CI lockfile-drift gate",
+    "configure the web/ build as a static export with no server-side RSC or Server-Function endpoint, asserted mechanically",
+    "proceed to Tasks 6.4 through 6.8"
+  ],
+  "terminal_state": "ACCEPTED — pre-install gate discharged for exactly the recorded set",
+  "preserved_discrepancies": [
+    {
+      "id": "bundled_rsc_runtime",
+      "state": "PRESERVED — discharged post-acceptance",
+      "detail": "the declared graph carries no react-server-dom-* edge at 15.1.4 or 15.1.12; the copy Next vendors inside its own tarball was not verifiable pre-install",
+      "evidence": "grimoires/loa/a2a/sprint-6/evidence/next-rsc-bundled-verification.md"
+    },
+    {
+      "id": "advisory_vs_registry_15_1_x",
+      "state": "PRESERVED — recorded as a fact about the upstream record, not reconciled",
+      "detail": "the Next.js advisory names 15.1.9 as the 15.1.x fix; npm still deprecates 15.1.9 and 15.1.10; the accepted 15.1.12 is strictly more conservative than the vendor stated remedy"
+    }
+  ],
+  "authority_disposition": {
+    "completes": "the deferred off-chain obligation at vux-v1-oz-v3-provenance-refreeze-2026-08.md §9 for ponder / Next.js + React / viem + wagmi / Playwright / PostgreSQL",
+    "still_open": "slither 0.10.x and any additional CI/static-analysis toolchain — Sprint 8, Task 8.1",
+    "predecessor_authority_rewritten": false,
+    "sdd_reconciliation_recorded_not_performed": "sdd.md:L449 names Next.js 15.1.4; the accepted pin is 15.1.12, a security-patch selection inside the same accepted 15.1.x family per the operator D-1 disposition. The SDD is NOT edited by this node; carried to review as a documentation-reconciliation item"
+  }
+}

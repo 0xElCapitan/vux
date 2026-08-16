@@ -60,9 +60,9 @@
         {
           "global_id": 6,
           "local_label": "sprint-6",
-          "status": "planned",
+          "status": "completed",
           "created": "2026-08-10T20:34:40Z",
-          "completed": null
+          "completed": "2026-08-16T00:00:00Z"
         },
         {
           "global_id": 7,
@@ -85,6 +85,6 @@
   "active_bugfix": null,
   "global_sprint_counter": 8,
   "bugfix_cycles": [],
-  "last_updated": "2026-08-13T20:40:00Z",
+  "last_updated": "2026-08-16T00:00:00Z",
   "next_sprint_number": 9
 }

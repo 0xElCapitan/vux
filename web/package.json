@@ -1,0 +1,29 @@
+{
+  "name": "vux-web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "VUX v1 truth surface — static-exportable, read-only, no server-side custody of anything (sdd.md:L449, L453).",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "node scripts/serve-static.mjs",
+    "test:copy": "node scripts/build-with-test-env.mjs && playwright test",
+    "verify:pins": "node ../tools/offchain/verify-accepted-pins.mjs",
+    "verify:rsc": "node scripts/verify-rsc-runtime.mjs",
+    "verify:static": "node scripts/verify-static-export.mjs",
+    "test:units": "node --test tests/units.test.mjs",
+    "build:test": "node scripts/build-with-test-env.mjs"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.71.1",
+    "next": "15.1.12",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "viem": "2.21.60",
+    "wagmi": "2.14.16"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1"
+  }
+}

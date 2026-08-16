@@ -1,0 +1,135 @@
+/* Sparse on purpose. The product requirement is that a user understands what
+   they are looking at without understanding the machinery, so the page gives the
+   numbers room and puts each qualifier next to the number it qualifies rather
+   than in a footnote nobody reads. */
+
+:root {
+  --bg: #0e0f12;
+  --panel: #16181d;
+  --panel-warn: #1d1a12;
+  --fg: #f2f3f5;
+  --muted: #a6adba;
+  --line: #2a2e37;
+  --accent: #8ab4ff;
+  --yellow: #f5c451;
+  --alert: #ff8f6b;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #fbfbfc; --panel: #ffffff; --panel-warn: #fffaf0; --fg: #14161a;
+    --muted: #4d5561; --line: #e2e5ea; --accent: #2b5fd9; --yellow: #8a6300; --alert: #a33b16;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.site-header {
+  display: flex; gap: 1.5rem; align-items: baseline;
+  padding: 1rem 1.5rem; border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 700; letter-spacing: .14em; text-decoration: none; color: var(--fg); }
+.site-header nav { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+.site-header nav a { color: var(--muted); text-decoration: none; }
+.site-header nav a:hover, .site-header nav a:focus-visible { color: var(--fg); text-decoration: underline; }
+
+.site-main { max-width: 68rem; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.site-footer { border-top: 1px solid var(--line); padding: 1.5rem; color: var(--muted); font-size: .9rem; }
+
+.hero { margin-bottom: 2.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 .5rem; line-height: 1.2; }
+.hero__sub { color: var(--muted); max-width: 46rem; margin: 0; }
+
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+}
+.panel--warn { background: var(--panel-warn); border-color: var(--yellow); }
+.panel h2 { margin: 0 0 .75rem; font-size: 1.05rem; letter-spacing: .02em; }
+
+/* --- three-tier truth: three blocks, never one number with a footnote ------ */
+.tiers { margin-bottom: 1.5rem; }
+.tiers__explanation {
+  background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 8px; padding: 1rem 1.25rem; margin: 0 0 1rem; max-width: 52rem;
+}
+.tiers__grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+.tier { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.25rem; }
+.tier__label { font-size: .82rem; text-transform: none; color: var(--accent); margin: 0 0 .6rem; font-weight: 600; }
+.tier__value { min-height: 2.4rem; }
+.tier .num { font-size: 1.55rem; font-variant-numeric: tabular-nums; font-weight: 600; }
+.tier__meaning { margin: .6rem 0 .35rem; font-size: .92rem; }
+.tier__qualifier { margin: 0 0 .5rem; font-size: .88rem; color: var(--muted); }
+.tier__source { margin: 0; font-size: .76rem; color: var(--muted); opacity: .8; font-family: ui-monospace, monospace; }
+.tier__detail { display: grid; gap: .15rem; margin: .6rem 0 0; font-size: .84rem; color: var(--muted); }
+.tier__detail div { display: flex; justify-content: space-between; gap: 1rem; }
+.tier__detail dt, .tier__detail dd { margin: 0; }
+
+/* --- the mandatory YELLOW disclosure -------------------------------------- */
+.disclosure--yellow {
+  border: 1px solid var(--yellow); border-left: 4px solid var(--yellow);
+  background: var(--panel-warn); border-radius: 8px; padding: .9rem 1.1rem; margin: .75rem 0;
+}
+.disclosure__tag {
+  display: inline-block; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--yellow); font-weight: 700; margin-bottom: .35rem;
+}
+.disclosure__text { margin: 0; }
+.reserve-description__note { color: var(--muted); font-size: .92rem; }
+
+/* --- data unavailable: a state of its own, never a value ------------------- */
+.unavailable {
+  display: inline-flex; gap: .5rem; align-items: baseline; flex-wrap: wrap;
+  border: 1px dashed var(--alert); border-radius: 8px; padding: .5rem .75rem;
+  color: var(--alert); background: transparent; font-size: .9rem;
+}
+.unavailable--loading { border-style: dotted; color: var(--muted); border-color: var(--line); }
+.unavailable__label { font-weight: 700; }
+.outage {
+  border: 1px solid var(--alert); border-radius: 10px; padding: .9rem 1.1rem;
+  margin-bottom: 1.5rem; color: var(--alert);
+}
+
+/* --- data ----------------------------------------------------------------- */
+.stats { display: grid; gap: .5rem; margin: 0; }
+.stats div { display: flex; justify-content: space-between; gap: 1.5rem; border-bottom: 1px solid var(--line); padding-bottom: .4rem; }
+.stats dt { color: var(--muted); margin: 0; }
+.stats dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+.quote { font-size: 1.7rem; font-variant-numeric: tabular-nums; font-weight: 600; margin: .5rem 0; }
+.quote--empty { color: var(--muted); font-weight: 400; }
+
+.field { display: grid; gap: .35rem; max-width: 22rem; margin-bottom: .5rem; }
+.field span { color: var(--muted); font-size: .9rem; }
+.field input {
+  background: var(--bg); color: var(--fg); border: 1px solid var(--line);
+  border-radius: 8px; padding: .6rem .75rem; font-size: 1rem; font-variant-numeric: tabular-nums;
+}
+
+.note { color: var(--muted); font-size: .9rem; margin: .5rem 0 0; max-width: 48rem; }
+.note--strong { color: var(--fg); }
+
+.causes { list-style: none; padding: 0; margin: 0; display: grid; gap: .9rem; }
+.causes code { font-size: .8rem; color: var(--muted); }
+.causes p { margin: .2rem 0 0; color: var(--muted); font-size: .9rem; }
+
+.tier-summary { list-style: none; padding: 0; display: grid; gap: 1rem; }
+.tier-summary p { margin: .25rem 0 0; }
+
+blockquote {
+  margin: 0; padding: .9rem 1.1rem; border-left: 3px solid var(--accent);
+  background: var(--bg); border-radius: 6px;
+}
+
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: .88rem; }
+th, td { text-align: right; padding: .45rem .6rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 600; }

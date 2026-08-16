@@ -1,0 +1,23 @@
+{
+  "name": "vux-indexer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "VUX v1 off-chain truth replica — derived, disposable, rebuildable from chain events. Read-only with respect to protocol authority (sdd.md:L451, L474).",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "dev": "ponder dev",
+    "start": "ponder start",
+    "serve": "ponder serve",
+    "codegen": "ponder codegen",
+    "reconstruct": "node scripts/reconstruct.mjs",
+    "verify:pins": "node ../tools/offchain/verify-accepted-pins.mjs",
+    "test": "node --test test/reconstruct.test.mjs test/handlers.test.mjs",
+    "verify:codegen": "node scripts/verify-ponder-codegen.mjs"
+  },
+  "dependencies": {
+    "hono": "4.6.19",
+    "ponder": "0.8.33",
+    "viem": "2.21.60"
+  }
+}
