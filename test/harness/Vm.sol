@@ -83,6 +83,37 @@ interface Vm {
     // --- fuzzing ---
     function assume(bool condition) external pure;
 
+    // --- fork gating ---
+    /// @dev The Q-6 gate (Sprint 7 Task 7.1) can only be answered against the
+    ///      real canonical Robinhood Chain WETH, so its suite is meaningless
+    ///      off-fork. Marking those cases skipped — rather than letting them
+    ///      fail — keeps the accumulated suite honest in both directions: the
+    ///      default run neither pretends to have proven the fork facts nor goes
+    ///      red for not having a fork URL. The recorded fork run is the evidence.
+    function skip(bool skipTest) external;
+
+    /// @dev The public Robinhood Chain RPC keeps historical state for only about
+    ///      ten minutes (measured in Task 7.1), so a hard-coded fork block makes
+    ///      a suite unreproducible almost immediately. The exact-block binding is
+    ///      therefore supplied by the runner — set at evidence-capture time,
+    ///      omitted by a reviewer forking at their own block — while the
+    ///      block-independent identity assertions always run.
+    function envOr(string calldata name, uint256 defaultValue) external view returns (uint256 value);
+    function envOr(string calldata name, bytes32 defaultValue) external view returns (bytes32 value);
+
+    // --- broadcasting (deployment rehearsal scripts) -------------------------
+    /// @dev The rehearsal key is supplied by the runner, never by the
+    ///      repository: launch keys are launch secrets (sdd.md:L270), and a key
+    ///      literal in a tracked file is exactly what
+    ///      `tools/provenance/verify-launch-hygiene.sh` exists to catch. Reading
+    ///      it from the environment keeps the two-transaction rehearsal runnable
+    ///      without ever committing a key, rehearsal or otherwise.
+    function envUint(string calldata name) external view returns (uint256 value);
+    /// @dev Marks the NEXT call or creation as a real transaction from `key`'s
+    ///      account. Two of these, in order, is what makes the rehearsal an
+    ///      actual two-transaction launch rather than one atomic simulation.
+    function broadcast(uint256 privateKey) external;
+
     // --- filesystem and JSON (build-artifact provenance checks) ---
     function readFile(string calldata path) external view returns (string memory data);
     function parseJsonBytes(string calldata json, string calldata key) external pure returns (bytes memory);

@@ -1,0 +1,44 @@
+Q-6 / Sprint-5-carry fork run - verbatim capture
+captured (UTC): 2026-08-17T20:39:49Z
+
+RE-ESTABLISHED after Tasks 7.2-7.6. The Q-6 suite file was reformatted by
+'forge fmt' and its harness (test/harness/Vm.sol) gained two additive
+cheatcode declarations (envUint, broadcast) used only by the rehearsal
+script, so the operator-accepted result was re-run rather than inherited.
+
+chain            : Robinhood Chain mainnet, eth_chainId = 4663
+rpc              : https://rpc.mainnet.chain.robinhood.com   (public, rate-limited, NON-ARCHIVE ~10 min state window)
+fork block       : 39130641
+fork block hash  : 0x662b5a64a30484e22a08db30fb3ed5c0517c49ad1077c2965b3776edd98da304
+parent hash      : 0xb1f43f4785b3a24f9ac91dc80667e6cff39ea94343bb8470ebc1058c7297bee3
+state root       : 0x8121aa9687fe87218d4b1292145416aee174acbc5f70fbbb4099e7db640d3375
+block timestamp  : 1786999172  (2026-08-17T20:39:32.000Z)
+
+command:
+  VUX_RH_FORK_BLOCK=39130641 \
+  VUX_RH_FORK_PARENT_HASH=0xb1f43f4785b3a24f9ac91dc80667e6cff39ea94343bb8470ebc1058c7297bee3 \
+  forge test --match-path test/fork/RhWethFork.t.sol \
+    --fork-url https://rpc.mainnet.chain.robinhood.com \
+    --fork-block-number 39130641 -vv
+
+forge Version: 1.5.0-v1.5.0
+Commit SHA: 1c57854462289b2e71ee7654cd6666217ed86ffd
+Build Timestamp: 2025-11-24T06:08:41.137817900Z (1763964521)
+Build Profile: maxperf
+
+No files changed, compilation skipped
+
+Ran 10 tests for test/fork/RhWethFork.t.sol:RhWethForkTest
+[PASS] test_ForkIdentity_MatchesAcceptedRhTrustSurface() (gas: 46661)
+[PASS] test_Q6_ConstructorContextNativeWrapIsExactAndImmediatelySpendable() (gas: 225103)
+[PASS] test_Q6_Control_NonPayableDepositFails() (gas: 136138)
+[PASS] test_Q6_Control_ValueAcceptedButNotCreditedFails() (gas: 136335)
+[PASS] test_Q6_NoApprovalAndNoPrefundingWereUsed() (gas: 229400)
+[PASS] test_Sprint5Carry_Control_ReceiversDetectARealCallback() (gas: 418142)
+[PASS] test_Sprint5Carry_TransferEmitsExactlyOneTransferEventAndNothingElse() (gas: 193523)
+[PASS] test_Sprint5Carry_TransferFromInvokesNoSenderOrRecipientCallback() (gas: 277872)
+[PASS] test_Sprint5Carry_TransferInvokesNoRecipientCallback_RecordingReceiver() (gas: 194978)
+[PASS] test_Sprint5Carry_TransferInvokesNoRecipientCallback_RejectingReceiver() (gas: 108790)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 1.59s (6.40s CPU time)
+
+Ran 1 test suite in 1.74s (1.59s CPU time): 10 tests passed, 0 failed, 0 skipped (10 total tests)

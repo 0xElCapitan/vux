@@ -64,6 +64,17 @@ contract MockWeth is ERC20 {
         _mint(to, amount);
     }
 
+    /// @dev The native wrap, mirroring the semantics Q-6 measured against the
+    ///      real canonical RH WETH on a Robinhood Chain fork: credit the caller
+    ///      exactly `msg.value`, minting supply against the ETH actually received
+    ///      (`test/fork/RhWethFork.t.sol`). Genesis funds itself through this
+    ///      call inside `GenesisDeployer`'s constructor (sdd.md:L161), so the
+    ///      mock has to have it — and having it match the *measured* behaviour,
+    ///      rather than a guess at it, is what keeps the genesis suites honest.
+    function deposit() external payable {
+        _mint(msg.sender, msg.value);
+    }
+
     function setFailTransfers(bool value) external {
         failTransfers = value;
     }
