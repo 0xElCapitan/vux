@@ -27,6 +27,48 @@ cd "$REPO_ROOT"
 THRESHOLD=90
 LCOV="lcov.info"
 
+# --- diagnostics -------------------------------------------------------------
+#
+# The two load-bearing commands below used to run under `>/dev/null 2>&1`. That
+# is what made this gate undiagnosable: when it failed on hosted CI it emitted
+# one line — "forge coverage failed — rerun without >/dev/null" — and nothing
+# else, so establishing WHY required reproducing the runner on a developer's
+# machine. A fence that fails without evidence is only half a fence.
+#
+# Output is therefore captured rather than discarded. A successful run still
+# prints a single line, so a green log stays readable; a failing run prints the
+# exit status and the TAIL of the real output. The tail rather than the whole
+# log because a compiler or test failure reports at the end, and an unbounded
+# dump of an instrumented build would bury it. An empty tail with a non-zero
+# status is itself evidence — that is what a killed process looks like.
+DIAG_TAIL=200
+DIAG_DIR="$(mktemp -d)"
+# `:?` rather than a bare expansion: if mktemp ever fails, DIAG_DIR is empty and
+# an unguarded recursive delete of "" is not a cleanup, it is a loaded gun.
+trap 'rm -rf "${DIAG_DIR:?}"' EXIT
+DIAG_LOG=""
+DIAG_STATUS=0
+
+# run_logged <slug> <cmd...> — run with stdout+stderr captured, status preserved.
+run_logged() {
+  local slug="$1"; shift
+  DIAG_LOG="$DIAG_DIR/$slug.log"
+  "$@" >"$DIAG_LOG" 2>&1
+  DIAG_STATUS=$?
+  return "$DIAG_STATUS"
+}
+
+# diag <what> — report what the last run_logged actually did. Failure path only.
+diag() {
+  local total shown
+  total=$(wc -l < "$DIAG_LOG" | tr -d ' ')
+  shown=$(( total > DIAG_TAIL ? DIAG_TAIL : total ))
+  printf '      ---- %s: exit %d, last %d of %d output line(s) ----\n' \
+    "$1" "$DIAG_STATUS" "$shown" "$total" >&2
+  tail -n "$DIAG_TAIL" "$DIAG_LOG" | sed 's/^/      | /' >&2
+  printf '      ---- end %s ----\n' "$1" >&2
+}
+
 echo "== core surface =="
 mapfile -t CORE < <(git ls-files 'src/*.sol' | grep -v '^src/interfaces/' | grep -v '^src/v3core/' | sort)
 if (( ${#CORE[@]} == 0 )); then
@@ -53,22 +95,29 @@ echo "== measure =="
 #    instrumented build lets those tests keep reading the real artifacts.
 COV_OUT="out-coverage"
 
+# Recorded because it is not visible from the measurement itself and it changes
+# what this step costs: [profile.ci] raises fuzz to 10,000 runs and invariants to
+# 256x64, so the same command is a very different workload locally and on CI.
+info "FOUNDRY_PROFILE=${FOUNDRY_PROFILE:-default}"
+
 # The artifact-reading suites read `out/<C>.sol/<C>.json` by hardcoded path, so a
 # NORMAL build has to exist before the instrumented run — otherwise they fail on
 # a missing file. Locally `out/` is usually already there; on a fresh CI checkout
 # it is not, which is exactly the case that would have failed silently.
-if forge build >/dev/null 2>&1; then
+if run_logged forge-build forge build; then
   pass "normal build present in out/ for the artifact-reading suites"
 else
   fail "forge build failed — the artifact-reading suites have nothing to read"
+  diag "forge build"
   finish
 fi
 
-if FOUNDRY_OUT="$COV_OUT" forge coverage --ir-minimum --report lcov \
-     --no-match-coverage '(test|script|vendor)' >/dev/null 2>&1; then
+if run_logged forge-coverage env FOUNDRY_OUT="$COV_OUT" forge coverage --ir-minimum \
+     --report lcov --no-match-coverage '(test|script|vendor)'; then
   pass "forge coverage completed (instrumented build isolated in $COV_OUT/)"
 else
-  fail "forge coverage failed — rerun without >/dev/null to see the compiler output"
+  fail "forge coverage failed"
+  diag "forge coverage --ir-minimum"
   finish
 fi
 [[ -s "$LCOV" ]] || { fail "no $LCOV produced"; finish; }

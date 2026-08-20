@@ -156,6 +156,23 @@ jobs:
         run: |
           "$PYTHON" -m pip install --require-hashes --no-deps -r tools/static-analysis/requirements.txt
 
+      # POSITIVE CONTROL. The negative demonstration below is not evidence
+      # without it: "the gate failed" is also satisfied by a gate that could not
+      # RUN at all, so an uncontrolled negative test proves nothing about the
+      # disposition machinery it claims to exercise.
+      #
+      # That is not hypothetical. On 2026-08-20 this job failed on a fresh
+      # checkout because slither had nowhere to write its report, the mutation
+      # under test was never reached, and the only hosted evidence that slither
+      # executes at all came from a DIFFERENT job — the one where run-all.sh
+      # happens to build into `out/` before the gate runs.
+      #
+      # Running the unmodified tree here makes the pair a controlled experiment:
+      # the only difference between this step passing and the next step failing
+      # is the single removed disposition.
+      - name: Positive control — slither runs and the accepted tree is clean
+        run: bash tools/provenance/verify-static-analysis.sh
+
       # A gate that has never been observed to fail is a gate nobody has tested.
       # Drop one triaged disposition and require the gate to reject the tree.
       - name: Prove the static-analysis gate closes

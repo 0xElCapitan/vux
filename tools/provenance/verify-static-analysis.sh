@@ -43,6 +43,46 @@ ACCEPTED_ADAPTER_VERSION="0.3.7"
 
 PY="${PYTHON:-python3}"
 
+# --- diagnostics -------------------------------------------------------------
+#
+# The build and the analysis below used to run under `>/dev/null 2>&1`. That is
+# what made this gate undiagnosable: on hosted CI it emitted "slither produced no
+# report" and nothing else, which names the SYMPTOM and hides every cause —
+# slither erroring, crytic-compile finding no build-info, or the report write
+# itself failing. A fence that fails without evidence is only half a fence.
+#
+# Output is therefore captured rather than discarded. A successful run still
+# prints a single line, so a green log stays readable; a failing run prints the
+# exit status and the TAIL of the real output, because slither reports its error
+# last, after however many detector lines the run produced.
+DIAG_TAIL=200
+DIAG_DIR="$(mktemp -d)"
+# `:?` rather than a bare expansion: if mktemp ever fails, DIAG_DIR is empty and
+# an unguarded recursive delete of "" is not a cleanup, it is a loaded gun.
+trap 'rm -rf "${DIAG_DIR:?}"' EXIT
+DIAG_LOG=""
+DIAG_STATUS=0
+
+# run_logged <slug> <cmd...> — run with stdout+stderr captured, status preserved.
+run_logged() {
+  local slug="$1"; shift
+  DIAG_LOG="$DIAG_DIR/$slug.log"
+  "$@" >"$DIAG_LOG" 2>&1
+  DIAG_STATUS=$?
+  return "$DIAG_STATUS"
+}
+
+# diag <what> — report what the last run_logged actually did. Failure path only.
+diag() {
+  local total shown
+  total=$(wc -l < "$DIAG_LOG" | tr -d ' ')
+  shown=$(( total > DIAG_TAIL ? DIAG_TAIL : total ))
+  printf '      ---- %s: exit %d, last %d of %d output line(s) ----\n' \
+    "$1" "$DIAG_STATUS" "$shown" "$total" >&2
+  tail -n "$DIAG_TAIL" "$DIAG_LOG" | sed 's/^/      | /' >&2
+  printf '      ---- end %s ----\n' "$1" >&2
+}
+
 # --- the accepted authority is byte-identical -------------------------------
 echo "== static-analysis authority =="
 require_authority "$STATIC_ANALYSIS_MD"   "$STATIC_ANALYSIS_MD_SHA256"
@@ -145,15 +185,18 @@ fi
 SA_OUT="out-slither"
 echo
 echo "== build-info from the accepted toolchain (isolated in $SA_OUT/) =="
-if forge build --out "$SA_OUT" --build-info --skip 'test/**' --skip 'script/**' >/dev/null 2>&1; then
+if run_logged forge-build-info \
+     forge build --out "$SA_OUT" --build-info --skip 'test/**' --skip 'script/**'; then
   bi_count=$(find "$SA_OUT/build-info" -name '*.json' -type f 2>/dev/null | wc -l | tr -d ' ')
   if (( bi_count > 0 )); then
     pass "forge emitted $bi_count build-info artifact(s) into $SA_OUT/ under the accepted Foundry/solc pins"
   else
     fail "no $SA_OUT/build-info/*.json produced — slither has nothing to read"
+    diag "forge build --build-info"
   fi
 else
   fail "forge build --out $SA_OUT --build-info failed"
+  diag "forge build --build-info"
 fi
 
 # --- the analysis itself ----------------------------------------------------
@@ -169,8 +212,9 @@ if "$PY" -c 'import slither' >/dev/null 2>&1; then
   # Exit status is deliberately not consulted: slither returns non-zero whenever
   # findings exist, which is the normal state of a triaged baseline. The
   # dispositions are the gate, not the count.
-  "$PY" -m slither . --ignore-compile --foundry-out-directory "$SA_OUT" \
-        --filter-paths 'vendor/' --json "$REPORT" >/dev/null 2>&1 || true
+  run_logged slither \
+    "$PY" -m slither . --ignore-compile --foundry-out-directory "$SA_OUT" \
+          --filter-paths 'vendor/' --json "$REPORT" || true
   if [[ -s "$REPORT" ]]; then
     if "$PY" "$SA_DIR/compare-baseline.py" --report "$REPORT" --baseline "$BASELINE"; then
       pass "static-analysis baseline clean"
@@ -179,6 +223,7 @@ if "$PY" -c 'import slither' >/dev/null 2>&1; then
     fi
   else
     fail "slither produced no report at $REPORT"
+    diag "slither"
   fi
 else
   fail "slither not importable — install with: $PY -m pip install --require-hashes --no-deps -r $REQ"
