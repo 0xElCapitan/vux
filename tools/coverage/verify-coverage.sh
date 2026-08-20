@@ -112,6 +112,27 @@ else
   finish
 fi
 
+# BOTH compilation units, and the second one is not optional. `foundry.toml`
+# grants the suites read access to `./out` AND `./out-v3core`, and they use it:
+# the genesis, POL, event-schema and init-code-hash suites read
+# `out-v3core/VuxPoolDeployer.sol/...` and `out-v3core/UniswapV3Pool.sol/...`
+# through `vm.readFile`. That unit is =0.7.6 under a DIFFERENT profile, so the
+# build above cannot produce it — only `FOUNDRY_PROFILE=v3core` can, which is
+# why run-all.sh builds both before running any gate.
+#
+# This job never runs run-all.sh, so on a fresh CI checkout `out-v3core/` did
+# not exist and 52 tests died in `vm.readFile` with "No such file or directory"
+# — while locally the directory is always left behind by an earlier run-all.sh
+# and the gate measured 98.19%. Same fresh-checkout assumption that broke the
+# static-analysis gate on the same day, in the other compilation unit.
+if run_logged forge-build-v3core env FOUNDRY_PROFILE=v3core forge build; then
+  pass "=0.7.6 vendored unit present in out-v3core/ for the artifact-reading suites"
+else
+  fail "FOUNDRY_PROFILE=v3core forge build failed — the suites reading out-v3core/ have nothing to read"
+  diag "forge build (=0.7.6 unit)"
+  finish
+fi
+
 if run_logged forge-coverage env FOUNDRY_OUT="$COV_OUT" forge coverage --ir-minimum \
      --report lcov --no-match-coverage '(test|script|vendor)'; then
   pass "forge coverage completed (instrumented build isolated in $COV_OUT/)"

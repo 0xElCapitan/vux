@@ -208,6 +208,17 @@ echo "== slither =="
 # assertion to the thing that actually runs. A PATH lookup could assert one
 # install and execute another.
 if "$PY" -c 'import slither' >/dev/null 2>&1; then
+  # slither writes its report with a plain `open(path, "w")`, which cannot
+  # create a missing parent. The parent here is `out/` — and this gate never
+  # builds into `out/`, deliberately: its build-info is isolated in
+  # `out-slither/`. So on any job that does not run run-all.sh's `forge build`
+  # first, a fresh checkout has no `out/` at all, and a fully COMPLETED analysis
+  # (2026-08-20: 53 contracts, 93 detectors, 68 findings — the exact triaged
+  # count) was discarded at the final write with FileNotFoundError, leaving the
+  # gate to report only "produced no report". Creating the directory is the
+  # entire fix. The report path stays exactly the one the accepted refreeze
+  # records, and the build output stays isolated.
+  mkdir -p "$(dirname "$REPORT")"
   rm -f "$REPORT"
   # Exit status is deliberately not consulted: slither returns non-zero whenever
   # findings exist, which is the normal state of a triaged baseline. The
