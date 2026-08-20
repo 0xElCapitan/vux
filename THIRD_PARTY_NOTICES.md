@@ -191,8 +191,18 @@ the §1 allowlist.
 ## 6. Implementation dependencies
 
 **Selected (accepted SDD v1.6.0) and authorized by the accepted refreeze
-(operator acceptance 2026-08-10). None installed. Nothing imported or
-vendored yet.**
+(operator acceptance 2026-08-10).**
+
+**State of the tree as of Sprint 8 (2026-08-19)** — this section previously read
+"None installed. Nothing imported or vendored yet.", which was true when it was
+written and is no longer. What is actually here now:
+
+| surface | state | census |
+|---|---|---|
+| OpenZeppelin v5.2.0 (§6.1) | **vendored**, byte-identical, 28 files | `tools/provenance/verify-census.sh` (CI, fail-closed) |
+| Uniswap v3-core v1.0.0 (§6.2) | **vendored**, byte-identical, 32 files | same gate |
+| Off-chain npm surface (§6.3) | **installed** in two roots with committed lockfiles | `grimoires/loa/a2a/sprint-8/offchain-licence-census.json` |
+| Static-analysis toolchain (§6.4) | **installed** in CI only, hash-pinned | `grimoires/loa/a2a/sprint-8/static-analysis-licence-census.json` |
 
 | dependency family | classification | licence family | status |
 |---|---|---|---|
@@ -205,7 +215,9 @@ never the production authority.
 
 The canonical POL venue is protocol-deployed from the pinned Uniswap v3-core
 source (§6.2), and the toolchain pins (solc `=0.8.28` and `=0.7.6`, Foundry
-1.0.0) are recorded in the refreeze authority. Canonical Robinhood Chain
+**v1.5.0 @ `1c57854462289b2e71ee7654cd6666217ed86ffd`** — the 2026-08-12
+toolchain refreeze superseded the Foundry 1.0.0 selection this line previously
+named) are recorded in the refreeze authority. Canonical Robinhood Chain
 WETH is an external deployed runtime contract, interacted with through a cleared
 interface — it is not source copied or linked into VUX.
 
@@ -283,6 +295,86 @@ modification notice, pointer to this file) — it must never be presented as
 wholly VUX-original. GPL corresponding-source obligations apply on conveyance.
 Vendoring or importing any v3-core path outside the recorded census requires a
 new operator-accepted refreeze.
+
+### 6.3 Off-chain surface — accepted refreeze (operator acceptance 2026-08-14)
+
+Authority: `docs/authority/vux-v1-offchain-provenance-refreeze-2026-08.md`
+(`OFFCHAIN_PROVENANCE_REFREEZE_CURRENT_ACCEPTED`) + its JSON registry. The
+acceptance authorizes exactly ten packages plus the disclosed exact transitive
+`@tanstack/query-core@5.71.1`, in two package roots (`indexer/`, `web/`), each
+with a committed lockfile enforced by `npm ci --ignore-scripts` and a CI
+lockfile-drift gate.
+
+| package | pin | root | licence |
+|---|---|---|---|
+| `ponder` | 0.8.33 | `indexer/` | MIT |
+| `next` | 15.1.12 | `web/` | MIT |
+| `react` / `react-dom` | 19.0.0 | `web/` | MIT |
+| `viem` | 2.21.60 | both | MIT |
+| `wagmi` | 2.14.16 | `web/` | MIT |
+| `@playwright/test` | 1.49.1 | `web/` (dev/test) | Apache-2.0 |
+| `@tanstack/react-query` | 5.71.1 | `web/` | MIT |
+| `hono` | 4.6.19 | `indexer/` | MIT |
+| PostgreSQL | 16.4 | service (deployment fact) | PostgreSQL Licence |
+
+**Transitive licence census (closes disclosure D-3 of that refreeze, §6.1).**
+Produced by `tools/offchain/licence-census.mjs`, recorded at
+`grimoires/loa/a2a/sprint-8/offchain-licence-census.json`: **675 distinct
+packages**, overwhelmingly MIT/ISC/Apache-2.0/BSD. Weak-copyleft members
+(MPL-2.0 ×4, one `Apache-2.0 AND LGPL-3.0-or-later`) are all compatible with
+`GPL-3.0-or-later`. 74 further lockfile entries are optional platform-gated
+binaries npm records but does not install on any single host.
+
+**Disclosed: three packages carry a proprietary, non-commercial licence and are
+NOT distributed.** `@metamask/sdk@0.32.0`, `@metamask/sdk-communication-layer@0.32.0`,
+and `@metamask/sdk-install-modal-web@0.32.0` arrive as non-optional production
+dependencies of `@wagmi/connectors@5.7.12` (itself a dependency of the accepted
+`wagmi` pin). They declare **no licence** on the npm registry, and the LICENSE
+file inside the published tarball is a ConsenSys proprietary grant limited to
+**Non-Commercial Use** — a field-of-use restriction incompatible with
+`GPL-3.0-or-later` conveyance. `@metamask/eth-json-rpc-provider@1.0.1` likewise
+declares no licence.
+
+They are installed (they are in the accepted lockfile) but **no part of them is
+conveyed**. VUX configures only wagmi's built-in `injected()` connector
+(`web/lib/wagmi.js`), never `metaMask()`, so the bundler removes the SDK
+entirely. Verified by exhaustive scan of all 38 files / 1,220,956 bytes of the
+built static export `web/out/`: zero occurrences of `ConsenSys`, `MetaMaskSDK`,
+`metamask.app.link`, `sdk-communication`, `eth-json-rpc-provider`, or
+`Non-Commercial`. The single `metaMask` string that does appear is an entry in
+wagmi's own MIT-licensed injected-wallet identifier table — a detection
+predicate, not SDK code.
+
+**Consequence, stated plainly:** the distributed artifact is clean. The
+*development and CI environment* installs proprietary non-commercial code as a
+transitive consequence of an accepted pin. That is a bounded, disclosed residual
+carried to the operator, not a resolved one.
+
+### 6.4 Static-analysis toolchain — accepted refreeze (operator acceptance 2026-08-19)
+
+Authority: `docs/authority/vux-v1-static-analysis-provenance-refreeze-2026-08.md`
+(`STATIC_ANALYSIS_PROVENANCE_REFREEZE_CURRENT_ACCEPTED`) + its JSON registry.
+This is a **toolchain** entry, in the same class §6's preamble assigns to solc and
+Foundry — not a conveyance entry.
+
+| distribution | pin | upstream commit | licence |
+|---|---|---|---|
+| `slither-analyzer` | 0.10.4 | `crytic/slither` @ `aeeb2d368802844733671e35200b30b5f5bdcf5c` | AGPL-3.0 |
+| `crytic-compile` | 0.3.7 | `crytic/crytic-compile` @ `20df04f37af723eaa7fa56dc2c80169776f3bc4d` | AGPL-3.0 |
+
+The full transitive closure — **49 distributions**, every one pinned `==` with
+`--hash=sha256:` in `tools/static-analysis/requirements.txt` — is censused at
+`grimoires/loa/a2a/sprint-8/static-analysis-licence-census.json`: 0 undeclared
+licences, 0 yanked artifacts, and three AGPL-3.0 members (the two above plus
+`solc-select`, all Trail of Bits) alongside `certifi` MPL-2.0.
+
+**No AGPL obligation reaches VUX**, for four independent reasons recorded in the
+refreeze §4.2: no conveyance, no modification (so AGPL §13's network clause never
+triggers), no linking or incorporation into any VUX artifact, and analyzer output
+is not a derivative of the analyzer. The discriminating test is that the shipped
+artifact is byte-identical whether or not slither is ever installed. Recorded but
+not relied upon: `GPL-3.0-or-later` is in any case compatible with AGPL-3.0
+(GPLv3 §13).
 
 ---
 

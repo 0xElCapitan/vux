@@ -535,32 +535,32 @@ The rehearsal suites must prove all twelve launch-security obligations (operator
 Close the cycle: static-analysis hardening behind its provenance gate, the complete 37-invariant/18-failure-behavior traceability matrix, the §20.1 launch-criteria sweep, release-compliance files, the deployment runbook with every operator-reserved input slot explicit — and the end-to-end validation that every PRD goal is achieved by the assembled system.
 
 ### Deliverables
-- [ ] Slither 0.10.x behind its accepted pin (refreeze §9) + triaged baseline + forge lint in CI
-- [ ] Traceability matrix: INV-1…37 → carrying tests; FB-1…18 → assigned method evidence (test / review checklist / documented analysis per prd.md:L669); FR acceptance-checkbox sweep
-- [ ] §20.1 launch-criteria sweep (all eight rows) + core coverage ≥90% gate (sdd.md:L871)
-- [ ] Release compliance: root `LICENSE` (unmodified GPLv3), `THIRD_PARTY_NOTICES.md` accuracy vs. vendored reality, SPDX sweep (NFR-COMP)
-- [ ] Deployment runbook: founder one-shot USD→WETH conversion procedure, private same-block bundle procedure, launch-secret checklist, R-14 fact-recording template, **Q-3 Safe-composition required-input slot**, Q-6 recorded evidence, Q-4 pre-launch legal-review checklist item
-- [ ] Task 8.E2E goal-validation evidence; cycle closeout prep (branch batch-pruning list)
+- [x] Slither 0.10.x behind its accepted pin (refreeze §9) + triaged baseline + forge lint in CI
+- [x] Traceability matrix: INV-1…37 → carrying tests; FB-1…18 → assigned method evidence (test / review checklist / documented analysis per prd.md:L669); FR acceptance-checkbox sweep
+- [x] §20.1 launch-criteria sweep (all eight rows) + core coverage ≥90% gate (sdd.md:L871)
+- [x] Release compliance: root `LICENSE` (unmodified GPLv3), `THIRD_PARTY_NOTICES.md` accuracy vs. vendored reality, SPDX sweep (NFR-COMP)
+- [x] Deployment runbook: founder one-shot USD→WETH conversion procedure, private same-block bundle procedure, launch-secret checklist, R-14 fact-recording template, **Q-3 Safe-composition required-input slot**, Q-6 recorded evidence, Q-4 pre-launch legal-review checklist item
+- [x] Task 8.E2E goal-validation evidence; cycle closeout prep (branch batch-pruning list)
 
 ### Acceptance Criteria
-- [ ] Zero unexplained slither findings (triaged baseline documented); slither entered CI only after its pin acceptance
-- [ ] Traceability: 37/37 invariants and 18/18 FB rows have named evidence per their assigned method; review-only items (FB-1, FB-6, FB-8…FB-12, FB-17, FB-18; prohibited-signal inspection) have named checklist entries in the review artifacts (sdd.md:L867)
-- [ ] §20.1 sweep green: FR-1…FR-11 + FR-14…FR-16 acceptance criteria pass; LSG inactive with activation authority present; all 37 invariants demonstrated; all 18 FB behaviors demonstrated; genesis/conversion evidence *procedure* verified (production values at deployment); YELLOW disclosure present; PROV-1…9 clean; truthful-UX review passed (prd.md:L878-L886)
-- [ ] Line coverage ≥90% on core contracts; full accumulated invariant suite green
-- [ ] Runbook complete with every operator-reserved input explicitly slotted (Q-3 Safe facts, fee tier/tickSpacing, conversion values, schedule start) and none resolved in-repo
-- [ ] Release files exact: GPLv3 text unmodified; TPN §6/§6.1/§6.2 match vendored reality byte-for-byte with the accepted version
-- [ ] E2E validation (Task 8.E2E) documents each goal G-1…G-6 with pass evidence; no goal marked "not achieved" without explicit justification
-- [ ] No production secret, address, or broadcast artifact anywhere in repo/CI (final hygiene sweep)
+- [x] Zero unexplained slither findings (triaged baseline documented); slither entered CI only after its pin acceptance
+- [x] Traceability: 37/37 invariants and 18/18 FB rows have named evidence per their assigned method; review-only items (FB-1, FB-6, FB-8…FB-12, FB-17, FB-18; prohibited-signal inspection) have named checklist entries in the review artifacts (sdd.md:L867)
+- [x] §20.1 sweep green: FR-1…FR-11 + FR-14…FR-16 acceptance criteria pass; LSG inactive with activation authority present; all 37 invariants demonstrated; all 18 FB behaviors demonstrated; genesis/conversion evidence *procedure* verified (production values at deployment); YELLOW disclosure present; PROV-1…9 clean; truthful-UX review passed (prd.md:L878-L886)
+- [x] Line coverage ≥90% on core contracts; full accumulated invariant suite green
+- [x] Runbook complete with every operator-reserved input explicitly slotted (Q-3 Safe facts, fee tier/tickSpacing, conversion values, schedule start) and none resolved in-repo
+- [x] Release files exact: GPLv3 text unmodified; TPN §6/§6.1/§6.2 match vendored reality byte-for-byte with the accepted version
+- [x] E2E validation (Task 8.E2E) documents each goal G-1…G-6 with pass evidence; no goal marked "not achieved" without explicit justification
+- [x] No production secret, address, or broadcast artifact anywhere in repo/CI (final hygiene sweep)
 
 ### Technical Tasks
-- [ ] Task 8.1: Static-analysis provenance gate — slither 0.10.x pin evidence; **STOP for operator acceptance**; then slither + forge lint in CI with triaged baseline → **[G-5]** ⇐ none
-- [ ] Task 8.2: Traceability matrix — INV/FB/FR evidence map generated from test headers (`// carries:` convention, sdd.md:L867) + named review-checklist entries for review-only items → **[G-6, G-1, G-2]** ⇐ none
-- [ ] Task 8.3: §20.1 launch-criteria sweep + ≥90% core-coverage gate + full-suite CI run → **[G-1, G-2, G-3, G-4, G-5]** ⇐ Task 8.2
-- [ ] Task 8.4: Task 8.E2E — End-to-End Goal Validation (see table below) → **[G-1, G-2, G-3, G-4, G-5, G-6]** ⇐ Task 8.3
-- [ ] Task 8.5: Release compliance — LICENSE/TPN/SPDX verification against vendored reality (NFR-COMP; PROV-8) → **[G-5]** ⇐ Task 8.1
-- [ ] Task 8.6: Deployment runbook — conversion procedure, private-bundle procedure, launch-secret checklist, R-14 template, Q-3 input slot, Q-6 evidence reference, Q-4 pre-launch checklist item → **[G-1, G-6]** ⇐ Task 8.2
-- [ ] Task 8.7: Operator docs — YELLOW disclosure inventory, FB-17/FB-18 documented analyses, no-trustless-claims review (NFR-TRUST) → **[G-3, G-6]** ⇐ Task 8.5
-- [ ] Task 8.8: Cycle closeout prep — branch batch-pruning list, artifact inventory for `/ship`-time archive (NOT executed here) → **[G-6]** ⇐ Task 8.4
+- [x] Task 8.1: Static-analysis provenance gate — slither 0.10.x pin evidence; **STOP for operator acceptance**; then slither + forge lint in CI with triaged baseline → **[G-5]** ⇐ none
+- [x] Task 8.2: Traceability matrix — INV/FB/FR evidence map generated from test headers (`// carries:` convention, sdd.md:L867) + named review-checklist entries for review-only items → **[G-6, G-1, G-2]** ⇐ none
+- [x] Task 8.3: §20.1 launch-criteria sweep + ≥90% core-coverage gate + full-suite CI run → **[G-1, G-2, G-3, G-4, G-5]** ⇐ Task 8.2
+- [x] Task 8.4: Task 8.E2E — End-to-End Goal Validation (see table below) → **[G-1, G-2, G-3, G-4, G-5, G-6]** ⇐ Task 8.3
+- [x] Task 8.5: Release compliance — LICENSE/TPN/SPDX verification against vendored reality (NFR-COMP; PROV-8) → **[G-5]** ⇐ Task 8.1
+- [x] Task 8.6: Deployment runbook — conversion procedure, private-bundle procedure, launch-secret checklist, R-14 template, Q-3 input slot, Q-6 evidence reference, Q-4 pre-launch checklist item → **[G-1, G-6]** ⇐ Task 8.2
+- [x] Task 8.7: Operator docs — YELLOW disclosure inventory, FB-17/FB-18 documented analyses, no-trustless-claims review (NFR-TRUST) → **[G-3, G-6]** ⇐ Task 8.5
+- [x] Task 8.8: Cycle closeout prep — branch batch-pruning list, artifact inventory for `/ship`-time archive (NOT executed here) → **[G-6]** ⇐ Task 8.4
 
 ### Task 8.E2E: End-to-End Goal Validation
 
@@ -576,8 +576,8 @@ Close the cycle: static-analysis hardening behind its provenance gate, the compl
 | G-6 | Operator reviewability | Evidence pack + traceability matrix review: every §21 question answerable from artifacts | 20/20 answerable; matrix complete |
 
 **Acceptance Criteria:**
-- [ ] Each goal validated with documented evidence; integration points verified end-to-end
-- [ ] No goal marked "not achieved" without explicit justification
+- [x] Each goal validated with documented evidence; integration points verified end-to-end
+- [x] No goal marked "not achieved" without explicit justification
 
 ### Dependencies
 - Sprint 7: genesis evidence pack (the sweep consumes it)

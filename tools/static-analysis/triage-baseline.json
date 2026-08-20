@@ -1,0 +1,728 @@
+{
+  "schema_version": 1,
+  "generated_by": "/implement sprint-8, Task 8.1 (post-acceptance)",
+  "authority": "docs/authority/vux-v1-static-analysis-provenance-refreeze-2026-08.md",
+  "analyzer": {
+    "distribution": "slither-analyzer",
+    "version": "0.10.4",
+    "adapter": "crytic-compile==0.3.7",
+    "detectors_run": 93,
+    "contracts_analyzed": 53
+  },
+  "invocation": {
+    "build": "forge build --build-info --skip \"test/**\" --skip \"script/**\"",
+    "analyze": "slither . --ignore-compile --filter-paths \"vendor/\" --json out/slither-report.json",
+    "compiler_invoked_by_slither": false,
+    "network_access": false
+  },
+  "key_derivation": "sha256(check + '|' + description with every #L<n>[-L<m>] source reference collapsed to '#' and whitespace normalized)[:16] — line-shift stable, so unrelated edits above a finding do not churn the baseline",
+  "policy": "The gate FAILS on any finding whose key is absent from `findings` below, and on any baseline key that no longer appears (a stale disposition must be removed deliberately, not left to rot). Zero suppressed detectors; zero suppressed severities. `no unexplained or improperly dispositioned finding` is the bar — not an empty report.",
+  "totals": {
+    "findings": 68,
+    "by_impact": {
+      "Informational": 20,
+      "Low": 22,
+      "Medium": 26
+    },
+    "by_verdict": {
+      "accepted-design": 37,
+      "informational": 15,
+      "false-positive": 16
+    },
+    "high_impact": 0
+  },
+  "class_dispositions": {
+    "calls-loop": {
+      "verdict": "accepted-design",
+      "rationale": "The loops iterate `_strategyAssets[strategy]`, a per-strategy asset list that only the operator can extend, one entry per `admitStrategy` call. The bound is an operator-controlled admission decision, not attacker-controlled input, and the blast radius of exhausting it is Strategic-only (FB-6). Harvest measures per-asset balance deltas, which structurally requires one call per asset."
+    },
+    "divide-before-multiply": {
+      "verdict": "false-positive",
+      "rationale": "`(MIN_TICK / spacing) * spacing` and `(MAX_TICK / spacing) * spacing` are the canonical Uniswap v3 tick-alignment idiom (src/StrategicTreasury.sol:442-443). The truncation IS the operation: it snaps the boundary ticks down/up to the nearest usable multiple of `tickSpacing`. Reordering to multiply first would defeat the purpose and produce an unusable tick. Precision is not lost; it is discarded deliberately and exactly once."
+    },
+    "incorrect-equality": {
+      "verdict": "false-positive",
+      "rationale": "Every flagged comparison is `== 0` against a value that is exactly zero or exactly non-zero by construction — a sentinel test, not a balance/threshold test. `l.maturesAt == 0` distinguishes 'never admitted' from 'admitted'; `qRaw == 0` / `start == 0` distinguish the bootstrap epoch from an ordinary one; `amount == 0` / `gained == 0` are skip-if-nothing-happened guards. The detector's premise — that an attacker can nudge a value to miss a strict equality — needs a quantity that can be perturbed by a wei. None of these can: they are set to 0 or to a specific value by this contract's own writes. Note `Rig._route` and `Lens._dNeed` carry the SAME `qRaw == 0` test, which is exactly the Lens/Rig equality the truth surface depends on (INV-36/37)."
+    },
+    "missing-inheritance": {
+      "verdict": "accepted-design",
+      "rationale": "Deliberate, and inverting it would weaken the design. `IVUX` / `IVUXMintable` / `IVUXBurnable` / `IReserveBacking` / `ILSGRewardProgram` are narrow CONSUMER-SIDE views: HardReserve imports `IVUX`, Rig imports only `IVUXMintable`, StrategicTreasury imports only `IVUXBurnable`. That is the narrow-authority design — each consumer's type surface exposes exactly the authority it holds and nothing else. Making `VUX` inherit all three would publish the union of those authorities on one type and defeat the narrowing that the accepted architecture (mint=rig, burnForRedemption=reserve) exists to express. The detector cannot see consumer-side intent."
+    },
+    "naming-convention": {
+      "verdict": "informational",
+      "rationale": "Two known slither heuristic gaps, no security consequence. (a) `immutable` and `constant` state variables (`Lens.RIG`, `Rig.BOOTSTRAP_OPENING`, `Rig.MINIMUM_OPENING`, `Rig.DECAY_FLOOR`) and the view functions that expose them (`IRigViews.EPOCH_PERIOD()` etc.) use SCREAMING_SNAKE_CASE, which IS the Solidity style-guide convention for constants; slither's detector tests them against the mixedCase rule for mutable variables and ordinary functions. (b) `GenesisDeployer._stepN_...` private helpers carry the specification's step numbers on purpose — the names are the traceability link from code to the accepted 11-step genesis sequence, and renaming them to satisfy a linter would delete that link."
+    },
+    "reentrancy-benign": {
+      "verdict": "accepted-design",
+      "rationale": "Every site is `nonReentrant` and role-gated, and the written state is either the caller's own measured delta or an accounting variable that no other function reads mid-transaction. Slither classifies these 'benign' because no value is at risk; the classification is correct."
+    },
+    "reentrancy-events": {
+      "verdict": "false-positive",
+      "rationale": "`GenesisDeployer._steps8to9_handOffAuthorityAndSweep` is `private` and reachable ONLY from the constructor (src/GenesisDeployer.sol:234). Genesis executes entirely inside that constructor — there is no `genesis()` entry point and no runtime function of any kind (src/GenesisDeployer.sol:80-85). There is no post-construction transaction in which event ordering could be observed or exploited."
+    },
+    "reentrancy-no-eth": {
+      "verdict": "accepted-design",
+      "rationale": "NOT reachable as described. `redeemUnits` is `onlyRole(OPERATOR_ROLE)` AND `nonReentrant` (src/StrategicTreasury.sol:642-646), so self-reentrancy is blocked outright. The cross-function path slither names requires the adapter, re-entered from `IStrategyAdapter.redeem`, to call `closeStrategy` — which is itself `onlyRole(OPERATOR_ROLE)` and additionally requires the strategy to be already de-admitted. An adapter holding OPERATOR_ROLE is outside the accepted trust model. Independently, the amount that drives every subsequent write is the treasury's OWN measured balance delta (`before` / `IERC20(asset).balanceOf(address(this)) - before`, lines 656-658), never an adapter claim, so a re-entrant adapter cannot inflate it. Accepted authority: sdd.md:L302 and threat row 9 (sdd.md:L949) — an adversarial adapter 'can at most misclassify funds it could equally have stolen; fraud <= theft', bounded by cap + 24h maturity + instant removal + Strategic-only blast radius (FB-6)."
+    },
+    "timestamp": {
+      "verdict": "accepted-design",
+      "rationale": "`block.timestamp` is load-bearing monetary machinery here, not an incidental comparison. The Dutch decay clock, the epoch schedule, the UPS accrual window, and the 24h admission maturity are all defined in terms of elapsed wall time by the accepted specification (PRD FR-4, Appendix A). Miner timestamp drift is bounded to seconds against an EPOCH_PERIOD measured in days and an ADMISSION_DELAY of 24h; the resulting price/UPS perturbation is far below the economic noise floor and cannot cross an authority boundary. The accepted design contemplates and documents this dependency."
+    },
+    "uninitialized-local": {
+      "verdict": "false-positive",
+      "rationale": "Solidity zero-initializes locals. Every site is either a declare-then-assign-in-branch accumulator whose zero value is the intended semantics (`revenuePart`/`lossPart` are mutually exclusive by construction; `totalWeight`/`totalDeployed` are summation accumulators), or a named memory struct used as a settlement record (`Rig.take(...).s`) whose fields are each assigned before use — `s.qRaw` deliberately remains 0 on the bootstrap branch, which is the specified bootstrap behaviour, not an omission. `GenesisDeployer.constructor.d` is the deployment record populated step-by-step across _step0.._step10. No field is read before it is written."
+    },
+    "unused-return": {
+      "verdict": "accepted-design",
+      "rationale": "Two distinct correct-by-design shapes. (a) Tuple destructuring that deliberately binds only the members it needs (`slot0()`, `positions()`, `RIG.epochState()`) — the discarded members are unused by construction, and naming them would be dead code. (b) Uniswap v3 mutating calls whose return values are deliberately NOT trusted: `burn()` only credits `tokensOwed`, so the value that matters is read from the subsequent `collect()` return (decreasePol, src/StrategicTreasury.sol:950-953) — consuming burn's return would double-count; and `swap()`'s return is ignored in favour of the treasury's own `vux.balanceOf` delta measured across the call (buyVuxForPol, lines 981-988), which is the same 'measure your own receipt, never trust the counterparty's claim' discipline the accepted design applies at every value boundary. The `burn(..., 0)` in `_pokeCollectAndClassifyFees` is the canonical v3 fee-poke idiom whose return is (0,0) by definition."
+    }
+  },
+  "findings": [
+    {
+      "key": "0877a00b709bf111",
+      "check": "missing-inheritance",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/StrategicTreasury.sol:75",
+      "summary": "StrategicTreasury (src/StrategicTreasury.sol#75-1278) should inherit from ILSGRewardProgram (src/interfaces/ILSGModule.sol#49-53)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "0c13d82e40617ce1",
+      "check": "missing-inheritance",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/VUX.sol:72",
+      "summary": "VUX (src/VUX.sol#72-127) should inherit from IVUXBurnable (src/interfaces/IVUXBurnable.sol#22-26)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "5ed27fb7a841fbfb",
+      "check": "missing-inheritance",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/VUX.sol:72",
+      "summary": "VUX (src/VUX.sol#72-127) should inherit from IVUXMintable (src/interfaces/IVUXMintable.sol#21-30)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "990c4ef88d8c5b2f",
+      "check": "missing-inheritance",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/VUX.sol:72",
+      "summary": "VUX (src/VUX.sol#72-127) should inherit from IVUX (src/interfaces/IVUX.sol#16-23)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "f5d68e1e5c4d5c8f",
+      "check": "missing-inheritance",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/HardReserve.sol:44",
+      "summary": "HardReserve (src/HardReserve.sol#44-185) should inherit from IReserveBacking (src/interfaces/ILensViews.sol#66-68)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "09c6dabe3b4844b9",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/interfaces/ILensViews.sol:54",
+      "summary": "Function IRigViews.EPOCH_PERIOD() (src/interfaces/ILensViews.sol#54) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "116a59abc141ecbc",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/Lens.sol:59",
+      "summary": "Variable Lens.RIG (src/Lens.sol#59) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "16803561353d3e80",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/GenesisDeployer.sol:375",
+      "summary": "Function GenesisDeployer._steps5to6_deployTreasuryAndLens(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#375-388) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "25047aaa6db25364",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/GenesisDeployer.sol:398",
+      "summary": "Function GenesisDeployer._step7_provisionPolAndFundReserve(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#398-411) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "60e40c15a2dfe0b3",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/GenesisDeployer.sol:415",
+      "summary": "Function GenesisDeployer._steps8to9_handOffAuthorityAndSweep(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#415-448) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "ae5ea873a07e5b47",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/interfaces/ILensViews.sol:55",
+      "summary": "Function IRigViews.SPLIT_KING_BP() (src/interfaces/ILensViews.sol#55) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "b767be68fd81f98b",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/interfaces/ILensViews.sol:56",
+      "summary": "Function IRigViews.STRATEGIC_CAP_BP() (src/interfaces/ILensViews.sol#56) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "b8069697894be2af",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/GenesisDeployer.sol:455",
+      "summary": "Function GenesisDeployer._step10_closingSelfVerification(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#455-482) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "b8d6ec78cfdb270b",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/Rig.sol:130",
+      "summary": "Variable Rig.MINIMUM_OPENING (src/Rig.sol#130) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "c0aa2eaecbea0ff5",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/GenesisDeployer.sol:288",
+      "summary": "Function GenesisDeployer._steps1to3_deployCoreAndVerifyNonces(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#288-319) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "c2037b744c6a5cc2",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/Rig.sol:127",
+      "summary": "Variable Rig.BOOTSTRAP_OPENING (src/Rig.sol#127) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "c78c2e98bfe4f004",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/GenesisDeployer.sol:331",
+      "summary": "Function GenesisDeployer._step4_deployAndVerifyCanonicalPool(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#331-366) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "eafe15e41dbbc7ef",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/interfaces/ILensViews.sol:57",
+      "summary": "Function IRigViews.BP_DENOM() (src/interfaces/ILensViews.sol#57) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "f1c8a80a87ed8d62",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/GenesisDeployer.sol:271",
+      "summary": "Function GenesisDeployer._step0_snapshotAndWrap(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#271-278) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "f67bb43a9f0a1333",
+      "check": "naming-convention",
+      "impact": "Informational",
+      "confidence": "High",
+      "where": "src/Rig.sol:134",
+      "summary": "Variable Rig.DECAY_FLOOR (src/Rig.sol#134) is not in mixedCase",
+      "verdict": "informational"
+    },
+    {
+      "key": "18a4929d4e6e0335",
+      "check": "calls-loop",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1111",
+      "summary": "StrategicTreasury._deploy(address,address,uint256) (src/StrategicTreasury.sol#1111-1133) has external calls inside a loop: unitsBefore = IStrategyAdapter(strategy).principalUnits() (src/StrategicTreasury.sol#1127)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "c353fbcfa8e7e363",
+      "check": "calls-loop",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1111",
+      "summary": "StrategicTreasury._deploy(address,address,uint256) (src/StrategicTreasury.sol#1111-1133) has external calls inside a loop: unitsHeld[strategy] += IStrategyAdapter(strategy).principalUnits() - unitsBefore (src/StrategicTreasury.sol#1129)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "cb35c6772c8984e5",
+      "check": "calls-loop",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1111",
+      "summary": "StrategicTreasury._deploy(address,address,uint256) (src/StrategicTreasury.sol#1111-1133) has external calls inside a loop: IStrategyAdapter(strategy).deposit(asset,amount) (src/StrategicTreasury.sol#1128)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "d92f27f8bca7f1b3",
+      "check": "calls-loop",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:592",
+      "summary": "StrategicTreasury.harvestYield(address) (src/StrategicTreasury.sol#592-624) has external calls inside a loop: before[i] = IERC20(assets[i]).balanceOf(address(this)) (src/StrategicTreasury.sol#600)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "dda42a8b94f67eb6",
+      "check": "calls-loop",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:592",
+      "summary": "StrategicTreasury.harvestYield(address) (src/StrategicTreasury.sol#592-624) has external calls inside a loop: gained = IERC20(assets[i_scope_0]).balanceOf(address(this)) - before[i_scope_0] (src/StrategicTreasury.sol#618)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "49bde1200db7229c",
+      "check": "reentrancy-benign",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:533",
+      "summary": "Reentrancy in StrategicTreasury.recallFromStrategy(address,address,uint256) (src/StrategicTreasury.sol#533-541):",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "4bc52b13dc412e37",
+      "check": "reentrancy-benign",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1111",
+      "summary": "Reentrancy in StrategicTreasury._deploy(address,address,uint256) (src/StrategicTreasury.sol#1111-1133):",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "503372a1222a069a",
+      "check": "reentrancy-benign",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:945",
+      "summary": "Reentrancy in StrategicTreasury.decreasePol(uint128) (src/StrategicTreasury.sol#945-963):",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "50c61641b82f64b2",
+      "check": "reentrancy-benign",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1156",
+      "summary": "Reentrancy in StrategicTreasury._addLiquidity(uint256,uint256) (src/StrategicTreasury.sol#1156-1169):",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "d2b3a59fdd990b28",
+      "check": "reentrancy-benign",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:642",
+      "summary": "Reentrancy in StrategicTreasury.redeemUnits(address,uint256,uint256) (src/StrategicTreasury.sol#642-679):",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "e865718a09803d20",
+      "check": "reentrancy-benign",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:834",
+      "summary": "Reentrancy in StrategicTreasury.deployMarginalBySignal(uint256) (src/StrategicTreasury.sol#834-869):",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "eeb56cc96c26c89e",
+      "check": "reentrancy-benign",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:592",
+      "summary": "Reentrancy in StrategicTreasury.harvestYield(address) (src/StrategicTreasury.sol#592-624):",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "34013b1e4bf6c0f1",
+      "check": "reentrancy-events",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/GenesisDeployer.sol:415",
+      "summary": "Reentrancy in GenesisDeployer._steps8to9_handOffAuthorityAndSweep(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#415-448):",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "1a935bc0224c5e56",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/Rig.sol:580",
+      "summary": "Rig._successorOpening(uint256) (src/Rig.sol#580-585) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "2fdad6f09bc2be81",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/Rig.sol:517",
+      "summary": "Rig._route(uint256,uint256,uint256,uint256) (src/Rig.sol#517-530) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "455a41c3a1184209",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/Rig.sol:466",
+      "summary": "Rig.currentUPS() (src/Rig.sol#466-471) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "50a94b5fe3ad7ccd",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/Rig.sol:453",
+      "summary": "Rig.currentPrice() (src/Rig.sol#453-459) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "550570b376d17e54",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/Rig.sol:307",
+      "summary": "Rig.take(uint256) (src/Rig.sol#307-409) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "be0d837b0cacfe69",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1269",
+      "summary": "StrategicTreasury._eligibleForSignal(address,address) (src/StrategicTreasury.sol#1269-1277) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "ce3afaf4012c1207",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/Lens.sol:191",
+      "summary": "Lens._dNeed(uint256,uint256,uint256) (src/Lens.sol#191-193) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "f00624c2dc9de56e",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1111",
+      "summary": "StrategicTreasury._deploy(address,address,uint256) (src/StrategicTreasury.sol#1111-1133) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "fe78f08312e50faa",
+      "check": "timestamp",
+      "impact": "Low",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:834",
+      "summary": "StrategicTreasury.deployMarginalBySignal(uint256) (src/StrategicTreasury.sol#834-869) uses timestamp for comparisons",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "00ba68474ae43bc8",
+      "check": "divide-before-multiply",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:402",
+      "summary": "StrategicTreasury.constructor(address,address,address,address,address,uint24) (src/StrategicTreasury.sol#402-447) performs a multiplication on the result of a division:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "dbe75112b708ac67",
+      "check": "divide-before-multiply",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:402",
+      "summary": "StrategicTreasury.constructor(address,address,address,address,address,uint24) (src/StrategicTreasury.sol#402-447) performs a multiplication on the result of a division:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "1ec1b34f0e1ef581",
+      "check": "incorrect-equality",
+      "impact": "Medium",
+      "confidence": "High",
+      "where": "src/StrategicTreasury.sol:592",
+      "summary": "StrategicTreasury.harvestYield(address) (src/StrategicTreasury.sol#592-624) uses a dangerous strict equality:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "2835d4bf44ba4a1d",
+      "check": "incorrect-equality",
+      "impact": "Medium",
+      "confidence": "High",
+      "where": "src/StrategicTreasury.sol:1269",
+      "summary": "StrategicTreasury._eligibleForSignal(address,address) (src/StrategicTreasury.sol#1269-1277) uses a dangerous strict equality:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "40f4daf99d1c2281",
+      "check": "incorrect-equality",
+      "impact": "Medium",
+      "confidence": "High",
+      "where": "src/Rig.sol:466",
+      "summary": "Rig.currentUPS() (src/Rig.sol#466-471) uses a dangerous strict equality:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "629d4b9d6a1307ba",
+      "check": "incorrect-equality",
+      "impact": "Medium",
+      "confidence": "High",
+      "where": "src/Rig.sol:517",
+      "summary": "Rig._route(uint256,uint256,uint256,uint256) (src/Rig.sol#517-530) uses a dangerous strict equality:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "9d2fe846f5238f94",
+      "check": "incorrect-equality",
+      "impact": "Medium",
+      "confidence": "High",
+      "where": "src/Lens.sol:191",
+      "summary": "Lens._dNeed(uint256,uint256,uint256) (src/Lens.sol#191-193) uses a dangerous strict equality:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "cdd8f490671da7ca",
+      "check": "incorrect-equality",
+      "impact": "Medium",
+      "confidence": "High",
+      "where": "src/StrategicTreasury.sol:1111",
+      "summary": "StrategicTreasury._deploy(address,address,uint256) (src/StrategicTreasury.sol#1111-1133) uses a dangerous strict equality:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "dc1ed9cbb7711c0e",
+      "check": "incorrect-equality",
+      "impact": "Medium",
+      "confidence": "High",
+      "where": "src/StrategicTreasury.sol:834",
+      "summary": "StrategicTreasury.deployMarginalBySignal(uint256) (src/StrategicTreasury.sol#834-869) uses a dangerous strict equality:",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "c7b9a2296c182c6c",
+      "check": "reentrancy-no-eth",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:642",
+      "summary": "Reentrancy in StrategicTreasury.redeemUnits(address,uint256,uint256) (src/StrategicTreasury.sol#642-679):",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "0774910973040209",
+      "check": "uninitialized-local",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:850",
+      "summary": "StrategicTreasury.deployMarginalBySignal(uint256).totalDeployed (src/StrategicTreasury.sol#850) is a local variable never initialized",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "27c24aae6df0a0ea",
+      "check": "uninitialized-local",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:665",
+      "summary": "StrategicTreasury.redeemUnits(address,uint256,uint256).revenuePart (src/StrategicTreasury.sol#665) is a local variable never initialized",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "398a4d2e52c87b5c",
+      "check": "uninitialized-local",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/Rig.sol:308",
+      "summary": "Rig.take(uint256).s (src/Rig.sol#308) is a local variable never initialized",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "4391e9227a14c719",
+      "check": "uninitialized-local",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:666",
+      "summary": "StrategicTreasury.redeemUnits(address,uint256,uint256).lossPart (src/StrategicTreasury.sol#666) is a local variable never initialized",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "693804f8cb09a401",
+      "check": "uninitialized-local",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:845",
+      "summary": "StrategicTreasury.deployMarginalBySignal(uint256).totalWeight (src/StrategicTreasury.sol#845) is a local variable never initialized",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "f2f5b69ae0b13bab",
+      "check": "uninitialized-local",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/GenesisDeployer.sol:238",
+      "summary": "GenesisDeployer.constructor(GenesisParams).d (src/GenesisDeployer.sol#238) is a local variable never initialized",
+      "verdict": "false-positive"
+    },
+    {
+      "key": "1ab721628aadb3db",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/GenesisDeployer.sol:331",
+      "summary": "GenesisDeployer._step4_deployAndVerifyCanonicalPool(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#331-366) ignores return value by (actualSqrtPrice,None,None,None,None,None,None) = IUniswapV3Pool(d.pool).slot0() (src/Gene",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "1bd42b63ca2edab6",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:974",
+      "summary": "StrategicTreasury.buyVuxForPol(uint256,uint256,uint160) (src/StrategicTreasury.sol#974-991) ignores return value by IUniswapV3Pool(pool).swap(address(this),token0 == address(weth),wethIn.toInt256(),sqrtPriceLimitX96,) (src/StrategicTreasury",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "1fd224cdea61953e",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/Lens.sol:115",
+      "summary": "Lens.estimateIfDisplacedNow() (src/Lens.sol#115-128) ignores return value by (None,None,None,None,bootstrap) = RIG.epochState() (src/Lens.sol#123)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "27306ed07006ff2e",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:945",
+      "summary": "StrategicTreasury.decreasePol(uint128) (src/StrategicTreasury.sol#945-963) ignores return value by IUniswapV3Pool(pool).burn(tickLower,tickUpper,liquidity) (src/StrategicTreasury.sol#950)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "351f9b6d2537faf4",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1195",
+      "summary": "StrategicTreasury._affordableLiquidity(uint256,uint256) (src/StrategicTreasury.sol#1195-1209) ignores return value by (sqrtPriceX96,None,None,None,None,None,None) = IUniswapV3Pool(pool).slot0() (src/StrategicTreasury.sol#1196)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "8678508a72f1b2cb",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1219",
+      "summary": "StrategicTreasury._pokeCollectAndClassifyFees() (src/StrategicTreasury.sol#1219-1236) ignores return value by IUniswapV3Pool(pool).burn(tickLower,tickUpper,0) (src/StrategicTreasury.sol#1220)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "b9ab46c594aeffe4",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/Lens.sol:82",
+      "summary": "Lens.rawClockLimit() (src/Lens.sol#82-86) ignores return value by (None,epochStart,None,epochUPS,bootstrap) = RIG.epochState() (src/Lens.sol#83)",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "c069a9340831074f",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/StrategicTreasury.sol:1252",
+      "summary": "StrategicTreasury._positionLiquidity() (src/StrategicTreasury.sol#1252-1254) ignores return value by (liquidity,None,None,None,None) = IUniswapV3Pool(pool).positions(keccak256(bytes)(abi.encodePacked(address(this),tickLower,tickUpper))) (sr",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "ebbee5994193ad40",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/GenesisDeployer.sol:512",
+      "summary": "GenesisDeployer._verifyPoolAndPositionState(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#512-528) ignores return value by (sqrtPriceX96,None,None,None,None,None,None) = IUniswapV3Pool(d.pool).slot0() (src/GenesisDeployer",
+      "verdict": "accepted-design"
+    },
+    {
+      "key": "f896c974c5aeab33",
+      "check": "unused-return",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "where": "src/GenesisDeployer.sol:512",
+      "summary": "GenesisDeployer._verifyPoolAndPositionState(GenesisParams,GenesisDeployer.Deployed) (src/GenesisDeployer.sol#512-528) ignores return value by (liquidity,None,None,None,None) = IUniswapV3Pool(d.pool).positions(keccak256(bytes)(abi.encodePack",
+      "verdict": "accepted-design"
+    }
+  ],
+  "forge_lint": {
+    "tool": "forge lint (Foundry v1.5.0 @ 1c57854462289b2e71ee7654cd6666217ed86ffd — already-accepted toolchain, no new provenance surface)",
+    "scope": "src/",
+    "high_findings": 0,
+    "high_policy": "FAIL — not baselined. The first high-severity finding to appear stops the build rather than being absorbed.",
+    "medium_findings": 4,
+    "medium_dispositions": [
+      {
+        "where": "src/StrategicTreasury.sol:442",
+        "check": "divide-before-multiply",
+        "verdict": "false-positive",
+        "rationale": "the same (MIN_TICK / spacing) * spacing tick-alignment idiom slither flags; the truncation IS the operation. See class_dispositions.divide-before-multiply."
+      },
+      {
+        "where": "src/StrategicTreasury.sol:443",
+        "check": "divide-before-multiply",
+        "verdict": "false-positive",
+        "rationale": "same, for MAX_TICK."
+      },
+      {
+        "where": "src/StrategicTreasury.sol:1071",
+        "check": "unsafe-typecast",
+        "verdict": "false-positive",
+        "rationale": "uint256(wethDelta) is guarded on the PRECEDING line: `if (wethDelta <= 0 || vuxDelta >= 0) revert CallbackDirectionMismatch(vuxDelta, wethDelta);` at src/StrategicTreasury.sol:1069. So wethDelta > 0 is proven before the cast and the conversion cannot wrap. The linter does not see the guard."
+      },
+      {
+        "where": "src/GenesisDeployer.sol:554",
+        "check": "unsafe-typecast",
+        "verdict": "false-positive",
+        "rationale": "bytes1(uint8(nonce)) is guarded on the PRECEDING line: `if (nonce == 0 || nonce > 0x7f) revert NoncePredictionOutOfDomain(nonce);` at src/GenesisDeployer.sol:552. So 1 <= nonce <= 0x7f is proven and uint8 cannot truncate — this is exactly the single-byte RLP nonce domain the NatSpec states, and anything outside it reverts rather than silently producing a wrong address."
+      }
+    ],
+    "informational_and_gas": "not gated — 46 info + 1 gas finding, advisory style/efficiency notes with no security consequence"
+  }
+}

@@ -1,0 +1,492 @@
+{
+  "schema_version": 1,
+  "delta_date": "2026-08-19",
+  "pass": 3,
+  "pass_note": "pass 1 candidate presented at the Sprint 8 Task 8.1 operator gate; pass 2 narrow candidate-authority consistency repair (D-S1 install invariant quoted in full; implementation-lifecycle commit wording); pass 3 operator acceptance activation — substantive pin/provenance/licence/security/compatibility content unchanged, mutation confined to acceptance state",
+  "status": "STATIC_ANALYSIS_PROVENANCE_REFREEZE_CURRENT_ACCEPTED",
+  "activation": "ACTIVE",
+  "scope": "STATIC_ANALYSIS_TOOLCHAIN_AUTHORITY_ONLY",
+  "companion_markdown": "docs/authority/vux-v1-static-analysis-provenance-refreeze-2026-08.md",
+  "operator_acceptance": {
+    "date": "2026-08-19",
+    "scope": "exactly slither-analyzer==0.10.4 and crytic-compile==0.3.7 at the identities and digests in pins_accepted, plus the transitive closure those two pins necessarily imply",
+    "wildcard_family_authorization_granted": false,
+    "unrelated_dependency_expansion_authorized": false,
+    "applies_only_to": [
+      "exact identities",
+      "licences",
+      "integrity evidence",
+      "source/release pins",
+      "installation method",
+      "invocation",
+      "analysis scope"
+    ],
+    "pre_acceptance_digests_reverified": {
+      "vux-v1-static-analysis-provenance-refreeze-2026-08.md": "82033b9379cc67df4fe27330f2d09afb9472739dd32c7b8f839d251835dcf91d",
+      "vux-v1-source-registry-static-analysis-refreeze-2026-08.json": "ac6afaa9614038a2ba996811c0cff3d09dfa94caff46148ab4385e176148f789"
+    },
+    "pre_acceptance_digests_reverification_result": "both MATCH — independently recomputed immediately before this mutation",
+    "equivalence_check": "accepted pin table compared entry-by-entry against pins_accepted: 2/2 exact match on distribution, version, repository, commit, and all four artifact digests; no broadening",
+    "new_dependency_rule": "if closure derivation reveals any package that is not a transitive consequence of the accepted pins, STOP with a bounded HITL rather than adding it",
+    "grants_git_authority": false,
+    "authorizes_commit_during_implement_sprint_8": false
+  },
+  "disclosure_dispositions_at_acceptance": {
+    "D-S1": {
+      "disposition": "ACCEPTED as disclosed; discharge authorized",
+      "required_actions": [
+        "derive the transitive closure from the accepted pins",
+        "materialize the fully pinned and hash-required tools/static-analysis/requirements.txt",
+        "every installed distribution explicitly pinned and hashed",
+        "preserve binding constraints: eth-abi > 5.0.0, pycryptodome >= 3.19.1",
+        "install ONLY with the exact invariant, --no-deps never omitted or abbreviated",
+        "the installed environment must equal the reviewed requirements file exactly",
+        "produce the transitive licence census"
+      ],
+      "stop_condition": "any package that is not a transitive consequence of the accepted pins → STOP with a bounded HITL"
+    },
+    "D-S2": {
+      "disposition": "ACCEPTED as a documented residual",
+      "accepted_characterization": "the vulnerable package is PRESENT in the static-analysis environment, but the vulnerable path is structurally unreachable on the authorized VUX invocation",
+      "acceptance_conditioned_on_bounded_invocation": [
+        "local project target",
+        "--ignore-compile",
+        "local Foundry build-info",
+        "no address target",
+        "no slither-read-storage",
+        "no configured RPC path"
+      ],
+      "mechanical_no_rpc_control": "REQUIRED, not optional",
+      "prohibited_restatements": ["fixed", "absent", "non-vulnerable"],
+      "lapse_condition": "if any later implementation change widens static-analysis execution into an RPC/provider path, this disposition no longer applies and operator review is required"
+    },
+    "D-S3": {
+      "disposition": "ACCEPTED as a bounded risk; execution authorized",
+      "basis": "the unsupported constructs identified in the refreeze are absent from the actual VUX source",
+      "stop_condition": "if slither 0.10.4 cannot correctly consume the accepted VUX build-info or parse the implementation for an unanticipated compatibility reason → STOP",
+      "silent_upgrade_to_0_11_x": "PROHIBITED — any 0.11.x use requires a new provenance/operator gate"
+    },
+    "D-S4": {
+      "disposition": "CONTROL ACCEPTED AND BINDING",
+      "authorized_distribution": "slither-analyzer",
+      "not_authorized_distribution": "slither",
+      "never_execute": "pip install slither",
+      "retained_controls": ["distribution-name assertion", "hash-pinned installation"]
+    }
+  },
+  "discharges_obligation": {
+    "source": "docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md",
+    "section": "9",
+    "rule": "identical fail-closed provenance rule — exact immutable pins recorded in an operator-accepted refreeze BEFORE first import/use in the applicable later sprint",
+    "scope_discharged_on_acceptance": "slither 0.10.x and any additional CI/static-analysis toolchain",
+    "scope_still_deferred_after_acceptance": "none — this is the final open clause of refreeze §9",
+    "routed_here_by": {
+      "path": "docs/authority/vux-v1-offchain-provenance-refreeze-2026-08.md",
+      "section": "10",
+      "quote": "The slither and CI/static-analysis portion of that obligation remains open and deferred to Sprint 8, Task 8.1."
+    }
+  },
+  "produced_by": {
+    "node": "/implement sprint-8",
+    "task": "8.1",
+    "branch": "sprint-8",
+    "baseline_commit": "6395cabb4deee5bae50ac79c8094053484261819"
+  },
+  "project_license": "GPL-3.0-or-later",
+  "project_license_changed": false,
+  "default_deny_preserved": true,
+  "smart_contract_surface_changed": false,
+  "compiler_surface_changed": false,
+  "pin_verification": {
+    "date": "2026-08-19",
+    "method": "PyPI packument enumeration of stable releases only; immutable identity from git ls-remote refs/tags/<tag> with ^{} peel against the repository named in the package's own Homepage/url field, enumerating the FULL upstream tag namespace (48 tags, not a filtered subset); cross-checked against the GitHub releases API for draft/prerelease/published_at; declared dependency surface corroborated against upstream setup.py at the pinned commit; security qualification from the GitHub Advisory Database (ecosystem=pip) resolved per admitted version range; compatibility established from upstream release notes, the actual VUX source tree, and the platform adapter read at its pinned commit",
+    "mutable_refs_are_authority": false,
+    "dist_tags_consulted_as_authority": false,
+    "container_tags_consulted_as_authority": false,
+    "package_artifacts_downloaded": false,
+    "artifact_download_rationale": "downloading a gated package's wheel or sdist to hash it locally would sit on the wrong side of the gate's 'or otherwise using' clause; the PyPI-published sha256 is exactly what `pip --require-hashes` verifies at install time and what a pinned requirements file records. The consequence is disclosed honestly as D-S1 rather than papered over. Identical line to the accepted off-chain refreeze."
+  },
+  "nothing_installed_imported_or_executed_at_gate": true,
+  "install_state_evidence_is_historical": "the block below records the tree state AT THE GATE (pre-acceptance). It is preserved as the evidence that the pins were established without use. After the 2026-08-19 acceptance the authorized sequence materializes tools/static-analysis/ and installs the pinned closure, so these values are history, not a live assertion.",
+  "install_state_evidence_at_gate": {
+    "slither_on_path": "absent",
+    "requirements_txt": "absent",
+    "pyproject_toml": "absent",
+    "setup_cfg": "absent",
+    "pipfile": "absent",
+    "poetry_lock": "absent",
+    "uv_lock": "absent",
+    "python_virtualenv_in_tree": "absent",
+    "tools_static_analysis_dir": "absent",
+    "slither_in_ci": "absent from .github/workflows/provenance.yml and .github/workflows/post-merge.yml",
+    "slither_baseline_artifact": "absent",
+    "slither_executed_against_vux": false,
+    "alternative_analyzer_substituted": false
+  },
+  "pins_accepted": [
+    {
+      "distribution": "slither-analyzer",
+      "family_authority": "slither 0.10.x (oz-v3 refreeze §9)",
+      "version": "0.10.4",
+      "role": "CI static analysis, dev-only, never conveyed",
+      "repository": "crytic/slither",
+      "tag": "0.10.4",
+      "tag_object_type": "commit",
+      "tag_kind": "lightweight",
+      "commit_sha": "aeeb2d368802844733671e35200b30b5f5bdcf5c",
+      "github_release": {
+        "draft": false,
+        "prerelease": false,
+        "published_at": "2024-08-23T13:33:25Z"
+      },
+      "published": "2024-08-23",
+      "license": "AGPL-3.0",
+      "yanked": false,
+      "requires_python": ">=3.8",
+      "artifacts": [
+        {
+          "filename": "slither_analyzer-0.10.4-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "sha256": "344745d885c8d883b78616622c3b443a56cab4022e09c475a3f570358cf24a14",
+          "size": 796925,
+          "upload_time_iso_8601": "2024-08-23T13:34:12.839152Z",
+          "yanked": false
+        },
+        {
+          "filename": "slither_analyzer-0.10.4.tar.gz",
+          "packagetype": "sdist",
+          "sha256": "bb89945509c7c1d461db2af1bfd85a7a02878334050e23aefc88d65568783a32",
+          "size": 569258,
+          "upload_time_iso_8601": "2024-08-23T13:34:14.484888Z",
+          "yanked": false
+        }
+      ],
+      "selection_rationale": "last and most-patched member of the accepted 0.10.x family; same conservatism the operator accepted for next@15.1.12 inside the accepted 15.1.x family"
+    },
+    {
+      "distribution": "crytic-compile",
+      "family_authority": "transitive of slither-analyzer (declared crytic-compile>=0.3.7,<0.4.0)",
+      "version": "0.3.7",
+      "role": "compilation-artifact adapter; the --ignore-compile behaviour this design depends on lives here",
+      "repository": "crytic/crytic-compile",
+      "tag": "0.3.7",
+      "tag_object_type": "commit",
+      "tag_kind": "lightweight",
+      "commit_sha": "20df04f37af723eaa7fa56dc2c80169776f3bc4d",
+      "published": "2024-04-07",
+      "license": "AGPL-3.0",
+      "yanked": false,
+      "requires_python": "!=3.12.0,>=3.8",
+      "artifacts": [
+        {
+          "filename": "crytic_compile-0.3.7-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "sha256": "bd8fc87f89afea5db714df13e302dcbaf50dd7c806fa424ace661384aa60634b",
+          "upload_time_iso_8601": "2024-04-07T20:56:37.955832Z",
+          "yanked": false
+        },
+        {
+          "filename": "crytic-compile-0.3.7.tar.gz",
+          "packagetype": "sdist",
+          "sha256": "c7713d924544934d063e68313da8d588a3ad82cd4f40eae30d99f2dd6e640d4b",
+          "upload_time_iso_8601": "2024-04-07T20:56:39.783417Z",
+          "yanked": false
+        }
+      ],
+      "selection_rationale": "the ONLY member of slither 0.10.4's admitted range that existed at slither 0.10.4's release date (2024-08-23) — therefore the version 0.10.4 was developed and tested against; 0.3.8 first appeared 2025-01-17",
+      "alternative_considered": {
+        "version": "0.3.11",
+        "published": "2025-11-14",
+        "sha256_wheel": "10f99c5f03ab124a14603093d65e534b58f078999bc3a39997cb3588fa82f80b",
+        "sha256_sdist": "d4e2253d5d81ec3a75deb3ab9fc2c2d2db56e835001cf07f3703911d74b56716",
+        "commit_sha": "46ab5fda85dc967c0896720c0c3d744bb588f8c3",
+        "disposition": "defensible — the load-bearing --ignore-compile behaviour was verified present in BOTH 0.3.7 and 0.3.11 — but pairs a 2024 analyzer with a 2025 adapter; not proposed"
+      }
+    }
+  ],
+  "accepted_family_enumeration": {
+    "family": "0.10.x",
+    "complete": true,
+    "pypi_and_upstream_tags_agree": true,
+    "members": [
+      { "version": "0.10.0", "commit_sha": "e3dcf1ecd3e9de60da046de471c5663ab637993a", "yanked": false },
+      { "version": "0.10.1", "commit_sha": "35230939bc763663de15f7c70ac9a8d0ac04a5a5", "yanked": false },
+      { "version": "0.10.2", "commit_sha": "fdf54f624d8c468afb3d8197eb9e98e377dac440", "yanked": false },
+      { "version": "0.10.3", "commit_sha": "798c1f6387ea0ce94ff792292095e4f9d0075bc9", "yanked": false },
+      { "version": "0.10.4", "commit_sha": "aeeb2d368802844733671e35200b30b5f5bdcf5c", "yanked": false }
+    ],
+    "outside_family_not_proposed": "0.11.0 … 0.11.6 exist and are NOT proposed — outside the accepted family, separate operator decision"
+  },
+  "name_confusion_hazard": {
+    "id": "D-S4",
+    "correct_distribution": "slither-analyzer",
+    "installed_cli_name": "slither",
+    "hazardous_distribution": "slither",
+    "hazardous_distribution_identity": {
+      "latest": "0.3.0",
+      "license": "MIT",
+      "summary": "A Python module that uses PyGame to bring Scratch-like features to Python",
+      "repository": "PySlither/Slither",
+      "relationship_to_static_analyzer": "none"
+    },
+    "control": "install only via hash-pinned requirements file (never `pip install slither`); the new provenance gate asserts the distribution name"
+  },
+  "direct_runtime_dependencies": [
+    { "name": "packaging", "constraint": "(unbounded)", "license": "Apache-2.0 OR BSD-2-Clause" },
+    { "name": "prettytable", "constraint": ">=3.10.2", "license": "BSD-3-Clause" },
+    { "name": "pycryptodome", "constraint": ">=3.4.6", "license": "BSD-2-Clause + Public Domain" },
+    { "name": "crytic-compile", "constraint": ">=0.3.7,<0.4.0", "license": "AGPL-3.0", "pinned_explicitly": "0.3.7" },
+    { "name": "web3", "constraint": ">=6.20.2,<7", "license": "MIT" },
+    { "name": "eth-abi", "constraint": ">=4.0.0", "license": "MIT" },
+    { "name": "eth-typing", "constraint": ">=3.0.0", "license": "MIT" },
+    { "name": "eth-utils", "constraint": ">=2.1.0", "license": "MIT" }
+  ],
+  "extras_not_installed": ["dev", "doc", "lint", "test"],
+  "crytic_compile_own_dependencies": ["pycryptodome>=3.4.6", "cbor2", "solc-select>=v1.0.4"],
+  "license_determination": {
+    "project_license": "GPL-3.0-or-later",
+    "tool_licenses": ["AGPL-3.0 (slither-analyzer)", "AGPL-3.0 (crytic-compile)", "AGPL-3.0 (solc-select)"],
+    "obligation_propagates_to_vux": false,
+    "independent_reasons": [
+      "no conveyance — VUX does not distribute slither; it is fetched from PyPI by whoever runs the gate, exactly as forge and solc are",
+      "no modification — AGPL §13's network clause triggers on modified versions offered to remote users; there is no modified version and no network service",
+      "no linking or incorporation — no VUX source imports slither, no slither code enters src/, vendor/, test/, script/, indexer/, or web/, and no shipped artifact contains any of it",
+      "analyzer output is not a derivative of the analyzer — the triaged baseline is a description of VUX code authored under the project licence"
+    ],
+    "classification": "TOOLCHAIN — same class as the accepted Foundry/solc treatment (oz-v3 refreeze §6: 'toolchain is not imported source'), NOT vendored source and NOT a distributed runtime dependency",
+    "shipped_artifact_byte_identical_whether_or_not_slither_runs": true,
+    "recorded_but_not_relied_upon": "even under a hypothetical conveyance, GPL-3.0-or-later and AGPL-3.0 are compatible in the direction that matters (GPLv3 §13 expressly permits combination with AGPLv3 work); no compatibility defect exists on any reading",
+    "third_party_notices_treatment": "toolchain entry (Task 8.5), not a conveyance entry"
+  },
+  "security_qualification": {
+    "database": "GitHub Advisory Database, ecosystem=pip",
+    "queried": ["slither-analyzer", "crytic-compile", "web3", "eth-abi", "eth-utils", "eth-typing", "pycryptodome", "prettytable", "packaging", "solc-select"],
+    "clean": ["slither-analyzer", "crytic-compile", "solc-select", "eth-utils", "eth-typing", "prettytable", "packaging"],
+    "resolved_above_fix": [
+      {
+        "package": "eth-abi",
+        "ghsa": "GHSA-rqr8-pxh7-cq3g",
+        "severity": "medium",
+        "vulnerable_range": "<4.2.0",
+        "first_patched": "4.2.0",
+        "disposition": "slither declares eth-abi>=4.0.0 unbounded above and web3@6.20.4 likewise declares no cap — resolver takes current 5.x; FIXED"
+      },
+      {
+        "package": "eth-abi",
+        "ghsa": "GHSA-3qwc-47jf-5rf7",
+        "severity": "medium",
+        "vulnerable_range": "<=5.0.0",
+        "first_patched": "5.0.1",
+        "disposition": "FIXED provided the pinned closure lands above 5.0.0 — recorded as a BINDING CONSTRAINT on the post-acceptance lockfile"
+      },
+      {
+        "package": "pycryptodome",
+        "ghsa": "GHSA-j225-cvw7-qrx7",
+        "severity": "high",
+        "vulnerable_range": "<3.19.1",
+        "first_patched": "3.19.1",
+        "disposition": "declared >=3.4.6 unbounded; resolver takes current 3.2x; FIXED — recorded as a BINDING CONSTRAINT (closure must land >=3.19.1)"
+      },
+      {
+        "package": "pycryptodome",
+        "ghsa": "GHSA-hgg3-g7gr-66r7",
+        "severity": "high",
+        "vulnerable_range": "<3.6.6",
+        "first_patched": "3.6.6",
+        "disposition": "subsumed by the above; FIXED"
+      }
+    ],
+    "unavoidable_in_family": {
+      "id": "D-S2",
+      "package": "web3",
+      "ghsa": "GHSA-5hr4-253g-cpx2",
+      "severity": "medium",
+      "summary": "web3.py: SSRF via CCIP Read (EIP-3668) OffchainLookup URL handling",
+      "vulnerable_range": ">= 6.0.0b3, < 7.15.0",
+      "first_patched": "7.15.0",
+      "slither_0_10_4_admits": ">=6.20.2,<7",
+      "no_in_family_fix_exists": true,
+      "resolves_to": "web3 6.20.4 (highest 6.x, published 2025-02-19)",
+      "reachability_on_vux_invocation": "structurally unreachable",
+      "reachability_evidence": [
+        "the vulnerability requires an outbound eth_call to a configured RPC provider, an OffchainLookup revert, and a subsequent HTTP fetch to the gateway URL that revert names",
+        "the proposed invocation targets a LOCAL DIRECTORY with --ignore-compile; it reads out/build-info/*.json from disk, constructs no Web3 provider, and makes no RPC call",
+        "slither/__main__.py — the module behind the `slither` console script — does not import web3 at the pinned commit; its imports are the standard library, crytic_compile, and slither internals",
+        "web3 is imported at slither/tools/read_storage/read_storage.py, which backs the SEPARATE slither-read-storage console script; that script is not invoked",
+        "the etherscan/address-target path in crytic_compile activates only when the target is a 0x… address; the target is `.`"
+      ],
+      "proposed_mechanical_control": "the CI step asserts no RPC endpoint is configured in the job environment, so a future edit that quietly adds one fails the gate rather than silently widening reachability",
+      "residual_stated_honestly": "the package is PRESENT in the environment; the finding is unreachable on the invocation VUX runs, not absent",
+      "requires_operator_disposition": true
+    }
+  },
+  "compatibility": {
+    "d_s3_language_feature_boundary": {
+      "id": "D-S3",
+      "fact": "slither 0.11.0 (2025-02-03) release notes state it 'adds support for the latest Solidity features like using a custom error in a require statement and transient storage' — so slither 0.10.4 (2024-08-23) predates support for both",
+      "features": [
+        { "feature": "require(cond, CustomError())", "solc_version": "0.8.26/0.8.27" },
+        { "feature": "transient data location", "solc_version": "0.8.28" }
+      ],
+      "vux_unit_pragma": "=0.8.28 (all twelve src/** files; src/v3core/VuxPoolDeployer.sol is =0.7.6 and belongs to the other unit)",
+      "features_expressible_in_this_unit": true,
+      "checked_against_actual_tree": true,
+      "sweep_results": {
+        "transient_data_location": "4 comment/prose occurrences and 1 test-message string across src/, test/, script/; ZERO uses as a data location",
+        "require_with_custom_error": "ZERO matches",
+        "custom_errors_declared": 70,
+        "custom_error_raise_form": "revert CustomError() — the pre-0.8.26 form, fully supported by slither 0.10.4"
+      },
+      "conclusion": "both unsupported constructs are absent from the source slither would parse",
+      "bounded_risk": "0.10.4 is the LAST member of the accepted family — if it cannot parse the =0.8.28 build-info for a reason not anticipated here, there is no fallback inside 0.10.x and the fallback is a new operator gate for 0.11.x; named now rather than discovered mid-sprint. The only complete proof is execution, which is on the far side of this gate."
+    },
+    "no_compiler_invoked": {
+      "mechanism": "crytic_compile/platform/foundry.py branches on ignore_compile; when set it SKIPS the `forge build` subprocess entirely and calls hardhat_like_parsing() over <project>/<out>/build-info",
+      "verified_at_pinned_commits": ["crytic-compile 0.3.7 @ 20df04f37af723eaa7fa56dc2c80169776f3bc4d", "crytic-compile 0.3.11 @ 46ab5fda85dc967c0896720c0c3d744bb588f8c3"],
+      "out_directory_default_in_0_3_7": "out — matches the VUX default profile verbatim",
+      "consequences": [
+        "slither adds NO compiler to the toolchain — it never invokes forge, never invokes solc, never asks solc-select to download anything",
+        "the analyzed AST is the ACCEPTED BUILD's AST, produced by Foundry v1.5.0 @ 1c57854462289b2e71ee7654cd6666217ed86ffd and pinned solc 0.8.28 — static analysis and compilation cannot silently diverge because there is only one compilation",
+        "POOL_INIT_CODE_HASH reproduction, census gates, and compiler-identity assertions are untouched; slither is a reader of out/, downstream of every existing gate"
+      ],
+      "verified_now_with_accepted_toolchain_only": {
+        "command": "forge build --build-info --skip \"test/**\" --skip \"script/**\"",
+        "artifact": "out/build-info/3c26e421b798f41c.json",
+        "bytes": 4963733,
+        "solcVersion": "0.8.28",
+        "has_solcLongVersion": true,
+        "input_settings_viaIR": true,
+        "output_sources_count": 48,
+        "every_source_has_ast": true,
+        "source_composition": {
+          "src_vux_original": 12,
+          "vendor_openzeppelin_v5.2.0": 28,
+          "vendor_uniswap_v3_core_interfaces": 8
+        },
+        "slither_involved": false
+      }
+    },
+    "python_floor": {
+      "slither_0_10_4_requires_python": ">=3.8",
+      "crytic_compile_0_3_7_requires_python": "!=3.12.0,>=3.8",
+      "proposed_ci_assertion": ">=3.10 and not exactly 3.12.0",
+      "rationale": ">=3.10 is slither's own current stated minimum and comfortably satisfies the closure; the !=3.12.0 exclusion is crytic-compile's, carried verbatim",
+      "runner_state": "ubuntu-latest currently provides Python 3.12.x, satisfying both",
+      "setup_python_action_added": false,
+      "precedent": ".github/workflows/provenance.yml — 'Asserted rather than assumed: a runner image rollback must not silently change what these gates mean. No setup-node action is added for this.'"
+    },
+    "analysis_scope": {
+      "reported": "src/** excluding src/v3core/ — the VUX-original production surface",
+      "parsed_but_filtered_from_reporting": "vendored OZ and v3-core interface files — src/ imports them and slither must resolve them to build a correct call graph; excluded via --filter-paths",
+      "excluded_from_build_info_entirely": "test/** and script/** via --skip — not the shipped artifact",
+      "v3core_unit_rationale": "vendor/uniswap-v3-core-v1.0.0/** is byte-identical upstream source under an immutable census whose drift gate fails closed on a one-byte change; VUX cannot act on a finding in it without breaking the census, so findings there would be noise diluting the baseline this sprint exists to make meaningful"
+    }
+  },
+  "transitive_closure_disclosure": {
+    "id": "D-S1",
+    "state": "OPEN BY DESIGN",
+    "expensive_edge": "web3<7",
+    "web3_resolved_version": "6.20.4",
+    "web3_own_runtime_requirements": ["aiohttp>=3.7.4.post0", "ckzg<2", "eth-abi>=4.0.0", "eth-account<0.13,>=0.8.0", "eth-hash[pycryptodome]>=0.5.1", "eth-typing!=4.2.0,<5.0.0,>=3.0.0", "eth-utils<5,>=2.1.0", "hexbytes<0.4.0,>=0.1.0", "jsonschema>=4.0.0", "lru-dict<1.3.0,>=1.1.6", "protobuf>=4.21.6", "pywin32>=223; platform_system == \"Windows\"", "requests>=2.16.0", "typing-extensions>=4.0.1", "websockets<14.0.0,>=10.0.0", "pyunormalize>=15.0.0"],
+    "estimated_closure_size": "40-60 distributions",
+    "why_not_enumerated_pre_acceptance": "enumerating it faithfully means running a resolver, and pinning it with verifiable hashes means fetching distribution metadata for every member — work that belongs on the far side of the gate. Inventing a closure by hand would produce a list pip might not reproduce, which is worse than an honest deferral.",
+    "proposed_discharge": "materialize a fully-pinned, hash-required tools/static-analysis/requirements.txt (every distribution pinned == with --hash=sha256:…) as a durable Sprint-8 candidate artifact, and install and use slither ONLY from that exact reviewed file, by the load-bearing install invariant quoted in full and never abbreviated: `python3 -m pip install --require-hashes --no-deps -r tools/static-analysis/requirements.txt` — the exact Python analogue of the accepted `npm ci --ignore-scripts` + committed-lockfile posture, failing closed on any digest mismatch; a transitive LICENCE census over that file discharges the same obligation the accepted off-chain refreeze carries as D-3",
+    "install_invariant": "python3 -m pip install --require-hashes --no-deps -r tools/static-analysis/requirements.txt",
+    "no_deps_is_required_not_shorthand": "the installed environment must be exactly the fully enumerated, pinned, hashed requirements file; pip is forbidden from resolving additional dependencies. This rule must not be weakened or generalized, and the invocation must not be abbreviated anywhere in this authority.",
+    "lifecycle_boundary": "the requirements file is intended for inclusion in the later reviewed/accepted Sprint-8 landing candidate; /implement sprint-8 creates NO Git commit and nothing here authorizes one",
+    "binding_constraints_on_the_resolved_closure": ["eth-abi > 5.0.0", "pycryptodome >= 3.19.1"],
+    "bounded_by_construction": "the pins_accepted digests are the anchors; anything in the generated closure that is not a transitive consequence of those two pins is a defect, not an authorization, and stops with a new bounded HITL"
+  },
+  "wrapper_tooling_considered_and_rejected": [
+    {
+      "option": "crytic/slither-action GitHub Action",
+      "disposition": "REJECTED",
+      "reason": "a fourth-party wrapper that pip-installs slither internally — it ADDS a provenance obligation (the action's own pin, its own transitive surface) while HIDING the one underneath it"
+    },
+    {
+      "option": "actions/setup-python",
+      "disposition": "REJECTED",
+      "reason": "the repository's accepted posture for interpreters is to use the runner's interpreter and assert its floor, adding no action; the Python step mirrors the Node precedent exactly"
+    },
+    {
+      "option": "ghcr.io/crytic/slither container image",
+      "disposition": "REJECTED (verified to exist; recorded as fallback, not authorized)",
+      "index_digest": "sha256:c2a1f1f237891730cdc90ce1c6bb3bf9b507639ccfae46f2e6b9826892c2e923",
+      "amd64_manifest_digest": "sha256:00ec7d03b798e46091ea51e43be9b390798624539d74d41195986277c4f6bdb5",
+      "reason": "one immutable content-addressed pin is attractive, but the closure inside is OPAQUE — it cannot be enumerated or licence-censused without pulling it — it bundles solc binaries VUX does not want, it lacks the accepted Foundry, and it would introduce Docker to a repository that uses none; would need its own operator decision"
+    }
+  ],
+  "net_new_ci_surface": {
+    "new_github_actions": 0,
+    "new_container_runtimes": 0,
+    "new_compilers": 0,
+    "new_run_steps": "in the eventual landed repository, one install step from the hash-pinned requirements file using the runner's existing Python, plus the analysis step",
+    "forge_lint": "part of the already-accepted Foundry v1.5.0 — introduces NO new provenance surface"
+  },
+  "proposed_installation_method": {
+    "command": "python3 -m pip install --require-hashes --no-deps -r tools/static-analysis/requirements.txt",
+    "is_the_load_bearing_invariant": true,
+    "may_be_abbreviated": false,
+    "abbreviation_rule": "this exact invocation is quoted in full wherever this authority describes installing slither; no abbreviated form (e.g. dropping --no-deps or the file path) is authorized anywhere",
+    "require_hashes_effect": "pip verifies every artifact against the digest recorded in the requirements file and FAILS CLOSED on any mismatch or on any requirement lacking a hash",
+    "no_deps_effect": "pip is forbidden from resolving anything beyond that file, so the installed set is exactly the reviewed set; this flag is REQUIRED, not a convenience, and must not be weakened or generalized",
+    "equivalence": "the Python equivalent of `npm ci --ignore-scripts` against a committed lockfile"
+  },
+  "proposed_invocation": {
+    "build_step": "forge build --build-info --skip \"test/**\" --skip \"script/**\"",
+    "analysis_step": "slither . --ignore-compile --filter-paths \"vendor/\" --json out/slither-report.json",
+    "network_access_required": false,
+    "compiler_invoked_by_slither": false,
+    "address_target": false
+  },
+  "authorized_next_actions_on_acceptance": [
+    "1. create tools/static-analysis/",
+    "2. materialize the fully-pinned, hash-required requirements.txt from exactly the two accepted pins, as a DURABLE SPRINT-8 CANDIDATE ARTIFACT (D-S1); binding constraints: eth-abi >5.0.0, pycryptodome >=3.19.1; verify the recorded slither-analyzer and crytic-compile digests equal the pins_accepted values byte-for-byte; produce the transitive licence census",
+    "3. install and use slither ONLY from that exact reviewed file, by the proposed_installation_method command quoted in full (--require-hashes --no-deps, never abbreviated), then run the proposed invocation against the actual VUX implementation",
+    "4. add the provenance gate and the CI job, including the no-RPC-env control (D-S2) and the distribution-name assertion (D-S4)",
+    "5. triage every finding against real reachability and authority consequence; establish the durable triaged baseline; fix real defects within accepted Sprint-8 scope with proportional verification; do NOT mutate accepted protocol architecture to appease a scanner",
+    "6. record the toolchain entry in THIRD_PARTY_NOTICES.md (Task 8.5)"
+  ],
+  "lifecycle_boundary_on_authorized_next_actions": {
+    "every_artifact_is": "a durable Sprint-8 candidate artifact, intended for inclusion in the later reviewed/accepted Sprint-8 landing candidate",
+    "implement_sprint_8_creates_git_commit": false,
+    "authorizes_git_commit": false,
+    "rule": "no action authorized here may be read as authorizing a Git commit during /implement sprint-8; committing, pushing, merging, and landing are later operator-gated lifecycle nodes",
+    "this_refreeze_confers_git_authority": false,
+    "future_state_descriptions_permitted": "descriptions of the eventual landed repository (e.g. CI consuming the committed requirements file) describe landed state and do not authorize an implementation-node commit"
+  },
+  "exclusions_reaffirmed": [
+    "any other version of either pinned package, INCLUDING a later patch — requires its own refreeze under the standing full-SHA-only pin policy",
+    "slither 0.11.x — outside the accepted family; a separate operator decision",
+    "the PyPI package `slither` (D-S4) — unrelated third-party code",
+    "crytic/slither-action, actions/setup-python, or any other GitHub Action",
+    "the ghcr.io/crytic/slither container image",
+    "any other static analyzer (Mythril, Securify, Semgrep, Aderyn, Wake, Echidna, Medusa, Manticore)",
+    "any slither plugin or detector package",
+    "slither's dev/doc/lint/test extras",
+    "any dependency that is not a transitive consequence of the two pins — such a discovery STOPS with a new bounded HITL",
+    "any smart-contract source — OZ / v3-core / Miner allowlists unchanged, POOL_INIT_CODE_HASH untouched, Foundry and off-chain refreezes unaffected"
+  ],
+  "preserved_unchanged": [
+    "default deny",
+    "full-SHA-only pin policy",
+    "Miner Manifold three-file allowlist",
+    "Heesho/liquid-signal-governance DEFERRED_NOT_V1",
+    "every operator-reserved value (Q-3, Q-4, Q-6, R-1…R-14)"
+  ],
+  "disclosures": [
+    { "id": "D-S1", "summary": "transitive closure not enumerated pre-acceptance; discharge is the hash-pinned lockfile", "state": "open by design" },
+    { "id": "D-S2", "summary": "web3 CCIP-Read SSRF unavoidable inside slither 0.10.x; unreachable on the VUX invocation; mechanical control proposed", "state": "requires operator disposition" },
+    { "id": "D-S3", "summary": "slither 0.10.4 predates two solc 0.8.26-0.8.28 language features; both verified absent from VUX source; no in-family fallback exists", "state": "bounded, evidenced" },
+    { "id": "D-S4", "summary": "PyPI `slither` is unrelated third-party code, not the analyzer; install-by-name is a live hazard", "state": "controlled by install method + gate assertion" }
+  ],
+  "terminal_state": "ACCEPTED 2026-08-19 — the authorized_next_actions_on_acceptance sequence is authorized; /implement sprint-8 resumes WITHOUT a Git commit",
+  "authority_disposition": {
+    "completes": "the last open clause of docs/authority/vux-v1-oz-v3-provenance-refreeze-2026-08.md §9 — 'slither 0.10.x and any additional CI/static-analysis toolchain'",
+    "on_acceptance_refreeze_section_9_remaining_deferred_obligations": "none",
+    "predecessor_files_rewritten": false,
+    "historical_attribution_removed": false,
+    "precedence_above_licence_pin_layer_changed": false,
+    "self_describes_disposition": "consistent with the strategic-treasury-delta, OZ/v3, Foundry-v1.5, and off-chain precedents, this refreeze self-describes its authority disposition rather than requiring a separate authority-map delta"
+  }
+}

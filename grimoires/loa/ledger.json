@@ -74,9 +74,9 @@
         {
           "global_id": 8,
           "local_label": "sprint-8",
-          "status": "planned",
+          "status": "completed",
           "created": "2026-08-10T20:34:50Z",
-          "completed": null
+          "completed": "2026-08-19T00:00:00Z"
         }
       ]
     }
@@ -85,6 +85,6 @@
   "active_bugfix": null,
   "global_sprint_counter": 8,
   "bugfix_cycles": [],
-  "last_updated": "2026-08-18T00:00:00Z",
+  "last_updated": "2026-08-19T00:00:00Z",
   "next_sprint_number": 9
 }

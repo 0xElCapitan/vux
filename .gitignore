@@ -18,7 +18,13 @@ cache/
 cache-v3core/
 out/
 out-v3core/
-coverage/
+out-slither/
+out-coverage/
+lcov.info
+# Anchored to the repository root on purpose. A bare `coverage/` is a
+# match-anywhere pattern, and it silently swallowed `tools/coverage/` — the
+# coverage GATE, which CI invokes by path and which therefore has to be tracked.
+/coverage/
 
 # Foundry broadcast artifacts — launch-secret posture (sdd.md:L270).
 # Production broadcast files embed the launch EOA, its nonces, predicted

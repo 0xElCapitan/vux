@@ -1,0 +1,16 @@
+{
+  "_comment_authority": "Authority: docs/authority/vux-v1-static-analysis-provenance-refreeze-2026-08.md (STATIC_ANALYSIS_PROVENANCE_REFREEZE_CURRENT_ACCEPTED, 2026-08-19). Analyzer identity is fixed by tools/static-analysis/requirements.txt.",
+
+  "_comment_ignore_compile": "The refreeze's load-bearing design property (§7.2): slither NEVER invokes a compiler. `forge build --build-info` runs first under the accepted Foundry v1.5.0 / solc 0.8.28 pins, and slither parses out/build-info/*.json. Static analysis and compilation therefore cannot diverge, and solc-select is never exercised.",
+  "ignore_compile": true,
+
+  "_comment_filter_paths": "vendor/ is byte-identical upstream source under an immutable census whose drift gate fails closed on a one-byte change (refreeze §7.4). VUX cannot act on a finding there without breaking the census, so those findings are excluded from REPORTING. They are still PARSED — slither must resolve the imports to build a correct call graph.",
+  "filter_paths": "vendor/",
+
+  "_comment_detectors": "No detector is disabled and no severity class is suppressed. The sprint target is `no unexplained or improperly dispositioned finding`, not a cosmetically empty report — every finding is dispositioned by key in tools/static-analysis/triage-baseline.json.",
+  "exclude_informational": false,
+  "exclude_optimization": false,
+  "exclude_low": false,
+  "exclude_medium": false,
+  "exclude_high": false
+}

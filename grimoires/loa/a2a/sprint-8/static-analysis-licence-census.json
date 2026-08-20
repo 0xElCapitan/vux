@@ -1,0 +1,572 @@
+{
+  "schema_version": 1,
+  "generated_by": "/implement sprint-8, Task 8.1 post-acceptance (D-S1 discharge) / Task 8.5",
+  "closes": {
+    "disclosure": "D-S1 (licence half)",
+    "authority": "docs/authority/vux-v1-static-analysis-provenance-refreeze-2026-08.md",
+    "section": "5.2 / \u00a79 action 2"
+  },
+  "method": "licence from each distribution's own PyPI metadata at the exact pinned version: the `license` field where declared, otherwise the `License ::` trove classifiers. Nothing inferred from the repository or from a sibling package.",
+  "closure_source": "tools/static-analysis/requirements.txt (fully pinned, hash-required)",
+  "project_license": "GPL-3.0-or-later",
+  "distribution_of_these_packages_by_vux": false,
+  "why_no_obligation_propagates": "None of these is conveyed, modified, or linked into any VUX artifact. They are a CI/developer toolchain fetched from PyPI, in the same class the accepted OZ/v3 refreeze \u00a76 assigns to Foundry and solc (\"toolchain is not imported source\"). The shipped artifact is byte-identical whether or not any of them is ever installed. Recorded but not relied upon: GPL-3.0-or-later is in any case compatible with the AGPL-3.0 members (GPLv3 \u00a713).",
+  "totals": {
+    "distributions": 49,
+    "by_licence": {
+      "MIT": 23,
+      "Apache-2.0": 5,
+      "BSD-3-Clause": 5,
+      "AGPL-3.0": 3,
+      "PSF-2.0": 3,
+      "3-Clause BSD License": 1,
+      "Apache 2.0": 1,
+      "Apache License 2.0": 1,
+      "Apache-2.0 AND CNRI-Python": 1,
+      "Apache-2.0 AND MIT": 1,
+      "Apache-2.0 OR BSD-2-Clause": 1,
+      "BSD, Public Domain": 1,
+      "MIT License": 1,
+      "MPL-2.0": 1,
+      "PSF": 1
+    },
+    "copyleft_family": 4,
+    "undeclared": 0,
+    "yanked_artifacts_across_closure": 0
+  },
+  "copyleft_detail": [
+    {
+      "distribution": "certifi",
+      "version": "2026.7.22",
+      "licence": "MPL-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.7",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "crytic-compile",
+      "version": "0.3.7",
+      "licence": "AGPL-3.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "!=3.12.0,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "slither-analyzer",
+      "version": "0.10.4",
+      "licence": "AGPL-3.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "solc-select",
+      "version": "1.2.0",
+      "licence": "AGPL-3.0",
+      "licence_source": "PyPI `license` field carries the full licence TEXT rather than an identifier; resolved to AGPL-3.0 from the text's own title",
+      "requires_python": ">=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    }
+  ],
+  "undeclared_detail": [],
+  "distributions": [
+    {
+      "distribution": "aiohappyeyeballs",
+      "version": "2.7.1",
+      "licence": "PSF-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "aiohttp",
+      "version": "3.14.3",
+      "licence": "Apache-2.0 AND MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 119,
+      "hashes_pinned": 119,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "aiosignal",
+      "version": "1.4.0",
+      "licence": "Apache 2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "attrs",
+      "version": "26.1.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "bitarray",
+      "version": "3.10.1",
+      "licence": "PSF-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.7",
+      "artifacts": 104,
+      "hashes_pinned": 104,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "cbor2",
+      "version": "6.1.4",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 49,
+      "hashes_pinned": 49,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "certifi",
+      "version": "2026.7.22",
+      "licence": "MPL-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.7",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "charset-normalizer",
+      "version": "3.5.1",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.7",
+      "artifacts": 172,
+      "hashes_pinned": 172,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "ckzg",
+      "version": "1.0.2",
+      "licence": "Apache-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "",
+      "artifacts": 85,
+      "hashes_pinned": 85,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "crytic-compile",
+      "version": "0.3.7",
+      "licence": "AGPL-3.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "!=3.12.0,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "cytoolz",
+      "version": "1.1.0",
+      "licence": "BSD-3-Clause",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 173,
+      "hashes_pinned": 173,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "eth-abi",
+      "version": "5.2.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "<4,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "eth-account",
+      "version": "0.11.3",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "<4,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "eth-hash",
+      "version": "0.8.0",
+      "licence": "MIT License",
+      "licence_source": "PyPI trove classifiers (no `license` field declared)",
+      "requires_python": "<4,>=3.10",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "eth-keyfile",
+      "version": "0.9.1",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "<4,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "eth-keys",
+      "version": "0.7.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "<4,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "eth-rlp",
+      "version": "1.0.1",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.8, <4",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "eth-typing",
+      "version": "4.4.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "<4,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "eth-utils",
+      "version": "4.1.1",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "<4,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "frozenlist",
+      "version": "1.8.0",
+      "licence": "Apache-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 130,
+      "hashes_pinned": 130,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "hexbytes",
+      "version": "0.3.1",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.7, <4",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "idna",
+      "version": "3.19",
+      "licence": "BSD-3-Clause",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "jsonschema",
+      "version": "4.26.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "jsonschema-specifications",
+      "version": "2025.9.1",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "lru-dict",
+      "version": "1.2.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "",
+      "artifacts": 82,
+      "hashes_pinned": 82,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "multidict",
+      "version": "6.7.1",
+      "licence": "Apache License 2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 146,
+      "hashes_pinned": 146,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "packaging",
+      "version": "26.3",
+      "licence": "Apache-2.0 OR BSD-2-Clause",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "parsimonious",
+      "version": "0.10.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "prettytable",
+      "version": "3.18.0",
+      "licence": "BSD-3-Clause",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "propcache",
+      "version": "0.5.2",
+      "licence": "Apache-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 121,
+      "hashes_pinned": 121,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "protobuf",
+      "version": "7.35.1",
+      "licence": "3-Clause BSD License",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 8,
+      "hashes_pinned": 8,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "py-ecc",
+      "version": "8.0.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "<4,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "pycryptodome",
+      "version": "3.23.0",
+      "licence": "BSD, Public Domain",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7",
+      "artifacts": 41,
+      "hashes_pinned": 41,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "pyunormalize",
+      "version": "17.0.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "pywin32",
+      "version": "312",
+      "licence": "PSF",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 21,
+      "hashes_pinned": 21,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "referencing",
+      "version": "0.37.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "regex",
+      "version": "2026.7.19",
+      "licence": "Apache-2.0 AND CNRI-Python",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 114,
+      "hashes_pinned": 114,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "requests",
+      "version": "2.34.2",
+      "licence": "Apache-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "rlp",
+      "version": "4.1.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": "<4,>=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "rpds-py",
+      "version": "2026.6.3",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.11",
+      "artifacts": 116,
+      "hashes_pinned": 116,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "slither-analyzer",
+      "version": "0.10.4",
+      "licence": "AGPL-3.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "solc-select",
+      "version": "1.2.0",
+      "licence": "AGPL-3.0",
+      "licence_source": "PyPI `license` field carries the full licence TEXT rather than an identifier; resolved to AGPL-3.0 from the text's own title",
+      "requires_python": ">=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "toolz",
+      "version": "1.1.0",
+      "licence": "BSD-3-Clause",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "typing-extensions",
+      "version": "4.16.0",
+      "licence": "PSF-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.9",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "urllib3",
+      "version": "2.7.0",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "wcwidth",
+      "version": "0.8.2",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.8",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "web3",
+      "version": "6.20.4",
+      "licence": "MIT",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.7.2",
+      "artifacts": 2,
+      "hashes_pinned": 2,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "websockets",
+      "version": "13.1",
+      "licence": "BSD-3-Clause",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.8",
+      "artifacts": 86,
+      "hashes_pinned": 86,
+      "yanked_artifacts": 0
+    },
+    {
+      "distribution": "yarl",
+      "version": "1.24.5",
+      "licence": "Apache-2.0",
+      "licence_source": "PyPI `license` field",
+      "requires_python": ">=3.10",
+      "artifacts": 104,
+      "hashes_pinned": 104,
+      "yanked_artifacts": 0
+    }
+  ]
+}

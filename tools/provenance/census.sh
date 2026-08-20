@@ -30,13 +30,20 @@ BASE_JSON_SHA256="6fc9fa81d80eda1f1017c6cb79f297b9a608150538e76ad97d8de1c8b5d2fe
 BASE_MD="docs/authority/vux-v1-licence-provenance-source-pin-freeze-2026-08.md"
 BASE_MD_SHA256="50c3584a1483b40ffb6391260a2bf42df32220c64724fdcc672ca62c01ace3a2"
 TPN="THIRD_PARTY_NOTICES.md"
-TPN_SHA256="963e2cfb8fe8306ee6d2cfd6e14fa417a7a61fd7bfddc3fe5aedc2b577170873"
+TPN_SHA256="40abb254306bd77ad3a9a253ff5e15ab26c5bfb0a851dcc2636d3d7df6fc248f"
 # Toolchain authority (2026-08-12). Pinned for the same reason as the others: a
 # gate that read a mutated toolchain refreeze would enforce the mutation.
 TOOLCHAIN_MD="docs/authority/vux-v1-foundry-v1.5-toolchain-refreeze-2026-08.md"
 TOOLCHAIN_MD_SHA256="439bdef308a79d1df20e4e43e2c3ec138af5bcd77dce3113a1a31befac20830a"
 TOOLCHAIN_JSON="docs/authority/vux-v1-foundry-v1.5-toolchain-refreeze-2026-08.json"
 TOOLCHAIN_JSON_SHA256="f83853492bd6894457813ef96dc23745cb1b52f04b684397623cacbc185224aa"
+# Static-analysis authority (2026-08-19, Sprint 8 Task 8.1). Discharges the last
+# open clause of oz-v3 refreeze §9. Pinned for the same reason as the others: a
+# gate that read a mutated pin set would enforce the mutation.
+STATIC_ANALYSIS_MD="docs/authority/vux-v1-static-analysis-provenance-refreeze-2026-08.md"
+STATIC_ANALYSIS_MD_SHA256="7769b4e392501636584a10a3841bba133dbec984cacced5c34653fd530dbd5c8"
+STATIC_ANALYSIS_JSON="docs/authority/vux-v1-source-registry-static-analysis-refreeze-2026-08.json"
+STATIC_ANALYSIS_JSON_SHA256="d4f9f36ebaa3701035a49ab7d8c7d376b20e37f531ee28ed1a415e4be747cde7"
 
 # --- Accepted pins (refreeze §2/§6/§7) --------------------------------------
 OZ_REPO="OpenZeppelin/openzeppelin-contracts"

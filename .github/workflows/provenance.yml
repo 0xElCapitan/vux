@@ -68,8 +68,120 @@ jobs:
           esac
           echo "toolchain is exactly foundry ${FOUNDRY_VERSION} @ ${FOUNDRY_COMMIT} (2026-08-12 toolchain refreeze)"
 
+      # Asserted rather than provisioned, exactly as the Node step below does and
+      # for the same reason: no setup-python action is added, so a runner image
+      # change cannot silently redefine what this gate means.
+      #
+      # The range is [3.10, 3.12) rather than the refreeze §7.3 proposal of
+      # ">=3.10, !=3.12.0", and the closure derivation is why: slither 0.10.4
+      # forces web3<7, which forces lru-dict<1.3.0, and lru-dict 1.2.0 publishes
+      # wheels only through cp311. Both 3.10 and 3.11 are in the ubuntu-latest
+      # tool cache, so nothing is installed to satisfy this.
+      - name: Assert a Python the accepted static-analysis closure supports
+        run: |
+          for c in python3.11 python3.10 \
+                   /opt/hostedtoolcache/Python/3.11.*/x64/bin/python3 \
+                   /opt/hostedtoolcache/Python/3.10.*/x64/bin/python3; do
+            for p in $c; do
+              [ -x "$(command -v "$p" 2>/dev/null || echo "$p")" ] || continue
+              if "$p" -c 'import sys;sys.exit(0 if (3,10)<=sys.version_info[:2]<(3,12) else 1)' 2>/dev/null; then
+                echo "PYTHON=$p" >> "$GITHUB_ENV"
+                echo "using $p ($("$p" --version 2>&1))"
+                exit 0
+              fi
+            done
+          done
+          echo "::error::no interpreter in [3.10, 3.12) found; the accepted static-analysis closure is wheel-complete only there"
+          exit 1
+
+      # The load-bearing invariant, never abbreviated. `--require-hashes` fails
+      # closed on any digest mismatch; `--no-deps` forbids pip from resolving
+      # anything beyond the reviewed file, so the environment equals the file.
+      - name: Install the accepted static-analysis closure — exact, hash-verified
+        run: |
+          "$PYTHON" -m pip install --require-hashes --no-deps -r tools/static-analysis/requirements.txt
+          "$PYTHON" -m pip show slither-analyzer | head -2
+
+      - name: Assert installing left the tree unchanged
+        run: git diff --exit-code -- tools/static-analysis/
+
       - name: Run all provenance gates and tests
         run: bash tools/provenance/run-all.sh
+
+  coverage:
+    name: core line coverage >= 90%
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      # Its own job rather than a step inside `run-all.sh`: `forge coverage`
+      # rebuilds the whole unit with the optimizer disabled, so folding it into
+      # the standard gate run would roughly double every local invocation for a
+      # measurement that only needs to hold per push.
+      - name: Core coverage gate (per-file AND total floors)
+        run: bash tools/coverage/verify-coverage.sh
+
+      - name: Assert the measurement left the tree unchanged
+        run: git diff --exit-code
+
+  static-analysis-negative-demonstration:
+    name: static-analysis gate fails closed on an undispositioned finding
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      - name: Assert a Python the accepted static-analysis closure supports
+        run: |
+          for c in python3.11 python3.10 \
+                   /opt/hostedtoolcache/Python/3.11.*/x64/bin/python3 \
+                   /opt/hostedtoolcache/Python/3.10.*/x64/bin/python3; do
+            for p in $c; do
+              [ -x "$(command -v "$p" 2>/dev/null || echo "$p")" ] || continue
+              if "$p" -c 'import sys;sys.exit(0 if (3,10)<=sys.version_info[:2]<(3,12) else 1)' 2>/dev/null; then
+                echo "PYTHON=$p" >> "$GITHUB_ENV"; exit 0
+              fi
+            done
+          done
+          echo "::error::no interpreter in [3.10, 3.12)"; exit 1
+
+      - name: Install the accepted static-analysis closure
+        run: |
+          "$PYTHON" -m pip install --require-hashes --no-deps -r tools/static-analysis/requirements.txt
+
+      # A gate that has never been observed to fail is a gate nobody has tested.
+      # Drop one triaged disposition and require the gate to reject the tree.
+      - name: Prove the static-analysis gate closes
+        run: |
+          cp tools/static-analysis/triage-baseline.json /tmp/baseline.orig
+          "$PYTHON" - <<'PY'
+          import json, io
+          p = 'tools/static-analysis/triage-baseline.json'
+          j = json.load(io.open(p, encoding='utf-8'))
+          j['findings'].pop(0)
+          io.open(p, 'w', encoding='utf-8', newline='\n').write(json.dumps(j, indent=2) + "\n")
+          PY
+          if bash tools/provenance/verify-static-analysis.sh > /tmp/out 2>&1; then
+            cat /tmp/out
+            echo "::error::gate PASSED with an undispositioned finding — it is not fail-closed"
+            exit 1
+          fi
+          grep -q "no disposition in the baseline" /tmp/out || {
+            cat /tmp/out; echo "::error::gate failed, but not for the expected reason"; exit 1; }
+          echo "gate correctly rejected the undispositioned finding"
+
+      - name: Assert the working tree was restored exactly
+        run: |
+          cp /tmp/baseline.orig tools/static-analysis/triage-baseline.json
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=no)" || { git status --porcelain; exit 1; }
 
   drift-negative-demonstration:
     name: drift gate fails closed on a 1-byte mutation

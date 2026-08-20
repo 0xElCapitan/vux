@@ -29,6 +29,9 @@ run_gate "PRD §17 research-guidance quarantine"    "$HERE/verify-quarantine.sh"
 run_gate "launch-secret and broadcast hygiene"     "$HERE/verify-launch-hygiene.sh"
 run_gate "POOL_INIT_CODE_HASH reproduction"        "$HERE/verify-init-code-hash.sh"
 run_gate "deployed surface and runtime capability" "$HERE/inspect-runtime-surface.sh"
+run_gate "static analysis (slither, triaged baseline)" "$HERE/verify-static-analysis.sh"
+run_gate "requirement traceability (INV/FB)"       "$HERE/../traceability/verify-traceability.sh"
+run_gate "final secret sweep (whole namespace)"    "$HERE/final-secret-sweep.sh"
 
 printf '\n\033[1m──────── test suite ────────\033[0m\n'
 forge test || failed+=("forge test")

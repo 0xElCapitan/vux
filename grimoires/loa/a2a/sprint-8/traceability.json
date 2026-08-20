@@ -1,0 +1,3299 @@
+{
+  "schema_version": 1,
+  "generated_by": "/implement sprint-8, Task 8.2 (tools/traceability/build-matrix.mjs)",
+  "registers": {
+    "INV": 37,
+    "FB": 18
+  },
+  "totals": {
+    "inv_covered": 37,
+    "fb_covered": 18,
+    "uncovered": []
+  },
+  "rows": [
+    {
+      "id": "INV-1",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 11,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 68,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsCompletelyAttributed() — assertion (declared L64)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 214,
+          "kind": "forge-test",
+          "detail": "test_G1_TakeoversContinueCorrectlyAcrossAHalvingBoundary() — assertion (declared L190)"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 20,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 58,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L53)"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 119,
+          "kind": "forge-test",
+          "detail": "test_GenesisCreditsNoAddressBeyondTheAcceptedTwo() (declared L92)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-2",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 12,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/genesis/GenesisFixture.sol",
+          "line": 40,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigFixture.sol",
+          "line": 33,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 34,
+          "kind": "forge-test",
+          "detail": "setUp() — assertion (declared L30)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 36,
+          "kind": "forge-test",
+          "detail": "setUp() — assertion (declared L30)"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 72,
+          "kind": "forge-test",
+          "detail": "_acceptedAbi() (declared L43)"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 83,
+          "kind": "forge-test",
+          "detail": "test_GenesisTotalSupplyIsExactlyTheFrozenValue() — assertion (declared L82)"
+        },
+        {
+          "file": "test/treasury/TreasuryFixture.sol",
+          "line": 38,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-3",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 10,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 255,
+          "kind": "forge-test",
+          "detail": "test_G1_RedemptionPaysProRataOnTheMinedSystem() — assertion (declared L234)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 34,
+          "kind": "forge-test",
+          "detail": "setUp() — assertion (declared L30)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 39,
+          "kind": "forge-test",
+          "detail": "setUp() — assertion (declared L30)"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 72,
+          "kind": "forge-test",
+          "detail": "_acceptedAbi() (declared L43)"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 86,
+          "kind": "forge-test",
+          "detail": "test_GenesisTotalSupplyIsExactlyTheFrozenValue() — assertion (declared L82)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-4",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 10,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 211,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 212,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 21,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigSettlement.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 149,
+          "kind": "forge-test",
+          "detail": "test_IdentityIsVux() (declared L142)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-5",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 13,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 68,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsCompletelyAttributed() — assertion (declared L64)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 80,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsCompletelyAttributed() (declared L70)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 289,
+          "kind": "forge-test",
+          "detail": "test_TheFrozenConstantsAreExposedAndCorrect() (declared L275)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 63,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L53)"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 149,
+          "kind": "forge-test",
+          "detail": "test_IdentityIsVux() (declared L142)"
+        },
+        {
+          "file": "test/token/VuxToken.t.sol",
+          "line": 275,
+          "kind": "forge-test",
+          "detail": "test_NoBurnFromEntryPointExistsAtRuntime() (declared L264)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-6",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 8,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 201,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 204,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 205,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 48,
+          "kind": "forge-test",
+          "detail": "testFuzz_QmintIsMinOfQrawAndFlooredSafeIssuance() (declared L33)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-7",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 7,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigBootstrap.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigBootstrap.t.sol",
+          "line": 61,
+          "kind": "forge-test",
+          "detail": "test_TheFirstTakeoverRoutesEverythingButTheCapToHardAndMintsZero() — assertion (declared L46)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 214,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 216,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 217,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-8",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 15,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 72,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsCompletelyAttributed() (declared L64)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 79,
+          "kind": "stateful-invariant",
+          "detail": "invariant_IssuanceNeverExceedsRawOpportunity() — assertion (declared L75)"
+        },
+        {
+          "file": "test/lens/LensEstimateParity.t.sol",
+          "line": 76,
+          "kind": "forge-test",
+          "detail": "test_ParityWhenTheClockBindsAndWhenVemBinds() — assertion (declared L62)"
+        },
+        {
+          "file": "test/lens/LensEstimateParity.t.sol",
+          "line": 187,
+          "kind": "forge-test",
+          "detail": "test_TheReaderOfTheEstimateReceivesNothing() (declared L170)"
+        },
+        {
+          "file": "test/lens/LensViews.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/lens/LensViews.t.sol",
+          "line": 65,
+          "kind": "forge-test",
+          "detail": "test_RawClockLimitAccruesWithElapsedTime() (declared L54)"
+        },
+        {
+          "file": "test/rig/RigPricing.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigPricing.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigPricing.t.sol",
+          "line": 236,
+          "kind": "forge-test",
+          "detail": "test_AHalvingDuringAnOpenReignDoesNotChangeItsSnapshot() (declared L218)"
+        },
+        {
+          "file": "test/rig/RigPricing.t.sol",
+          "line": 256,
+          "kind": "forge-test",
+          "detail": "test_QrawOneSecondShortOfTheCapIsOneSecondShort() (declared L247)"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 194,
+          "kind": "forge-test",
+          "detail": "test_TheRejectionUnwindsEveryLeg() (declared L165)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-9",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 9,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/lens/LensViews.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/lens/LensViews.t.sol",
+          "line": 65,
+          "kind": "forge-test",
+          "detail": "test_RawClockLimitAccruesWithElapsedTime() (declared L54)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 198,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 199,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigPricing.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigPricing.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigPricing.t.sol",
+          "line": 256,
+          "kind": "forge-test",
+          "detail": "test_QrawOneSecondShortOfTheCapIsOneSecondShort() (declared L247)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-10",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 12,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 87,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SettlementCountMatchesTheEpochCounter() (declared L83)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 89,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SettlementCountMatchesTheEpochCounter() (declared L83)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 93,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsExactlyThePhysicalBalance() — assertion (declared L92)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 232,
+          "kind": "forge-test",
+          "detail": "test_G1_TakeoversContinueCorrectlyAcrossAHalvingBoundary() (declared L190)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 256,
+          "kind": "forge-test",
+          "detail": "test_G1_RedemptionPaysProRataOnTheMinedSystem() — assertion (declared L234)"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 42,
+          "kind": "forge-test",
+          "detail": "setUp() (declared L37)"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 394,
+          "kind": "forge-test",
+          "detail": "test_RedeemingZeroMovesNothing() (declared L381)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-11",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 6,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 103,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheSupplyFloorHolds() (declared L98)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 119,
+          "kind": "stateful-invariant",
+          "detail": "invariant_StrategicAndHardNeverMix() (declared L106)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 126,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingOnlyReflectsRealWethMovements() — assertion (declared L122)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 188,
+          "kind": "forge-test",
+          "detail": "test_EveryHandlerActionDoesRealWork() (declared L154)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-12",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 5,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 202,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-13",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 11,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 215,
+          "kind": "forge-test",
+          "detail": "test_G1_TakeoversContinueCorrectlyAcrossAHalvingBoundary() — assertion (declared L190)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 208,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 209,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 53,
+          "kind": "forge-test",
+          "detail": "testFuzz_QmintIsMinOfQrawAndFlooredSafeIssuance() (declared L33)"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 244,
+          "kind": "forge-test",
+          "detail": "test_TheRigRetainsNothingBetweenSettlements() (declared L231)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-14",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 8,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/reserve/HardReserveSurface.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/reserve/HardReserveSurface.t.sol",
+          "line": 246,
+          "kind": "forge-test",
+          "detail": "test_ExternalSurfaceIsExactlyRedeemPlusViews() (declared L231)"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 22,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-15",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 8,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 96,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsExactlyThePhysicalBalance() (declared L92)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 99,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheSupplyFloorHolds() — assertion (declared L98)"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 58,
+          "kind": "forge-test",
+          "detail": "test_BackingIsThePhysicalWethBalanceWithNoDepositFunction() (declared L45)"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 234,
+          "kind": "forge-test",
+          "detail": "testFuzz_PreviewMatchesTheActualPayout() (declared L219)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 129,
+          "kind": "forge-test",
+          "detail": "redeemSome() (declared L114)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-16",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 12,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/lens/LensViews.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/lens/LensViews.t.sol",
+          "line": 107,
+          "kind": "forge-test",
+          "detail": "test_HardStatsReportsGenesisState() (declared L100)"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 206,
+          "kind": "forge-test",
+          "detail": "test_NaiveProductRevertsWhereRedeemSucceeds() (declared L187)"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 129,
+          "kind": "forge-test",
+          "detail": "redeemSome() (declared L114)"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 117,
+          "kind": "forge-test",
+          "detail": "test_WhenQrawIsBindingTheSurplusRaisesBackingPerUnit() (declared L107)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-17",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 8,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 103,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheSupplyFloorHolds() (declared L98)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 110,
+          "kind": "stateful-invariant",
+          "detail": "invariant_StrategicAndHardNeverMix() — assertion (declared L106)"
+        },
+        {
+          "file": "test/reserve/HardReserveRedemption.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/reserve/HardReserveSurface.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-18",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 9,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 174,
+          "kind": "forge-test",
+          "detail": "test_G1_EveryAdaptiveRoutingRegimeIsObservedOnTheAssembledSystem() (declared L143)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 175,
+          "kind": "forge-test",
+          "detail": "test_G1_EveryAdaptiveRoutingRegimeIsObservedOnTheAssembledSystem() — assertion (declared L143)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 186,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 191,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigRouting.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-19",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 10,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 176,
+          "kind": "forge-test",
+          "detail": "test_G1_EveryAdaptiveRoutingRegimeIsObservedOnTheAssembledSystem() — assertion (declared L143)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 193,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 194,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 195,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigRouting.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigRouting.t.sol",
+          "line": 77,
+          "kind": "forge-test",
+          "detail": "test_RegimeThree_HardTakesAllRetainedAndStrategicIsZero() (declared L64)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-20",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 14,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 130,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingOnlyReflectsRealWethMovements() (declared L122)"
+        },
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 135,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheRigHoldsNoValue() — assertion (declared L134)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 105,
+          "kind": "forge-test",
+          "detail": "test_G1_GenesisStateIsExact() (declared L76)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 120,
+          "kind": "forge-test",
+          "detail": "test_G1_BootstrapTakeoverMintsZeroAndAccruesEightyEightPercentToHard() — assertion (declared L108)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 192,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 196,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigRouting.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigSettlement.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigSettlement.t.sol",
+          "line": 52,
+          "kind": "forge-test",
+          "detail": "test_OrdinarySettlementRoutesEveryLegExactly() — assertion (declared L28)"
+        },
+        {
+          "file": "test/rig/RigVem.t.sol",
+          "line": 230,
+          "kind": "forge-test",
+          "detail": "test_NoStorageCellRecordsTheUnmintedRemainder() (declared L201)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-21",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 12,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 180,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 182,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 183,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 184,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/rig/RigSettlement.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigSettlement.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigSettlement.t.sol",
+          "line": 287,
+          "kind": "forge-test",
+          "detail": "test_ReentrantTakeIsRejected() (declared L275)"
+        },
+        {
+          "file": "test/rig/RigSettlement.t.sol",
+          "line": 290,
+          "kind": "forge-test",
+          "detail": "test_ReentrantTakeIsRejected() (declared L275)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-22",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 9,
+      "evidence": [
+        {
+          "file": "test/rig/RigInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigBootstrap.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigBootstrap.t.sol",
+          "line": 69,
+          "kind": "forge-test",
+          "detail": "test_TheFirstTakeoverRoutesEverythingButTheCapToHardAndMintsZero() (declared L46)"
+        },
+        {
+          "file": "test/rig/RigBootstrap.t.sol",
+          "line": 76,
+          "kind": "forge-test",
+          "detail": "test_TheFirstTakeoverRoutesEverythingButTheCapToHardAndMintsZero() (declared L46)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 218,
+          "kind": "forge-test",
+          "detail": "_checkSettlement() — assertion (declared L156)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 142,
+          "kind": "forge-test",
+          "detail": "_absorbSettlement() — assertion (declared L134)"
+        }
+      ]
+    },
+    {
+      "id": "INV-23",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 11,
+      "evidence": [
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 74,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsCompletelyAttributed() — assertion (declared L70)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 9,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryAccountingProperties.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryAccountingProperties.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 17,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 114,
+          "kind": "forge-test",
+          "detail": "strategyCount() (declared L109)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 57,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L51)"
+        }
+      ]
+    },
+    {
+      "id": "INV-24",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 13,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 74,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsCompletelyAttributed() — assertion (declared L70)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 81,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsCompletelyAttributed() (declared L70)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 87,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsCompletelyAttributed() — assertion (declared L82)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 93,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsCompletelyAttributed() — assertion (declared L82)"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryFixture.sol",
+          "line": 152,
+          "kind": "forge-test",
+          "detail": "_activateLsg() (declared L147)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 17,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 57,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L51)"
+        },
+        {
+          "file": "test/treasury/TreasurySurface.t.sol",
+          "line": 145,
+          "kind": "forge-test",
+          "detail": "test_TheProhibitedSurfacesDoNotExist() (declared L121)"
+        }
+      ]
+    },
+    {
+      "id": "INV-25",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 8,
+      "evidence": [
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 94,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsAttributedIncludingTheVyrfLeg() — assertion (declared L90)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 216,
+          "kind": "stateful-invariant",
+          "detail": "invariant_ThePositionIsHeldDirectlyByTheTreasury() — assertion (declared L212)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 78,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L72)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 85,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L72)"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-26",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 14,
+      "evidence": [
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 99,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsAttributedIncludingTheVyrfLeg() (declared L90)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 106,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsAttributedIncludingTheVyrfBurn() — assertion (declared L101)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 110,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsAttributedIncludingTheVyrfBurn() (declared L101)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 117,
+          "kind": "stateful-invariant",
+          "detail": "invariant_NoPolPathEverIncreasesSupply() — assertion (declared L113)"
+        },
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 23,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 223,
+          "kind": "forge-test",
+          "detail": "test_INV27_ProtocolPolVuxIsNonVoting() (declared L213)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 236,
+          "kind": "forge-test",
+          "detail": "test_DecreasePolRejectsZero() (declared L226)"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 252,
+          "kind": "forge-test",
+          "detail": "test_BuyVuxForPolSourcesExistingSupplyAndNeverMints() — assertion (declared L238)"
+        }
+      ]
+    },
+    {
+      "id": "INV-27",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 5,
+      "evidence": [
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 82,
+          "kind": "forge-test",
+          "detail": "test_TheRevenueBurnCannotReachPolInventory() (declared L69)"
+        },
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 189,
+          "kind": "forge-test",
+          "detail": "_hasCallSite() (declared L177)"
+        },
+        {
+          "file": "test/treasury/PolConduct.t.sol",
+          "line": 211,
+          "kind": "forge-test",
+          "detail": "test_INV27_ProtocolPolVuxNeverRedeems() (declared L194)"
+        }
+      ]
+    },
+    {
+      "id": "INV-28",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 21,
+      "evidence": [
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 166,
+          "kind": "stateful-invariant",
+          "detail": "invariant_VyrfClassifiedAmountsNeverExceedFeesCharged() (declared L152)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 170,
+          "kind": "stateful-invariant",
+          "detail": "invariant_VyrfClassifiedAmountsNeverExceedFeesCharged() (declared L152)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 181,
+          "kind": "stateful-invariant",
+          "detail": "invariant_RevenueStillTracesOnlyToStrategyFlows() — assertion (declared L174)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 196,
+          "kind": "stateful-invariant",
+          "detail": "invariant_PolBasisNeverExceedsWhatWasPaidIn() — assertion (declared L192)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 201,
+          "kind": "stateful-invariant",
+          "detail": "invariant_PolBasisNeverExceedsWhatWasPaidIn() — assertion (declared L192)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 119,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheCoreHoldsNoTreasuryRole() (declared L108)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 128,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheCoreHoldsNoTreasuryRole() (declared L108)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 138,
+          "kind": "stateful-invariant",
+          "detail": "invariant_RevenueNeverExceedsWhatStrategiesDelivered() — assertion (declared L131)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 152,
+          "kind": "stateful-invariant",
+          "detail": "invariant_OutstandingPrincipalNeverExceedsWhatWasDeployed() — assertion (declared L146)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryAccountingProperties.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryAccountingProperties.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryFlows.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryFlows.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryFlows.t.sol",
+          "line": 83,
+          "kind": "forge-test",
+          "detail": "test_AStraddlingReturnSplitsIntoPrincipalAndRevenue() (declared L66)"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 200,
+          "kind": "forge-test",
+          "detail": "test_DecreasePolCollectsFeesFirstThenSweepsPrincipalAtomically() (declared L163)"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 223,
+          "kind": "forge-test",
+          "detail": "test_ReturnedPrincipalIsNeverRevenue() — assertion (declared L204)"
+        }
+      ]
+    },
+    {
+      "id": "INV-29",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 15,
+      "evidence": [
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 94,
+          "kind": "stateful-invariant",
+          "detail": "invariant_BackingIsAttributedIncludingTheVyrfLeg() — assertion (declared L90)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 106,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsAttributedIncludingTheVyrfBurn() — assertion (declared L101)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 156,
+          "kind": "stateful-invariant",
+          "detail": "invariant_VyrfClassifiedAmountsNeverExceedFeesCharged() — assertion (declared L152)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 161,
+          "kind": "stateful-invariant",
+          "detail": "invariant_VyrfClassifiedAmountsNeverExceedFeesCharged() — assertion (declared L152)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 166,
+          "kind": "stateful-invariant",
+          "detail": "invariant_VyrfClassifiedAmountsNeverExceedFeesCharged() (declared L152)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 169,
+          "kind": "stateful-invariant",
+          "detail": "invariant_VyrfClassifiedAmountsNeverExceedFeesCharged() (declared L152)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 181,
+          "kind": "stateful-invariant",
+          "detail": "invariant_RevenueStillTracesOnlyToStrategyFlows() — assertion (declared L174)"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 185,
+          "kind": "stateful-invariant",
+          "detail": "invariant_RevenueStillTracesOnlyToStrategyFlows() — assertion (declared L174)"
+        },
+        {
+          "file": "test/treasury/PolInvariantHandler.sol",
+          "line": 62,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 7,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolInvariants.t.sol",
+          "line": 78,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L72)"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryPol.t.sol",
+          "line": 333,
+          "kind": "forge-test",
+          "detail": "test_HarvestPolBurnsVuxFeesAndAccretesWethFeesToHard() — assertion (declared L305)"
+        }
+      ]
+    },
+    {
+      "id": "INV-30",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 11,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 119,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheCoreHoldsNoTreasuryRole() (declared L108)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 130,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheCoreHoldsNoTreasuryRole() (declared L108)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 138,
+          "kind": "stateful-invariant",
+          "detail": "invariant_RevenueNeverExceedsWhatStrategiesDelivered() — assertion (declared L131)"
+        },
+        {
+          "file": "test/treasury/TreasuryAccountingProperties.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryAccountingProperties.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryFlows.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryFlows.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasurySurface.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasurySurface.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasurySurface.t.sol",
+          "line": 228,
+          "kind": "forge-test",
+          "detail": "test_NoStoredPolicyRatioConstantIsExposed() (declared L206)"
+        }
+      ]
+    },
+    {
+      "id": "INV-31",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 6,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 305,
+          "kind": "forge-test",
+          "detail": "test_G2_StrategicLossAtEveryDepthLeavesTheCoreBitIdentical() (declared L270)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 336,
+          "kind": "forge-test",
+          "detail": "test_G2_NoRescuePathFromStrategicDistressToTheReserve() — assertion (declared L309)"
+        },
+        {
+          "file": "test/treasury/TreasurySurface.t.sol",
+          "line": 202,
+          "kind": "forge-test",
+          "detail": "test_SignalerBudgetIsTheSoleEarmark() (declared L184)"
+        }
+      ]
+    },
+    {
+      "id": "INV-32",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 9,
+      "evidence": [
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 347,
+          "kind": "forge-test",
+          "detail": "test_G2_NoRescuePathFromStrategicDistressToTheReserve() (declared L309)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 351,
+          "kind": "forge-test",
+          "detail": "test_G4_LsgShipsInactiveAndItsActivationLifecycleWorks() — assertion (declared L350)"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 19,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 144,
+          "kind": "forge-test",
+          "detail": "test_ActivationAuthorityRejectsAnUnauthorizedCaller() (declared L125)"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 175,
+          "kind": "forge-test",
+          "detail": "test_CapsClampTheSplitAndTheRemainderStaysInCustody() (declared L161)"
+        }
+      ]
+    },
+    {
+      "id": "INV-33",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 13,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 93,
+          "kind": "stateful-invariant",
+          "detail": "invariant_SupplyIsCompletelyAttributed() — assertion (declared L82)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 107,
+          "kind": "stateful-invariant",
+          "detail": "invariant_TheAuthorityGraphNeverMoves() (declared L94)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 347,
+          "kind": "forge-test",
+          "detail": "test_G2_NoRescuePathFromStrategicDistressToTheReserve() (declared L309)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 375,
+          "kind": "forge-test",
+          "detail": "test_G4_ActivationDeactivationLifecycleAndNegativeBoundaries() (declared L354)"
+        },
+        {
+          "file": "test/treasury/TreasuryAdmission.t.sol",
+          "line": 252,
+          "kind": "forge-test",
+          "detail": "test_RecallStillWorksAfterRemoval() (declared L238)"
+        },
+        {
+          "file": "test/treasury/TreasuryConstructor.t.sol",
+          "line": 116,
+          "kind": "forge-test",
+          "detail": "test_RoleRotationIsAdminGated() (declared L100)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 205,
+          "kind": "forge-test",
+          "detail": "test_ASignalCannotReachAnUnadmittedUnmaturedOrRemovedTarget() (declared L178)"
+        }
+      ]
+    },
+    {
+      "id": "INV-34",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 8,
+      "evidence": [
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 347,
+          "kind": "forge-test",
+          "detail": "test_G2_NoRescuePathFromStrategicDistressToTheReserve() (declared L309)"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 48,
+          "kind": "forge-test",
+          "detail": "_signal() (declared L39)"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 57,
+          "kind": "forge-test",
+          "detail": "test_LaunchesInactiveWithTheAuthorityPresent() (declared L51)"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 73,
+          "kind": "forge-test",
+          "detail": "test_ActivationIsAffirmativeAndUngated() (declared L61)"
+        }
+      ]
+    },
+    {
+      "id": "INV-35",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 8,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 266,
+          "kind": "forge-test",
+          "detail": "test_G1_RedemptionPaysProRataOnTheMinedSystem() (declared L234)"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 292,
+          "kind": "forge-test",
+          "detail": "test_G2_StrategicLossAtEveryDepthLeavesTheCoreBitIdentical() — assertion (declared L270)"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        }
+      ]
+    },
+    {
+      "id": "INV-36",
+      "covered": true,
+      "methods": [
+        "playwright",
+        "implementation",
+        "documented-analysis"
+      ],
+      "count": 4,
+      "evidence": [
+        {
+          "file": "web/tests/truth-copy.spec.js",
+          "kind": "playwright",
+          "detail": "copy suite asserting verbatim rendering + zero prohibited phrases",
+          "line": 0
+        },
+        {
+          "file": "web/components/ReserveDescription.jsx",
+          "kind": "implementation",
+          "detail": "component that always couples ownerless/immutable with the YELLOW text (sdd.md:L645)",
+          "line": 0
+        },
+        {
+          "file": "web/lib/truth-copy.js",
+          "kind": "implementation",
+          "detail": "YELLOW disclosure text, single source",
+          "line": 0
+        },
+        {
+          "file": "grimoires/loa/a2a/sprint-8/trust-inventory.md",
+          "kind": "documented-analysis",
+          "detail": "Sprint 8 YELLOW inventory (plan §D: \"Sprint 8 inventory\")",
+          "line": 0
+        }
+      ]
+    },
+    {
+      "id": "INV-37",
+      "covered": true,
+      "methods": [
+        "ci-gate"
+      ],
+      "count": 4,
+      "evidence": [
+        {
+          "file": ".github/workflows/provenance.yml",
+          "kind": "ci-gate",
+          "detail": "every gate runs on every push (plan §D: \"every sprint's CI\")",
+          "line": 0
+        },
+        {
+          "file": "tools/provenance/verify-census.sh",
+          "kind": "ci-gate",
+          "detail": "census + byte identity + excluded sources",
+          "line": 0
+        },
+        {
+          "file": "tools/provenance/verify-pins.sh",
+          "kind": "ci-gate",
+          "detail": "immutable-pin discipline; no mutable ref as authority",
+          "line": 0
+        },
+        {
+          "file": "tools/provenance/verify-static-analysis.sh",
+          "kind": "ci-gate",
+          "detail": "Sprint 8: the static-analysis toolchain itself cannot expand source authority",
+          "line": 0
+        }
+      ]
+    },
+    {
+      "id": "FB-1",
+      "covered": true,
+      "methods": [
+        "review-checklist"
+      ],
+      "count": 1,
+      "evidence": [
+        {
+          "file": "grimoires/loa/a2a/sprint-3/evidence/fb-1-mining-redemption-independence.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    },
+    {
+      "id": "FB-2",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 3,
+      "evidence": [
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 29,
+          "kind": "forge-test",
+          "detail": "setUp() (declared L25)"
+        },
+        {
+          "file": "test/rig/RigInvariantHandler.sol",
+          "line": 137,
+          "kind": "forge-test",
+          "detail": "redeemSome() — assertion (declared L114)"
+        }
+      ]
+    },
+    {
+      "id": "FB-3",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 2,
+      "evidence": [
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 51,
+          "kind": "forge-test",
+          "detail": "test_FB2_NoChallengerLeavesTheKingSeatedAndOwedNothing() (declared L35)"
+        }
+      ]
+    },
+    {
+      "id": "FB-4",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 2,
+      "evidence": [
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 79,
+          "kind": "forge-test",
+          "detail": "handlerFreeShortfall() (declared L75)"
+        }
+      ]
+    },
+    {
+      "id": "FB-5",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 9,
+      "evidence": [
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 7,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 266,
+          "kind": "forge-test",
+          "detail": "test_G1_RedemptionPaysProRataOnTheMinedSystem() (declared L234)"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 14,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 69,
+          "kind": "forge-test",
+          "detail": "_loseStrategicCapital() (declared L60)"
+        },
+        {
+          "file": "test/treasury/TreasuryFixture.sol",
+          "line": 26,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryFixture.sol",
+          "line": 152,
+          "kind": "forge-test",
+          "detail": "_activateLsg() (declared L147)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariantHandler.sol",
+          "line": 343,
+          "kind": "forge-test",
+          "detail": "closeStrategy() (declared L334)"
+        }
+      ]
+    },
+    {
+      "id": "FB-6",
+      "covered": true,
+      "methods": [
+        "review-checklist"
+      ],
+      "count": 1,
+      "evidence": [
+        {
+          "file": "grimoires/loa/a2a/sprint-4/evidence/fb-6-9-10-12-scenario-notes.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    },
+    {
+      "id": "FB-7",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 9,
+      "evidence": [
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 7,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/e2e/GoalValidation.t.sol",
+          "line": 305,
+          "kind": "forge-test",
+          "detail": "test_G2_StrategicLossAtEveryDepthLeavesTheCoreBitIdentical() (declared L270)"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 22,
+          "kind": "forge-test",
+          "detail": "setUp() (declared L16)"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 32,
+          "kind": "forge-test",
+          "detail": "setUp() (declared L16)"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 41,
+          "kind": "forge-test",
+          "detail": "test_FB7_APolPriceCollapseLeavesHardArithmeticBitIdentical() — assertion (declared L33)"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 45,
+          "kind": "forge-test",
+          "detail": "test_FB7_APolPriceCollapseLeavesHardArithmeticBitIdentical() (declared L33)"
+        }
+      ]
+    },
+    {
+      "id": "FB-8",
+      "covered": true,
+      "methods": [
+        "forge-test",
+        "review-checklist"
+      ],
+      "count": 7,
+      "evidence": [
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 64,
+          "kind": "forge-test",
+          "detail": "test_FB7_FullyUnwindingPolLeavesTheReserveUntouched() (declared L49)"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 84,
+          "kind": "forge-test",
+          "detail": "test_FB8_UnharvestedFeesAreCountedNowhere() — assertion (declared L75)"
+        },
+        {
+          "file": "test/treasury/PolFailureBehaviors.t.sol",
+          "line": 100,
+          "kind": "forge-test",
+          "detail": "test_FB8_UnharvestedFeesAreCountedNowhere() (declared L75)"
+        },
+        {
+          "file": "test/treasury/TreasuryFlows.t.sol",
+          "line": 247,
+          "kind": "forge-test",
+          "detail": "test_ADuplicatedRewardAssetIsCreditedExactlyOnce() (declared L231)"
+        },
+        {
+          "file": "grimoires/loa/a2a/sprint-5/engineer-feedback.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    },
+    {
+      "id": "FB-9",
+      "covered": true,
+      "methods": [
+        "forge-test",
+        "review-checklist"
+      ],
+      "count": 4,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryRevenue.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryRevenue.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryRevenue.t.sol",
+          "line": 65,
+          "kind": "forge-test",
+          "detail": "test_TheFourLegsMayNotExceedRealizedRevenue() — assertion (declared L51)"
+        },
+        {
+          "file": "grimoires/loa/a2a/sprint-4/evidence/fb-6-9-10-12-scenario-notes.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    },
+    {
+      "id": "FB-10",
+      "covered": true,
+      "methods": [
+        "forge-test",
+        "review-checklist"
+      ],
+      "count": 4,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryLsgBoundary.t.sol",
+          "line": 351,
+          "kind": "forge-test",
+          "detail": "test_FundingCannotExceedTheEarmark() (declared L339)"
+        },
+        {
+          "file": "grimoires/loa/a2a/sprint-4/evidence/fb-6-9-10-12-scenario-notes.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    },
+    {
+      "id": "FB-11",
+      "covered": true,
+      "methods": [
+        "review-checklist"
+      ],
+      "count": 1,
+      "evidence": [
+        {
+          "file": "grimoires/loa/a2a/sprint-8/fb-11-analysis.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    },
+    {
+      "id": "FB-12",
+      "covered": true,
+      "methods": [
+        "forge-test",
+        "review-checklist"
+      ],
+      "count": 4,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryRevenue.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryRevenue.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryRevenue.t.sol",
+          "line": 65,
+          "kind": "forge-test",
+          "detail": "test_TheFourLegsMayNotExceedRealizedRevenue() — assertion (declared L51)"
+        },
+        {
+          "file": "grimoires/loa/a2a/sprint-4/evidence/fb-6-9-10-12-scenario-notes.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    },
+    {
+      "id": "FB-13",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 4,
+      "evidence": [
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 112,
+          "kind": "forge-test",
+          "detail": "test_FB4_HighDemandCapsIssuanceAndRaisesBackingPerUnit() (declared L85)"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 268,
+          "kind": "forge-test",
+          "detail": "_hasCallSite() (declared L255)"
+        }
+      ]
+    },
+    {
+      "id": "FB-14",
+      "covered": true,
+      "methods": [
+        "forge-test"
+      ],
+      "count": 2,
+      "evidence": [
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 151,
+          "kind": "forge-test",
+          "detail": "test_FB13_MassRedemptionPaysProRataWithoutTouchingStrategic() (declared L117)"
+        }
+      ]
+    },
+    {
+      "id": "FB-15",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 12,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 18,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 178,
+          "kind": "forge-test",
+          "detail": "test_FB14_RedemptionIsUnconditionalOnAnyMarketPrice() (declared L159)"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 209,
+          "kind": "forge-test",
+          "detail": "test_FB15_FB16_TheRigExposesNoRescueOrRecapitalizationPath() — assertion (declared L184)"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 175,
+          "kind": "forge-test",
+          "detail": "test_FB5_NoRescuePathExistsAfterATotalLoss() (declared L154)"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 191,
+          "kind": "forge-test",
+          "detail": "test_FB16_TheTreasuryIdentityCannotMintOrBurnAnotherHolder() (declared L181)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 57,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L51)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 66,
+          "kind": "forge-test",
+          "detail": "targetContracts() — assertion (declared L51)"
+        },
+        {
+          "file": "test/treasury/TreasurySurface.t.sol",
+          "line": 145,
+          "kind": "forge-test",
+          "detail": "test_TheProhibitedSurfacesDoNotExist() (declared L121)"
+        }
+      ]
+    },
+    {
+      "id": "FB-16",
+      "covered": true,
+      "methods": [
+        "stateful-invariant",
+        "forge-test"
+      ],
+      "count": 13,
+      "evidence": [
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 4,
+          "kind": "stateful-invariant",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 18,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 178,
+          "kind": "forge-test",
+          "detail": "test_FB14_RedemptionIsUnconditionalOnAnyMarketPrice() (declared L159)"
+        },
+        {
+          "file": "test/rig/RigFailureBehaviors.t.sol",
+          "line": 209,
+          "kind": "forge-test",
+          "detail": "test_FB15_FB16_TheRigExposesNoRescueOrRecapitalizationPath() — assertion (declared L184)"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 4,
+          "kind": "forge-test",
+          "detail": "file-level `// carries:` declaration"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 5,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 175,
+          "kind": "forge-test",
+          "detail": "test_FB5_NoRescuePathExistsAfterATotalLoss() (declared L154)"
+        },
+        {
+          "file": "test/treasury/TreasuryFailureBehaviors.t.sol",
+          "line": 191,
+          "kind": "forge-test",
+          "detail": "test_FB16_TheTreasuryIdentityCannotMintOrBurnAnotherHolder() (declared L181)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 6,
+          "kind": "forge-test",
+          "detail": "inline reference"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 57,
+          "kind": "forge-test",
+          "detail": "targetContracts() (declared L51)"
+        },
+        {
+          "file": "test/treasury/TreasuryInvariants.t.sol",
+          "line": 67,
+          "kind": "forge-test",
+          "detail": "targetContracts() — assertion (declared L51)"
+        },
+        {
+          "file": "test/treasury/TreasurySurface.t.sol",
+          "line": 145,
+          "kind": "forge-test",
+          "detail": "test_TheProhibitedSurfacesDoNotExist() (declared L121)"
+        }
+      ]
+    },
+    {
+      "id": "FB-17",
+      "covered": true,
+      "methods": [
+        "review-checklist"
+      ],
+      "count": 1,
+      "evidence": [
+        {
+          "file": "grimoires/loa/a2a/sprint-8/fb-17-18-analysis.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    },
+    {
+      "id": "FB-18",
+      "covered": true,
+      "methods": [
+        "review-checklist"
+      ],
+      "count": 1,
+      "evidence": [
+        {
+          "file": "grimoires/loa/a2a/sprint-8/fb-17-18-analysis.md",
+          "line": 0,
+          "kind": "review-checklist",
+          "detail": "accepted method is review/documented analysis, not an automated test (prd.md:L669, sprint.md §D)"
+        }
+      ]
+    }
+  ]
+}
