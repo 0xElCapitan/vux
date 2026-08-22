@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="740" viewBox="0 0 1200 740" role="img" aria-labelledby="title desc">
+  <title id="title">VUX authority and external trust boundaries</title>
+  <desc id="desc">The VUX monetary core is ownerless, the Strategic Treasury has bounded operator authority whose worst VUX-side outcome is Strategic loss, and canonical Robinhood Chain WETH remains an external YELLOW governance and upgrade dependency.</desc>
+  <style>
+    text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;fill:#14161a}.bg{fill:#fbfbfc}.panel{fill:#fff;stroke:#d9dde5;stroke-width:2}.core-panel{fill:#e8efff;stroke:#2458c4;stroke-width:2.5}.strategic-panel{fill:#f0edff;stroke:#7157c8;stroke-width:2.5}.external-panel{fill:#fffaf0;stroke:#8a6300;stroke-width:2.5}.good-panel{fill:#e8f7ee;stroke:#147a43;stroke-width:1.5}.danger-panel{fill:#fff0e9;stroke:#a33b16;stroke-width:1.5}
+    .title{font-size:30px;font-weight:500}.subtitle{font-size:16px;fill:#4d5561}.kicker{font-size:13px;font-weight:500;letter-spacing:1.3px}.heading{font-size:22px;font-weight:500}.body{font-size:15px}.small{font-size:14px;fill:#4d5561}.strong{font-weight:500}.hard{fill:#2458c4}.strategic{fill:#7157c8}.yellow{fill:#8a6300}.good{fill:#147a43}.danger{fill:#a33b16}.arrow{fill:none;stroke:#4d5561;stroke-width:2.5;marker-end:url(#arrow)}.yellow-arrow{stroke:#8a6300}.bus{fill:none;stroke:#8a6300;stroke-width:2.5}.dash{stroke-dasharray:7 6}.divider{stroke:#d9dde5;stroke-width:1.5}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#4d5561"/></marker></defs>
+  <rect class="bg" width="1200" height="740" rx="24"/>
+  <text class="title" x="50" y="55">Security by removed authority, bounded authority, and honest trust</text>
+  <text class="subtitle" x="50" y="83">The system does not pretend every risk has the same owner or blast radius.</text>
+
+  <text class="kicker hard" x="55" y="126">INSIDE VUX · OWNERLESS MONETARY CORE</text>
+  <rect class="core-panel" x="55" y="145" width="355" height="360" rx="22"/>
+  <text class="heading" x="85" y="183">VUX · Rig · Hard Reserve · Lens</text>
+  <line class="divider" x1="85" y1="202" x2="380" y2="202"/>
+  <text class="body" x="85" y="237">• No discretionary mint</text>
+  <text class="body" x="85" y="270">• No admin spending of Hard WETH</text>
+  <text class="body" x="85" y="303">• VEM cannot be waived</text>
+  <text class="body" x="85" y="336">• No arbitrary core calls</text>
+  <text class="body" x="85" y="369">• Genesis authority does not survive</text>
+  <rect class="good-panel" x="85" y="410" width="295" height="62" rx="13"/>
+  <text class="kicker good" x="105" y="436">PROTECTED PROPERTY</text>
+  <text class="small" x="105" y="459">Strategic failure cannot spend Hard or mint.</text>
+
+  <text class="kicker strategic" x="445" y="126">INSIDE VUX · BOUNDED OPERATION</text>
+  <rect class="strategic-panel" x="445" y="145" width="330" height="360" rx="22"/>
+  <text class="heading" x="475" y="181">Operator Safe →</text>
+  <text class="heading strategic" x="475" y="207">Strategic only</text>
+  <line class="divider" x1="475" y1="224" x2="745" y2="224"/>
+  <text class="body" x="475" y="257">• Admit strategies + set caps</text>
+  <text class="body" x="475" y="288">• Deploy, recall, close</text>
+  <text class="body" x="475" y="319">• Manage POL + revenue</text>
+  <text class="body" x="475" y="350">• Activate future bounded module</text>
+  <rect class="danger-panel" x="475" y="410" width="270" height="62" rx="13"/>
+  <text class="kicker danger" x="495" y="436">WORST VUX-SIDE OUTCOME</text>
+  <text class="small" x="495" y="459">Total Strategic loss.</text>
+
+  <text class="kicker yellow" x="810" y="126">OUTSIDE VUX CONTROL · YELLOW</text>
+  <rect class="external-panel" x="810" y="145" width="335" height="360" rx="22"/>
+  <text class="heading" x="840" y="183">Canonical RH WETH + chain</text>
+  <line class="divider" x1="840" y1="202" x2="1115" y2="202"/>
+  <text class="body" x="840" y="237">• External upgrade authority</text>
+  <text class="body" x="840" y="270">• Gateway/router dependencies</text>
+  <text class="body" x="840" y="303">• Chain liveness + execution</text>
+  <text class="body" x="840" y="336">• VUX has no control over changes</text>
+  <rect class="danger-panel" x="840" y="390" width="275" height="82" rx="13"/>
+  <text class="kicker danger" x="860" y="416">EXTERNAL WORST CASE</text>
+  <text class="small" x="860" y="440">Could block, freeze, burn, or seize</text>
+  <text class="small" x="860" y="461">the WETH backing asset.</text>
+
+  <path class="bus" d="M977 505V535H232"/>
+  <path class="arrow yellow-arrow" d="M232 535V513"/>
+  <path class="arrow yellow-arrow" d="M610 535V513"/>
+  <text class="small yellow" x="459" y="560">canonical WETH + chain dependency reaches both VUX domains</text>
+
+  <rect class="panel" x="80" y="590" width="1040" height="105" rx="17"/>
+  <text class="kicker" x="105" y="621">THE HONEST PUBLIC CLAIM</text>
+  <text class="body strong" x="105" y="651">The VUX Hard Reserve is ownerless and cannot be spent by a VUX administrator.</text>
+  <text class="body" x="105" y="676">Its canonical WETH backing asset retains an external governance and upgrade trust assumption.</text>
+</svg>

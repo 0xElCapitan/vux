@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">VUX Emission Model settlement</title>
+  <desc id="desc">VEM limits Settled VUX to the smaller of the Raw Clock Limit and issuance supported by the exact measured Hard Reserve increase, preserving or increasing backing per VUX.</desc>
+  <style>
+    text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;fill:#14161a}.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}.bg{fill:#fbfbfc}.panel{fill:#fff;stroke:#d9dde5;stroke-width:2}.hard-panel{fill:#e8efff;stroke:#2458c4;stroke-width:2.5}.estimate-panel{fill:#f0edff;stroke:#7157c8;stroke-width:2.5}.good-panel{fill:#e8f7ee;stroke:#147a43;stroke-width:2.5}.danger-panel{fill:#fff0e9;stroke:#a33b16;stroke-width:1.5}
+    .title{font-size:30px;font-weight:500}.subtitle{font-size:16px;fill:#4d5561}.kicker{font-size:13px;font-weight:500;letter-spacing:1.3px}.heading{font-size:22px;font-weight:500}.formula{font-size:18px;font-weight:500}.body{font-size:15px}.small{font-size:14px;fill:#4d5561}.strong{font-weight:500}.hard{fill:#2458c4}.estimate{fill:#7157c8}.good{fill:#147a43}.danger{fill:#a33b16}.arrow{fill:none;stroke:#4d5561;stroke-width:2.5;marker-end:url(#arrow)}.hard-arrow{stroke:#2458c4}.estimate-arrow{stroke:#7157c8}.dash{stroke-dasharray:7 6}.divider{stroke:#d9dde5;stroke-width:1.5}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#4d5561"/></marker></defs>
+  <rect class="bg" width="1200" height="700" rx="24"/>
+  <text class="title" x="50" y="55">VEM: opportunity is subordinate to backing</text>
+  <text class="subtitle" x="50" y="83">Settlement admits only issuance supported by measured new Hard WETH.</text>
+
+  <rect class="panel" x="45" y="165" width="275" height="300" rx="20"/>
+  <text class="kicker" x="72" y="200">BEFORE SETTLEMENT</text>
+  <text class="heading" x="72" y="239">Current monetary state</text>
+  <line class="divider" x1="72" y1="258" x2="293" y2="258"/>
+  <text class="formula mono hard" x="72" y="302">Bpre = Hard WETH</text>
+  <text class="formula mono" x="72" y="344">Spre = total supply</text>
+  <text class="formula mono" x="72" y="386">Npre = Bpre / Spre</text>
+  <text class="small" x="72" y="431">POL-held VUX remains in S.</text>
+
+  <rect class="estimate-panel" x="365" y="115" width="470" height="110" rx="18"/>
+  <text class="kicker estimate" x="395" y="147">CLOCK INPUT</text>
+  <text class="heading" x="395" y="181">Qraw · Raw Clock Limit</text>
+  <text class="small" x="395" y="206">Time-derived maximum, not a balance</text>
+  <path class="arrow estimate-arrow" d="M600 225V263"/>
+
+  <rect class="hard-panel" x="365" y="485" width="470" height="110" rx="18"/>
+  <text class="kicker hard" x="395" y="517">CAPITAL INPUT</text>
+  <text class="heading" x="395" y="551">D_R · measured new Hard WETH</text>
+  <text class="small" x="395" y="576">Current settlement delta only</text>
+  <path class="arrow hard-arrow" d="M600 485V437"/>
+
+  <rect class="panel" x="365" y="275" width="470" height="150" rx="20"/>
+  <text class="kicker" x="395" y="309">VEM SETTLEMENT LIMIT</text>
+  <text class="formula mono" x="395" y="353">Qsafe = floor(D_R × Spre / Bpre)</text>
+  <text class="formula mono good" x="395" y="397">Qmint = min(Qraw, Qsafe)</text>
+
+  <path class="arrow" d="M320 350H353"/>
+  <path class="arrow" d="M835 350H873"/>
+
+  <rect class="good-panel" x="880" y="165" width="275" height="300" rx="20"/>
+  <text class="kicker good" x="907" y="200">AFTER SETTLEMENT</text>
+  <text class="heading" x="907" y="239">Supported issuance</text>
+  <text class="heading" x="907" y="266">only</text>
+  <line class="divider" x1="907" y1="284" x2="1128" y2="284"/>
+  <text class="formula mono" x="907" y="326">Bafter = Bpre + D_R</text>
+  <text class="formula mono" x="907" y="368">Safter = Spre + Qmint</text>
+  <text class="formula mono good" x="907" y="410">Nafter ≥ Npre</text>
+  <text class="small" x="907" y="443">Unsupported Qraw expires—no IOU.</text>
+
+  <rect class="danger-panel" x="75" y="625" width="1050" height="48" rx="11"/>
+  <text class="body danger strong" x="600" y="655" text-anchor="middle">Strategic WETH, POL, strategy NAV, expected yield, and market price receive zero issuance credit.</text>
+</svg>

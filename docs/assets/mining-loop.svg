@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">VUX player mining loop and truth states</title>
+  <desc id="desc">A Blazer pays WETH to take the throne, holds a reign while raw opportunity develops, and receives WETH plus Settled VUX only after a later displacement. Raw Clock Limit, live estimate, and Settled VUX are distinct states.</desc>
+  <style>
+    text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;fill:#14161a}.bg{fill:#fbfbfc}.panel{fill:#ffffff;stroke:#d9dde5;stroke-width:2}.action-panel{fill:#eaf0ff;stroke:#2b5fd9;stroke-width:2}.estimate-panel{fill:#f0edff;stroke:#7157c8;stroke-width:2}.good-panel{fill:#e8f7ee;stroke:#147a43;stroke-width:2}
+    .title{font-size:30px;font-weight:500}.subtitle{font-size:16px;fill:#4d5561}.step{font-size:13px;font-weight:500;letter-spacing:1.3px}.heading{font-size:19px;font-weight:500}.body{font-size:14px;fill:#4d5561}.strong{font-weight:500}.action{fill:#2b5fd9}.estimate{fill:#7157c8}.good{fill:#147a43}.warn{fill:#a33b16}
+    .arrow{fill:none;stroke:#4d5561;stroke-width:2.5;marker-end:url(#arrow)}.divider{stroke:#d9dde5;stroke-width:2}.not-equal{font-size:26px;font-weight:500;fill:#a33b16}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#4d5561"/></marker></defs>
+  <rect class="bg" width="1200" height="600" rx="24"/>
+  <text class="title" x="50" y="55">The player loop</text>
+  <text class="subtitle" x="50" y="83">The throne starts an opportunity. A later takeover creates the settlement.</text>
+
+  <rect class="action-panel" x="45" y="125" width="190" height="150" rx="18"/>
+  <text class="step action" x="65" y="154">1 · BLAZE ’EM</text>
+  <text class="heading" x="65" y="187">Pay WETH</text>
+  <text class="body" x="65" y="215">Take the throne at the</text><text class="body" x="65" y="237">current Power Index.</text>
+  <text class="body strong" x="65" y="261">0 VUX at entry</text>
+
+  <path class="arrow" d="M235 200H270"/>
+  <rect class="panel" x="280" y="125" width="190" height="150" rx="18"/>
+  <text class="step" x="300" y="154">2 · PRIME BLAZER</text>
+  <text class="heading" x="300" y="187">Reign begins</text>
+  <text class="body" x="300" y="215">Blaze Rate snapshots.</text>
+  <text class="body" x="300" y="237">Next opening = 2× paid,</text>
+  <text class="body" x="300" y="259">subject to the minimum.</text>
+
+  <path class="arrow" d="M470 200H505"/>
+  <rect class="estimate-panel" x="515" y="125" width="190" height="150" rx="18"/>
+  <text class="step estimate" x="535" y="154">3 · BLAZING</text>
+  <text class="heading" x="535" y="187">Observe</text>
+  <text class="body" x="535" y="215">Raw clock grows.</text>
+  <text class="body" x="535" y="237">Live settlement estimate</text>
+  <text class="body" x="535" y="259">may rise or fall.</text>
+
+  <path class="arrow" d="M705 200H740"/>
+  <rect class="panel" x="750" y="125" width="190" height="150" rx="18"/>
+  <text class="step" x="770" y="154">4 · OVERPOWERED</text>
+  <text class="heading" x="770" y="187">Displaced</text>
+  <text class="body" x="770" y="215">A successor pays WETH.</text>
+  <text class="body" x="770" y="237">The outgoing reign</text>
+  <text class="body" x="770" y="259">settles atomically.</text>
+
+  <path class="arrow" d="M940 200H975"/>
+  <rect class="good-panel" x="985" y="125" width="170" height="150" rx="18"/>
+  <text class="step good" x="1005" y="154">5 · SETTLED</text>
+  <text class="heading" x="1005" y="187">Receive</text>
+  <text class="body" x="1005" y="215">Outgoing-King WETH</text>
+  <text class="body" x="1005" y="237">+ actual VUX Mined</text>
+  <text class="body strong" x="1005" y="261">Final after settlement</text>
+
+  <line class="divider" x1="50" y1="320" x2="1150" y2="320"/>
+  <text class="step" x="50" y="357">THE THREE VUX TRUTH STATES</text>
+
+  <rect class="panel" x="75" y="390" width="280" height="130" rx="18"/>
+  <text class="step action" x="98" y="420">BLAZE CLOCK</text>
+  <text class="heading" x="98" y="449">Raw Clock Limit</text>
+  <text class="body" x="98" y="478">Time-derived maximum.</text>
+  <text class="body warn" x="98" y="500">Not owned or guaranteed.</text>
+
+  <text class="not-equal" x="382" y="460">≠</text>
+  <rect class="estimate-panel" x="430" y="390" width="330" height="130" rx="18"/>
+  <text class="step estimate" x="453" y="420">VUX IF DISPLACED NOW</text>
+  <text class="heading" x="453" y="449">Live settlement estimate</text>
+  <text class="body" x="453" y="478">Conditional on the current clock,</text>
+  <text class="body" x="453" y="500">price, backing, and valid settlement.</text>
+
+  <text class="not-equal" x="787" y="460">≠</text>
+  <rect class="good-panel" x="835" y="390" width="290" height="130" rx="18"/>
+  <text class="step good" x="858" y="420">VUX MINED</text>
+  <text class="heading" x="858" y="449">Settled VUX</text>
+  <text class="body" x="858" y="478">Actually minted to the</text>
+  <text class="body strong" x="858" y="500">outgoing Prime Blazer.</text>
+</svg>

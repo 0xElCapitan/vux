@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="670" viewBox="0 0 1200 670" role="img" aria-labelledby="title desc">
+  <title id="title">VUX two-transaction genesis</title>
+  <desc id="desc">Transaction one deploys an inert commitment-gated pool deployer. Transaction two performs atomic constructor genesis, sanitizes hostile prefunding, establishes exact backing and protocol-owned liquidity, verifies all postconditions, and leaves no temporary authority.</desc>
+  <style>
+    text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;fill:#14161a}.bg{fill:#fbfbfc}.panel{fill:#fff;stroke:#d9dde5;stroke-width:2}.action-panel{fill:#eaf0ff;stroke:#2b5fd9;stroke-width:2.5}.good-panel{fill:#e8f7ee;stroke:#147a43;stroke-width:2.5}.threat-panel{fill:#fff0e9;stroke:#a33b16;stroke-width:1.5}.note-panel{fill:#fffaf0;stroke:#8a6300;stroke-width:1.5}
+    .title{font-size:30px;font-weight:500}.subtitle{font-size:16px;fill:#4d5561}.kicker{font-size:13px;font-weight:500;letter-spacing:1.3px}.heading{font-size:22px;font-weight:500}.body{font-size:15px}.small{font-size:14px;fill:#4d5561}.strong{font-weight:500}.action{fill:#2b5fd9}.good{fill:#147a43}.danger{fill:#a33b16}.yellow{fill:#8a6300}.arrow{fill:none;stroke:#4d5561;stroke-width:2.5;marker-end:url(#arrow)}.action-arrow{stroke:#2b5fd9}.danger-arrow{stroke:#a33b16;stroke-dasharray:7 6}.dash{stroke-dasharray:7 6}.divider{stroke:#d9dde5;stroke-width:1.5}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#4d5561"/></marker></defs>
+  <rect class="bg" width="1200" height="670" rx="24"/>
+  <text class="title" x="50" y="55">Genesis is safe under public knowledge</text>
+  <text class="subtitle" x="50" y="83">Commitments, sanitation, constructor atomicity, and postconditions—not secrecy.</text>
+
+  <rect class="note-panel" x="795" y="30" width="355" height="64" rx="14"/>
+  <text class="kicker yellow" x="820" y="56">PRIVATE ROUTING</text>
+  <text class="small" x="820" y="79">Confidentiality and launch optics only</text>
+  <path class="arrow dash" d="M795 76H735V118"/>
+
+  <rect class="action-panel" x="55" y="145" width="280" height="250" rx="22"/>
+  <text class="kicker action" x="85" y="179">TX 1</text>
+  <text class="heading" x="85" y="216">Inert pool deployer</text>
+  <line class="divider" x1="85" y1="234" x2="305" y2="234"/>
+  <text class="body" x="85" y="267">• Salted commitment</text>
+  <text class="body" x="85" y="299">• One-shot pool creation</text>
+  <text class="body" x="85" y="331">• No funds or protocol role</text>
+  <text class="body" x="85" y="363">• Ownerless and otherwise inert</text>
+
+  <path class="arrow action-arrow" d="M335 270H385"/>
+
+  <rect class="panel" x="395" y="118" width="500" height="330" rx="22"/>
+  <text class="kicker action" x="425" y="152">TX 2 · GENESISDEPLOYER CONSTRUCTOR</text>
+  <text class="heading" x="425" y="187">One atomic transaction</text>
+
+  <rect class="action-panel" x="425" y="215" width="205" height="82" rx="15"/>
+  <text class="kicker action" x="445" y="242">1 · FUND</text>
+  <text class="body strong" x="445" y="267">Wrap exact</text>
+  <text class="body strong" x="445" y="287">canonical WETH</text>
+  <path class="arrow" d="M630 256H660"/>
+  <rect class="action-panel" x="670" y="215" width="195" height="82" rx="15"/>
+  <text class="kicker action" x="690" y="242">2 · BUILD</text>
+  <text class="body strong" x="690" y="267">Deploy + wire</text>
+  <text class="body strong" x="690" y="287">identities</text>
+
+  <rect class="action-panel" x="425" y="320" width="205" height="82" rx="15"/>
+  <text class="kicker action" x="445" y="347">3 · SANITIZE</text>
+  <text class="body strong" x="445" y="372">Neutralize hostile</text>
+  <text class="body strong" x="445" y="392">prefunding</text>
+  <path class="arrow" d="M630 361H660"/>
+  <rect class="action-panel" x="670" y="320" width="195" height="82" rx="15"/>
+  <text class="kicker action" x="690" y="347">4 · ESTABLISH</text>
+  <text class="body strong" x="690" y="372">Exact B0 +</text>
+  <text class="body strong" x="690" y="392">canonical POL</text>
+
+  <path class="arrow action-arrow" d="M895 280H935"/>
+  <rect class="good-panel" x="945" y="145" width="205" height="250" rx="22"/>
+  <text class="kicker good" x="972" y="179">POSTCONDITIONS</text>
+  <text class="heading" x="972" y="216">Verify or revert</text>
+  <line class="divider" x1="972" y1="234" x2="1123" y2="234"/>
+  <text class="body" x="972" y="267">Exact supply</text>
+  <text class="body" x="972" y="299">Exact Hard WETH</text>
+  <text class="body" x="972" y="331">Exact POL + wiring</text>
+  <text class="small good" x="972" y="363">No authority or balance left</text>
+
+  <rect class="threat-panel" x="165" y="505" width="300" height="92" rx="17"/>
+  <text class="kicker danger" x="190" y="535">ADVERSARY KNOWS ADDRESSES</text>
+  <text class="small" x="190" y="563">Public prediction cannot occupy, initialize,</text>
+  <text class="small" x="190" y="584">or redirect accepted genesis state.</text>
+  <path class="arrow danger-arrow" d="M465 550H525V448"/>
+
+  <rect class="threat-panel" x="735" y="505" width="300" height="92" rx="17"/>
+  <text class="kicker danger" x="760" y="535">HOSTILE PREFUNDING</text>
+  <text class="small" x="760" y="563">Attacker-sent balances cannot change supply,</text>
+  <text class="small" x="760" y="584">B0, POL, authority, or bootstrap economics.</text>
+  <path class="arrow danger-arrow" d="M735 550H675V448"/>
+
+  <text class="body strong" x="342" y="637">Any mismatch reverts the entire constructor transaction. No partial genesis survives.</text>
+</svg>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">VUX system overview</title>
+  <desc id="desc">A takeover seats a new Prime Blazer, settles the outgoing Prime Blazer, and routes retained WETH between the ownerless Hard Reserve and the separate Strategic Treasury.</desc>
+  <style>
+    text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;fill:#14161a}
+    .bg{fill:#fbfbfc}.panel{fill:#ffffff;stroke:#d9dde5;stroke-width:2}.action-panel{fill:#eaf0ff;stroke:#2b5fd9;stroke-width:2}.hard-panel{fill:#e8efff;stroke:#2458c4;stroke-width:2}.strategic-panel{fill:#f0edff;stroke:#7157c8;stroke-width:2}
+    .title{font-size:30px;font-weight:500}.subtitle{font-size:16px;fill:#4d5561}.kicker{font-size:13px;font-weight:500;letter-spacing:1.4px}.heading{font-size:23px;font-weight:500}.body{font-size:16px}.small{font-size:14px;fill:#4d5561}.strong{font-weight:500}.action{fill:#2b5fd9}.hard{fill:#2458c4}.strategic{fill:#7157c8}.good{fill:#147a43}
+    .arrow{fill:none;stroke:#4d5561;stroke-width:2.5;marker-end:url(#arrow)}.hard-arrow{stroke:#2458c4}.strategic-arrow{stroke:#7157c8}.dash{stroke-dasharray:8 7}.chip{fill:#ffffff;stroke:#d9dde5;stroke-width:1.5}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#4d5561"/></marker></defs>
+  <rect class="bg" width="1200" height="760" rx="24"/>
+  <text class="title" x="50" y="56">VUX in one view</text>
+  <text class="subtitle" x="50" y="84">One player action coordinates the game, settlement, backing, and productive capital.</text>
+
+  <rect class="chip" x="50" y="120" width="270" height="62" rx="14"/>
+  <text class="kicker action" x="70" y="145">BLAZER</text>
+  <text class="body strong" x="70" y="167">Pays the Power Index · WETH</text>
+  <path class="arrow" d="M320 151H378"/>
+
+  <rect class="action-panel" x="390" y="108" width="420" height="178" rx="22"/>
+  <text class="kicker action" x="420" y="139">1 · THRONE</text>
+  <text class="heading" x="420" y="174">Public competition + distribution</text>
+  <text class="body" x="420" y="208">Challenger becomes Prime Blazer</text>
+  <text class="body" x="420" y="234">Outgoing reign settles atomically</text>
+  <text class="small" x="420" y="260">Entry buys the throne—not immediate VUX</text>
+
+  <path class="arrow" d="M810 151H868"/>
+  <rect class="chip" x="880" y="120" width="270" height="62" rx="14"/>
+  <text class="kicker good" x="900" y="145">OUTGOING PRIME BLAZER</text>
+  <text class="body strong" x="900" y="167">Receives WETH + Settled VUX</text>
+
+  <path class="arrow" d="M600 286V297"/>
+  <rect class="panel" x="420" y="306" width="360" height="92" rx="17"/>
+  <text class="kicker" x="450" y="333">RETAINED TAKEOVER CAPITAL</text>
+  <text class="heading" x="450" y="363">Adaptive WETH routing</text>
+  <text class="small" x="450" y="385">Hard need first · Strategic receives residual</text>
+
+  <path class="arrow hard-arrow" d="M510 398V417H320V431"/>
+  <text class="small hard" x="155" y="413">measured Hard contribution</text>
+  <path class="arrow strategic-arrow" d="M690 398V417H880V431"/>
+  <text class="small strategic" x="800" y="413">remaining Strategic capacity</text>
+
+  <rect class="hard-panel" x="70" y="443" width="500" height="230" rx="22"/>
+  <text class="kicker hard" x="100" y="476">2 · AETHERWELL</text>
+  <text class="heading" x="100" y="512">Hard Reserve</text>
+  <text class="body" x="100" y="548">Raw canonical WETH physically held</text>
+  <text class="body" x="100" y="576">Backs pro-rata VUX redemption</text>
+  <text class="body" x="100" y="604">Only measured new Hard WETH supports VEM</text>
+  <text class="small hard" x="100" y="643">Ownerless core · cannot fund Strategic risk</text>
+
+  <rect class="strategic-panel" x="630" y="443" width="500" height="230" rx="22"/>
+  <text class="kicker strategic" x="660" y="476">3 · TERRAFORM ENGINE</text>
+  <text class="heading" x="660" y="512">Strategic Treasury</text>
+  <text class="body" x="660" y="548">Protocol-owned liquidity + approved strategies</text>
+  <text class="body" x="660" y="576">Separate productive/risk capital</text>
+  <text class="body" x="660" y="604">Future Signal may inform marginal allocation</text>
+  <text class="small strategic" x="660" y="643">May gain or lose · never backs redemption</text>
+
+  <text class="small" x="367" y="721">Hard and Strategic remain separate accounting and authority domains.</text>
+</svg>

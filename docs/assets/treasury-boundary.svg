@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Hard Reserve and Strategic Treasury separation</title>
+  <desc id="desc">An ordinary takeover pays eighty percent to the outgoing Prime Blazer. The retained twenty percent routes adaptively between the Hard Reserve and Strategic Treasury. Only Hard backs redemption or supports VEM.</desc>
+  <style>
+    text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;fill:#14161a}.bg{fill:#fbfbfc}.panel{fill:#fff;stroke:#d9dde5;stroke-width:2}.hard-panel{fill:#e8efff;stroke:#2458c4;stroke-width:2.5}.strategic-panel{fill:#f0edff;stroke:#7157c8;stroke-width:2.5}.danger-panel{fill:#fff0e9;stroke:#a33b16;stroke-width:1.5}
+    .title{font-size:30px;font-weight:500}.subtitle{font-size:16px;fill:#4d5561}.kicker{font-size:13px;font-weight:500;letter-spacing:1.3px}.heading{font-size:23px;font-weight:500}.body{font-size:16px}.small{font-size:14px;fill:#4d5561}.strong{font-weight:500}.hard{fill:#2458c4}.strategic{fill:#7157c8}.danger{fill:#a33b16}.arrow{fill:none;stroke:#4d5561;stroke-width:2.5;marker-end:url(#arrow)}.hard-arrow{stroke:#2458c4}.strategic-arrow{stroke:#7157c8}.divider{stroke:#d9dde5;stroke-width:1.5}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#4d5561"/></marker></defs>
+  <rect class="bg" width="1200" height="680" rx="24"/>
+  <text class="title" x="50" y="55">Two treasuries, two incompatible jobs</text>
+  <text class="subtitle" x="50" y="83">Hard protects the exit right. Strategic accepts bounded productive risk.</text>
+
+  <rect class="panel" x="425" y="110" width="350" height="75" rx="16"/>
+  <text class="kicker" x="455" y="138">ORDINARY TAKEOVER</text>
+  <text class="heading" x="455" y="168">P WETH paid</text>
+  <path class="arrow" d="M425 147H250"/>
+  <rect class="panel" x="65" y="110" width="175" height="75" rx="16"/>
+  <text class="kicker" x="87" y="138">OUTGOING KING</text>
+  <text class="heading" x="87" y="168">80% of P</text>
+
+  <path class="arrow" d="M600 185V225"/>
+  <rect class="panel" x="455" y="220" width="290" height="70" rx="16"/>
+  <text class="kicker" x="480" y="248">RETAINED CAPITAL</text>
+  <text class="heading" x="480" y="276">20% of P · adaptive</text>
+
+  <path class="arrow hard-arrow" d="M520 290V330H310V360"/>
+  <text class="small hard" x="165" y="319">Hard receives 8%-plus-dust to 20%</text>
+  <path class="arrow strategic-arrow" d="M680 290V330H890V360"/>
+  <text class="small strategic" x="760" y="319">Strategic receives 0% to 12%</text>
+
+  <rect class="hard-panel" x="60" y="372" width="500" height="230" rx="22"/>
+  <text class="kicker hard" x="90" y="405">AETHERWELL · HARD RESERVE</text>
+  <text class="heading" x="90" y="442">Protected redemption capital</text>
+  <line class="divider" x1="90" y1="460" x2="530" y2="460"/>
+  <text class="body" x="90" y="493">• Raw canonical RH WETH only</text>
+  <text class="body" x="90" y="523">• Funds pro-rata redemption</text>
+  <text class="body" x="90" y="553">• Sole capital counted by VEM</text>
+  <text class="small hard" x="90" y="580">Ownerless · no strategy deployment</text>
+
+  <rect class="strategic-panel" x="640" y="372" width="500" height="230" rx="22"/>
+  <text class="kicker strategic" x="670" y="405">TERRAFORM ENGINE · STRATEGIC TREASURY</text>
+  <text class="heading" x="670" y="442">Productive/risk capital</text>
+  <line class="divider" x1="670" y1="460" x2="1110" y2="460"/>
+  <text class="body" x="670" y="493">• Canonical POL + approved strategies</text>
+  <text class="body" x="670" y="523">• Bounded operator authority</text>
+  <text class="body" x="670" y="553">• Future Signal: allocation input only</text>
+  <text class="small strategic" x="670" y="580">May gain or lose · separate balance sheet</text>
+
+  <rect class="danger-panel" x="170" y="625" width="860" height="38" rx="10"/>
+  <text class="body danger strong" x="255" y="650">No Strategic WETH, POL, NAV, or expected yield enters B, redemption, or VEM.</text>
+</svg>

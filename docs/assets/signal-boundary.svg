@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Future Signal architecture and its hard boundaries</title>
+  <desc id="desc">Signal is not active in VUX version one. A future evidence-gated activation could aggregate epochal holder signals into bounded marginal Strategic Treasury allocations, but Signal can never access the Hard Reserve, minting, redemption, the throne, or the Power Index.</desc>
+  <style>
+    text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;fill:#14161a}.bg{fill:#fbfbfc}.panel{fill:#fff;stroke:#d9dde5;stroke-width:2}.inactive-panel{fill:#f5f6f8;stroke:#89919d;stroke-width:2}.strategic-panel{fill:#f0edff;stroke:#7157c8;stroke-width:2.5}.gate-panel{fill:#fffaf0;stroke:#8a6300;stroke-width:2}.hard-panel{fill:#e8efff;stroke:#2458c4;stroke-width:2}.deny-panel{fill:#fff0e9;stroke:#a33b16;stroke-width:1.5}.title{font-size:30px;font-weight:500}.subtitle{font-size:16px;fill:#4d5561}.kicker{font-size:13px;font-weight:500;letter-spacing:1.3px}.heading{font-size:21px;font-weight:500}.body{font-size:15px}.small{font-size:14px;fill:#4d5561}.strong{font-weight:500}.strategic{fill:#7157c8}.hard{fill:#2458c4}.yellow{fill:#8a6300}.danger{fill:#a33b16}.muted{fill:#4d5561}.arrow{fill:none;stroke:#7157c8;stroke-width:2.5;marker-end:url(#arrow)}.dash{stroke-dasharray:7 6}.divider{stroke:#d9dde5;stroke-width:1.5}
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#7157c8"/></marker>
+  </defs>
+  <rect class="bg" width="1200" height="760" rx="24"/>
+  <text class="title" x="50" y="55">Signal extends Strategic capital allocation—never the monetary core</text>
+  <text class="subtitle" x="50" y="83">A future, bounded decision layer. It is not active in VUX v1.</text>
+
+  <text class="kicker muted" x="55" y="125">V1 · INACTIVE SEAM</text>
+  <rect class="inactive-panel" x="55" y="144" width="265" height="300" rx="22"/>
+  <text class="heading" x="82" y="184">Bounded module slot</text>
+  <line class="divider" x1="82" y1="202" x2="292" y2="202"/>
+  <text class="body" x="82" y="237">• No live signaling</text>
+  <text class="body" x="82" y="270">• No paid allocation</text>
+  <text class="body" x="82" y="303">• Operator Safe manages</text>
+  <text class="body" x="98" y="325">Strategic in v1</text>
+  <rect class="deny-panel" x="82" y="352" width="211" height="59" rx="13"/>
+  <text class="kicker danger" x="101" y="378">STATUS</text>
+  <text class="small" x="101" y="400">Future architecture only</text>
+
+  <path class="arrow dash" d="M320 294H373"/>
+
+  <text class="kicker yellow" x="375" y="125">ACTIVATION GATE · EVIDENCE REQUIRED</text>
+  <rect class="gate-panel" x="375" y="144" width="300" height="300" rx="22"/>
+  <text class="heading" x="402" y="184">Earn the right to activate</text>
+  <line class="divider" x1="402" y1="202" x2="648" y2="202"/>
+  <text class="body" x="402" y="237">• Audited implementation</text>
+  <text class="body" x="402" y="270">• Shadow Signal rehearsal</text>
+  <text class="body" x="402" y="303">• Admitted opportunities</text>
+  <text class="body" x="402" y="336">• Qualifying realized economics</text>
+  <text class="small yellow" x="402" y="384">Passing the gate is a future</text>
+  <text class="small yellow" x="402" y="405">operator decision—not a v1 promise.</text>
+
+  <path class="arrow dash" d="M675 294H728"/>
+
+  <text class="kicker strategic" x="730" y="125">FUTURE SIGNAL LOOP</text>
+  <rect class="strategic-panel" x="730" y="144" width="415" height="300" rx="22"/>
+  <text class="heading" x="757" y="184">Epochal signals → bounded allocation</text>
+  <line class="divider" x1="757" y1="202" x2="1118" y2="202"/>
+  <circle cx="776" cy="242" r="15" fill="#7157c8"/><text x="771" y="248" font-size="15" font-weight="500" fill="#fff">1</text>
+  <text class="body" x="803" y="248">Commit raw VUX; age for 7 days</text>
+  <circle cx="776" cy="282" r="15" fill="#7157c8"/><text x="771" y="288" font-size="15" font-weight="500" fill="#fff">2</text>
+  <text class="body" x="803" y="288">Submit fresh signal in first 24h</text>
+  <circle cx="776" cy="322" r="15" fill="#7157c8"/><text x="771" y="328" font-size="15" font-weight="500" fill="#fff">3</text>
+  <text class="body" x="803" y="328">Aggregate across a 14-day epoch</text>
+  <circle cx="776" cy="362" r="15" fill="#7157c8"/><text x="771" y="368" font-size="15" font-weight="500" fill="#fff">4</text>
+  <text class="body" x="803" y="368">Adjust marginal Strategic allocation</text>
+  <text class="small strategic" x="757" y="409">Custody and commitment—not a new backing claim.</text>
+
+  <rect class="panel" x="55" y="500" width="1090" height="205" rx="22"/>
+  <text class="kicker danger" x="82" y="537">PERMANENT NO-ACCESS BOUNDARY</text>
+  <text class="heading" x="82" y="570">Signal may influence only bounded Strategic capital</text>
+  <path class="arrow" d="M937 444V489"/>
+  <rect class="hard-panel" x="82" y="598" width="225" height="72" rx="14"/>
+  <text class="body strong hard" x="105" y="626">Hard Reserve</text>
+  <text class="small" x="105" y="650">No custody · no spending</text>
+  <rect class="deny-panel" x="330" y="598" width="225" height="72" rx="14"/>
+  <text class="body strong danger" x="353" y="626">VEM + minting</text>
+  <text class="small" x="353" y="650">No issuance authority</text>
+  <rect class="deny-panel" x="578" y="598" width="225" height="72" rx="14"/>
+  <text class="body strong danger" x="601" y="626">Redemption</text>
+  <text class="small" x="601" y="650">No claim modification</text>
+  <rect class="deny-panel" x="826" y="598" width="290" height="72" rx="14"/>
+  <text class="body strong danger" x="849" y="626">Throne + Power Index</text>
+  <text class="small" x="849" y="650">No game-control authority</text>
+  <text class="small" x="82" y="691">Strategic losses remain Strategic losses; they never become claims on Hard Reserve WETH.</text>
+</svg>
